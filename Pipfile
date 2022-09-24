@@ -1,0 +1,28 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+asgiref = ""
+autopep8 =""
+dj-database-url =""
+Django =""
+gunicorn =""
+pycodestyle =""
+python-decouple =""
+pytz =""
+sqlparse =""
+toml =""
+Unipath =""
+whitenoise =""
+
+# new
+qr_code = ""
+pillow = ""
+apscheduler = ""
+django-apscheduler = ""
+
+[requires]
+python_version = "3"

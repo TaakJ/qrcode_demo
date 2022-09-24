@@ -1,0 +1,64 @@
+    <div class="sidebar" data-color="purple" data-background-color="white" data-image="/static/assets/img/sidebar-3.jpg">
+      <div class="logo">
+        <a target="_blank" rel="noopener noreferrer" 
+          href="" class="simple-text logo-normal">
+            QRCode Demo
+        </a>
+      </div>
+      <div class="sidebar-wrapper">
+        <ul class="nav">
+
+            {% if request.user.is_authenticated %} 
+
+          <li class="nav-item {% if 'index' in segment %} active {% endif %}">
+            <a class="nav-link" href="{% url 'index' %}">
+              <i class="material-icons">dashboard</i>
+              <p class="d-lg-none d-md-block">
+              <p>Dashboard</p>
+            </a>
+          </li>
+          <li class="nav-item {% if 'page-user' in segment %} active {% endif %}">
+            <a class="nav-link" href="{% url 'page-user' %}">
+              <i class="material-icons">person</i>
+              <p>User Profile</p>
+            </a>
+          </li>
+          <li class="nav-item {% if 'ui-tables' in segment %} active {% endif %}">
+            <a class="nav-link" href="{% url 'ui-tables' %}">
+              <i class="material-icons">content_paste</i>
+              <p>Quality Level</p>
+            </a>
+          </li>
+          
+          <li class="nav-item ">
+            <a class="nav-link" href="{% url 'logout' %}" >
+              <i class="material-icons">directions_run</i>
+              <p>Logout</p>
+            </a>
+          </li>
+
+          <li class="nav-item active-pro ">
+            <a class="nav-link" 
+              target="_blank" rel="noopener noreferrer"  
+              href="https://www.mfec.co.th/">
+              <i class="material-icons">unarchive</i>
+              <p>Visit Website</p>
+            </a>
+          </li>
+
+        {% else %}
+
+          <li class="nav-item active">
+            <a class="nav-link" 
+              target="_blank" rel="noopener noreferrer"  
+              href="https://www.mfec.co.th/">
+              <i class="material-icons">unarchive</i>
+              <p>Visit Website</p>
+            </a>
+          </li>          
+
+        {% endif %}
+        </ul>
+      </div>
+
+    </div>

@@ -1,0 +1,101 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} UI Tables {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+        <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-warning">
+                  <h4 class="card-title mt-0"> Quality Plan</h4>
+                  <p class="card-category">Submit by apporved</p>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-hover" id="dataTable">
+                      <thead>
+                        <th style="font-weight:bold; font-size: 15px; color:#9b9b9b;">
+                          Userid
+                        </th>
+                        <th style="font-weight:bold; font-size: 15px; color:#9b9b9b;">
+                          Customer
+                        </th>
+                        <th style="font-weight:bold; font-size: 15px; color:#9b9b9b;">
+                          Apporved By
+                        </th>
+                        <th style="font-weight:bold; font-size: 15px; color:#9b9b9b;">
+                          Last Updated
+                        </th>
+                        <th style="font-weight:bold; font-size: 15px; color:#9b9b9b;">
+                          Schedule Plan
+                        </th>
+                        <th style="font-weight:bold; font-size: 15px; color:#9b9b9b;">
+                          Vote Point
+                        </th>
+                        <th style="font-weight:bold; font-size: 15px; color:#9b9b9b;">
+                          Submit
+                        </th>
+                      </thead>
+                      <tbody>
+                        {% for model in model %}
+                        <tr>
+                          <td class="{% if model.expired1 %}text-danger{% endif %}"> {{ model.userid }}  </td>
+                          <td class="{% if model.expired1 %}text-danger{% endif %}"> {{ model.company_name }} </td>
+                          <td class="{% if model.expired1 %}text-danger{% endif %}"> {{ model.approve_user }} </td>
+                          <td class="{% if model.expired1 %}text-danger{% endif %}"> {{ model.update_by }} </td>
+                          <td class="{% if model.expired1 %}text-danger{% endif %}"> {{ model.schedule_plan }} </td>
+                          <td class="td-actions text-left">  
+                            <button type="button" rel="tooltip" title="QR Code" class="btn btn-info btn-lg qrbtn" data-url="{% url 'qr-code' model.userid %}">
+                              <i class="material-icons">qr_code</i></button>
+                          </td>
+                          <td class="td-actions text-left">
+                            <button type="button" rel="tooltip" title="Edit Task" class="btn btn-success btn-round btn-lg editbtn" data-url="{% url 'edit-user' model.userid %}">
+                                <i class="material-icons">edit</i></button>&nbsp;
+                            <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-round btn-lg delbtn" data-url="{% url 'del-user' model.userid %}">
+                                <i class="material-icons">close</i></button>
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal fade" id="delpopup"  tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog"  role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                        <i class="material-icons" style="color: red;">notifications_active</i>&nbsp;&nbsp;
+                        <span class="modal-title"><b>DELETE</b></span>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      </div>
+                      <div class="modal-body">
+                          <h5>Are you sure you want to delete <strong></strong>?</h5>
+                      </div>
+                      <form role="form" >
+                        <div class="modal-footer">
+                          <button type="button" data-dismiss="modal" class="btn btn-danger btn-sm" id="del" >comfirm</button>
+                        </div>
+                      </form>
+                  </div>
+              </div>
+            </div>
+
+        </div>
+
+  
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<script src="/static/assets/js/core/styles.js"></script>
+
+{% endblock javascripts %}
