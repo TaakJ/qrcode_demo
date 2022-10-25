@@ -142,7 +142,6 @@ def calculate_rating(vote_star):
     
     return vote_percent, vote_status
 
-
 class indexiew(View):
     def get(self, request):
         try:
