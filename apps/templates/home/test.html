@@ -1,0 +1,653 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+<style>
+
+@import url('https://rsms.me/inter/inter.css');
+
+:root {
+    --color-dark: #212121;
+
+    --color-text: var(--color-dark);
+
+    --size-bezel: .5rem;
+    --size-radius: 4px;
+
+    font-size: calc(.6rem + .4vw);
+    color: var(--color-text);
+    padding: 0 calc(var(--size-bezel) * 3);
+}
+
+
+
+.card {
+    padding: calc(4 * var(--size-bezel));
+    margin-top: calc(4 * var(--size-bezel));
+    border-radius: var(--size-radius);
+    border: 3px solid var(--color-shadow, currentColor);
+    box-shadow: .5rem .5rem 0 var(--color-shadow, currentColor);
+}
+
+.gradient-background {
+width: 100%;
+background: linear-gradient(62deg, #EE7752, #f08ab1, #65c0e1, #23D5AB);
+    animation: gradient 10s ease infinite; 
+    background-size: 400% 400%;
+
+}
+@-webkit-keyframes gradient{
+0% {
+    background-position: 0 50%;
+}
+50% {
+    background-position: 100% 50%;
+}
+100% {
+    background-position: 0% 50%;
+}
+}
+@keyframes gradient{
+0% {
+    background-position: 0 50%;
+}
+50% {
+    background-position: 100% 50%;
+}
+100% {
+    background-position: 0% 50%;
+}
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(1, 250px);
+    margin: auto;
+    align-items: center;
+    justify-content: center;
+}
+
+.container .chartbox  {
+    width: 100%;
+    margin: auto 0;
+}
+
+.chartbox .chart {
+    margin-top: 5%;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 40px;
+    line-height: 250px;
+}
+
+.chartbox canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    width: 100%;
+
+}
+
+.chartbox .percent  {
+    position: relative;
+    color: #212121;
+    line-height: 1;
+    font-size: 40px;
+    font-weight: bold;
+    z-index: 2;
+}
+
+.box h2 {
+    display: block;
+    font-family: Arial Black, Arial Bold,sans-serif;
+    /* font-family: monospace Black Bold;
+    font-weight: bold; */
+    text-align: center;
+}
+
+.group_border {
+    display: inline-block;
+    position: relative;
+    /* font-weight: bold; */
+    padding: 5px 5px 0px 5px;
+    margin-bottom: 0%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.box .rate {
+    display: inline-block;
+    position: relative;
+    border: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Order correctly by floating highest to the right */
+.rate > span {
+    float: right;
+}
+
+/* The star of the show */
+.rate .star:before {
+    display: inline-block;
+    font-size: 4rem;
+    padding: .3rem .4rem;
+    margin: 0;
+    font-family: FontAwesome;
+    content: "\f005"; /* full star */
+}
+
+/* Half star trick */
+.rate .half:before {
+    content: "\f089"; /* half star no outline */
+    position: absolute;
+    padding-right: 0;
+}
+
+.star:hover:before, .star.selected:before {
+    color: #FFFF00;
+}
+
+.star:hover ~ .star:before, .star.selected ~ .star:before {
+    color: #FFFF00;
+    transition: color 0.8s;
+    /* fontAwesome filled star code */
+}
+
+@keyframes content {
+    from { right: 80%; }
+    to { left: 0%; }
+}
+.box .emoji {
+    display: inline-block;
+    position: relative;
+    border: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.emoji img {
+    margin: 0;
+    display: block;
+    width: 200px;
+    transition: all 0.4s;
+}
+
+.grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+}
+
+.imgcheck {
+    max-width: 33.3%;
+    padding: 0;
+    margin: 0;
+}
+
+.imgcheck ul {
+    list-style-type: none;
+}
+
+.imgcheck li {
+    display: inline-block;
+}
+
+input[type="radio"][id^="cb"] {
+    display: none;
+}
+
+.imgcheck label {
+    border: 1px solid #fff;
+    display: block;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+.imgcheck label:before {
+    background-color: transparent;
+    color: black;
+    content: "";
+    display: block;
+    border-radius: 50%;
+    border: 1px solid white;
+    position: absolute;
+    top: -1px; 
+    left: -1px;
+    width: 34px;
+    height: 34px;
+    text-align: center;
+    line-height: 36px;
+    transition-duration: 0.4s;
+    transform: scale(0);
+}
+
+.imgcheck label img {
+    width: 100%;
+    /* height: 10%; */
+    height: 18rem;
+    transition-duration: 0.2s;
+    /* transform-origin: 50% 50%; */
+}
+
+:checked + label {
+    border-color: transparent;
+}
+
+:checked + label:before {
+    content: "✓";
+    background-color: #0f0;
+    transform: scale(1);
+}
+
+:checked + label img {
+    transform: scale(0.9);
+    box-shadow: 0 0 10px #333;
+    z-index: -1;
+}
+
+input {
+    font-weight: bold;
+}
+
+</style>
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-chart gradient-background">
+                <div class="card-header card-header-primary card-header-icon"> 
+                    <div class="card-icon">
+                        <i class="material-icons">devices</i>
+                    </div>
+                </div>
+                <div class="card-header">  
+                    <div class="box">                        
+                        <div class="group_border" style="color: #212121;">
+                            <h2 style="text-decoration: underline #212121; text-underline-position: under;">{{ model.company_name }}</h2>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="chartbox">
+                            <div class="chart" data-percent="">
+                                <span class="percent" data-after="">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="box">
+                        <h2 style="color: white;">Indoor Air Quality</h2>
+                        <h2 style="color: black;">Subject Area : <span id=""  style="text-decoration: underline #212121; text-underline-position: under;">{{ model.job_id }}</span></h2> 
+                    </div>
+                    <br>
+                    <div class="box">
+                            <div class="rate">
+                                <span id="star7" class="star" title="5 stars"></span>
+                                <span id="star6" class="half star " title="4.5 stars"></span>
+                                <span id="star5" class="star" title="4 stars"></span>
+                                <span id="star4" class="half star" title="3.5 stars"></span>
+                                <span id="star3" class="star" title="3 stars"></span>
+                                <span id="star2" class="star" title="2 stars"></span>
+                                <span id="star1"  class="star" title="1 star"></span>
+                            </div>
+                    </div>
+                    <br>
+                    <div class="box">
+                        <div class="group_border" style="background-color: #FF5733; border: solid 5px #000;">
+                            <h2>Rating: <span id="statusid" style="color: white;">{{ model.vote_status }}</span></h2>
+                        </div>
+                        <div id="box">
+                            <div class="emoji">
+                                {% if model.vote_star == 7 %} 
+                                    <img id="emoji" src="/static/assets/img/fantastic.gif" alt="">
+                                {% elif model.vote_star == 6 %} 
+                                    <img id="emoji" src="/static/assets/img/excellent1.gif" alt="">
+                                {% elif model.vote_star == 5 %} 
+                                    <img id="emoji" src="/static/assets/img/great.gif" alt="">
+                                {% elif model.vote_star == 4 %} 
+                                    <img id="emoji" src="/static/assets/img/good.gif" alt="">
+                                {% elif model.vote_star == 3 %} 
+                                    <img id="emoji" src="/static/assets/img/good.gif" alt="">
+                                {% elif model.vote_star == 2 %} 
+                                    <img id="emoji" src="/static/assets/img/fair.gif" alt="">
+                                {% else %} 
+                                    <img id="emoji" src="/static/assets/img/bad.gif" alt="">
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="card-body">
+                    <h4 class="card-title">Vote Point</h4>
+                    <p class="card-category">
+                    <span class="text-success"><i class="fa fa-long-arrow-up"></i> {{ model.vote_percent }}% </span>&nbsp; Last 24 Hours.</p>
+                </div> -->
+                <div class="card-footer">
+                    <div class="stats">
+                        <span style="color: #212121; font-weight: bold; font-size: 1rem;">
+                            <i class="material-icons">access_time</i>Latest update
+                        </span>
+                        &nbsp;
+                        <span  style="color: #fff; font-weight: bold; font-size: 1rem;">&nbsp;<strong>{{ model.updated }}</strong></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 col-md-7 col-sm-8">
+            <div class="card card-stats">
+                <div class="card-header card-header-success card-header-icon">
+                    <div class="card-icon">
+                        <i class="material-icons">alarm</i>
+                    </div>
+                    <p class="card-category">Set Date</p>
+                    <h5 class="card-title" id="startdate_id" style="color: rgb(8, 194, 79); font-weight: bold; font-size: 1.5rem;"></h5>
+                </div>
+                <div class="card-footer">
+                    <div class="stats">
+                        <i class="material-icons">date_range</i>
+                        <span id='updatedid' style="color: #212121; font-weight: bold; font-size: 1rem;"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-7 col-sm-8">
+            <div class="card card-stats">
+                <div class="card-header card-header-danger card-header-icon">
+                    <div class="card-icon">
+                        <i class="material-icons">alarm_on</i>
+                    </div>
+                    <p class="card-category">Dual Date</p>
+                    <h5 class="card-title" id="dualdate_id" style="color: rgb(231, 10, 10); font-weight: bold; font-size: 1.5rem;"></h5>
+                </div>
+                <div class="card-footer">
+                    <div class="stats">
+                        <i class="material-icons">date_range</i>&nbsp;
+                        <span id='countdownid' style="color: #212121; font-weight: bold; font-size: 1rem;"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-7 col-sm-8">
+            <div class="card card-stats">
+                <div class="card-header card-header-warning card-header-icon">
+                    <div class="card-icon">
+                        <i class="material-icons">access_time</i>
+                    </div>
+                    <p class="card-category">Schedule Plan</p>
+                    <h5 class="card-title" id="plan_id" style="color: #212121; font-weight: bold; font-size: 1.5rem;">
+                        {{ model.schedule_plan|safe }} <span style="color: #212121; font-weight: bold; font-size: 1rem;">(Day)
+                </div>
+                <!-- <div class="card-footer">
+                    <div class="stats">
+                        <i class="material-icons">date_range</i>&nbsp;
+                        <span id='countdownid' style="color: #212121; font-weight: bold; font-size: 1rem;"></span>
+                    </div>
+                </div> -->
+            </div>
+        </div>     
+    </div>
+    {% if request.user.is_authenticated %} 
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-stats">
+                <div class="card-header card-header-info card-header-icon">
+                    <div class="card-icon">
+                        <i class="material-icons">supervisor_account</i>
+                    </div>
+                    <p class="card-category">about</p>
+                </div>
+                &nbsp;
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">Address Customer</label>
+                                <input type="text" class="form-control text" name="address" value="{{ model.address }}" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">Contract Customer</label>
+                                <input type="text" class="form-control text" name="telephone" value="{{ model.telephone }}" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">District</label>
+                                <input type="text" class="form-control text" name="district" value="{{ model.district }}" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                            <label class="bmd-label-floating">Sub-district</label>
+                            <input type="text" class="form-control text" name="sub_district" value="{{ model.sub_district }}" disabled>
+                        </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">Province</label>
+                            <input type="text" class="form-control text" name="province" value="{{ model.province }}" disabled>
+                        </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">Postal Code</label>
+                            <input type="text" class="form-control text" name="postal_code" value="{{ model.postal_code }}" disabled>
+                        </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">Job Description</label>
+                            <input type="text" class="form-control text" name="job_id" value="{{ model.job_id }}" disabled>
+                        </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">Sales Representative </label>
+                            <input type="text" class="form-control text" name="approve_user" value="{{ model.approve_user }}" disabled>
+                        </div>
+                        </div>
+                        
+                    </div>
+                    <br>
+                    <div class="grid-container">
+                        <div class="imgcheck">
+                            <ul>
+                                <h4 style="text-decoration: underline #212121; text-underline-position: under; font-weight: 900;">square</h4>
+                                <li><input type="radio" id="cb1" name="chk" value="1" checked/>
+                                    <label for="cb1"><img src="/static/assets/img/bg_qr/box.png"  alt=""/></label>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="imgcheck">
+                            <ul>
+                                <h4 style="text-decoration: underline #212121; text-underline-position: under; font-weight: 900;">circle</h4>
+                                <li><input type="radio" id="cb2" name="chk" value="2" />
+                                    <label for="cb2"><img src="/static/assets/img/bg_qr/cycle.png" alt="" /></label>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="imgcheck">
+                            <ul>
+                                <h4 style="text-decoration: underline  #212121; text-underline-position: under; font-weight: 900;">ribbon</h4>
+                                <li><input type="radio" id="cb3" name="chk"  value="3" />
+                                    <label for="cb3"><img src="/static/assets/img/bg_qr/ribbon.png" alt="" /></label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<script>
+
+$(document).ready(function() {
+
+const start_date = `{{ model.end_date|safe }}`;
+const dual_date = `{{ model.dual_date|safe }}`;
+const vote_star =  `{{ model.vote_star|safe }}`;
+const vote_percent = `{{ model.vote_percent|safe }}`;
+const qr_type = `{{ model.qr_type|safe }}`;
+const userid = `{{ model.userid|safe }}`;
+const plan = `{{ model.schedule_plan }}`;
+
+(function () {
+    x = setInterval(function() {   
+        var x = new Date()
+        var ampm = x.getHours( ) >= 12 ? ' PM' : ' AM';
+        hours = x.getHours( ) % 12;
+        hours = hours ? hours : 12;
+        hours=hours.toString().length==1? 0+hours.toString() : hours;
+
+        var minutes=x.getMinutes().toString()
+        minutes=minutes.length==1 ? 0+minutes : minutes;
+
+        var seconds=x.getSeconds().toString()
+        seconds=seconds.length==1 ? 0+seconds : seconds;
+
+        var month=(x.getMonth() +1).toString();
+        month=month.length==1 ? 0+month : month;
+
+        var dt=x.getDate().toString();
+        dt=dt.length==1 ? 0+dt : dt;
+
+        var x1= dt + "/" + month + "/" + x.getFullYear(); 
+        x1 = x1 + " - " +  hours + ":" +  minutes + ":" +  seconds + " " + ampm;
+        document.getElementById('updatedid').innerHTML = x1;
+    }, 1000);
+}());
+
+(function () {
+    const second = 1000,
+        minute = second * 60,
+        hour = minute * 60,
+        day = hour * 24;
+
+    let schedule = new Date(dual_date),
+        dual_dd = String(schedule.getDate()).padStart(2, "0"),
+        dual_mm = String(schedule.getMonth() + 1).padStart(2, "0"),
+        dual_yyyy = schedule.getFullYear(),
+        schedule_ =  dual_mm + "/" + dual_dd + "/" + dual_yyyy;
+        
+        st = new Date(start_date),
+        st_dd = String(st.getDate()).padStart(2, "0"),
+        st_mm = String(st.getMonth() + 1).padStart(2, "0"),
+        st_yyyy = st.getFullYear(),
+        st_date = st_mm + "/" + st_dd + "/" + st_yyyy;
+
+        document.getElementById('startdate_id').innerHTML = st_dd +'/'+st_mm+'/'+st_yyyy;
+        document.getElementById('dualdate_id').innerHTML = dual_dd +'/'+dual_mm+'/'+dual_yyyy;
+        
+        const countDown = new Date(schedule_).getTime();
+
+        x = setInterval(function() {   
+            const now = new Date().getTime();
+            distance = countDown - now;
+
+            cd = Math.floor(distance / (day)),
+            ch = Math.floor((distance % (day)) / (hour)),
+            cmi = Math.floor((distance % (hour)) / (minute)),
+            cms = Math.floor((distance % (minute)) / second);
+
+            x1 =  cd + " day : " +  ch + " hour : " +  cmi + " min : " +  cms + " sec";
+            document.getElementById('countdownid').innerHTML = x1;
+            document.getElementById('plan_id').innerHTML = cd;
+
+        },1000); 
+}());
+
+(function () {
+    var ratingList = $(".rate").find(".star")
+    ratingList.each(function(){
+        var intScore = Math.floor(vote_star);
+        setTimeout(function() {
+            $("#star" + intScore).addClass("selected");      
+        }, 400);
+    });
+}());
+
+(function () {
+    switch (qr_type) {
+        case '1':
+            $("#cb1").attr('checked', 'checked');
+            break;
+        case '2':
+            $("#cb2").attr('checked', 'checked');
+            break;
+        case '3':
+            $("#cb3").attr('checked', 'checked');
+            break;
+    }  
+}());
+
+$('.chart').easyPieChart({
+    barColor: function (percent) {
+        return (percent < 30 ? '#990000 ': percent < 50 ? '#0000FF': '#007f00');
+    },
+    size: 160,
+    scaleLength: 0,
+    lineWidth: 15,
+    trackWidth: 15,
+    lineCap: "round",
+    scaleColor: "transparent",
+    trackColor:	"#C8C8C8",
+    easing: 'easeOutBounce',
+    animate: 2000,
+    onStep: function (from, to, percent) {
+        $(this.el).find('.percent').text(Math.round(percent));
+    }
+});
+
+var chart = window.chart = $('.chart').data('easyPieChart');
+chart.update(vote_percent);
+
+$('input:radio').change(function() {
+    var radio_val = $(this).val();
+    var url = '/qr-code/'+ userid
+    $.ajax({
+        url: url,
+        async: false,
+        type:'get',
+        data: { 'request': radio_val},
+        dataType: 'json',
+        success: function(data) {
+            console.log(data);
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+});
+});
+
+</script>
+
+{% endblock javascripts %}
