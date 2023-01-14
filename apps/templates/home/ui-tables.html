@@ -222,11 +222,11 @@ input:checked + .slider-1:before {
                           <em class="material-icons">close</em></button>
                     </td>
                     <td class="td-actions text-left">  
-                      <button type="button" rel="tooltip" title="QR Code" id="{{model.userid}}" class="btn btn-info btn-lg qrbtn" data-url="{% url 'qr-code' model.userid %}">
+                      <button type="button" rel="tooltip" title="QR Code" id="{{model.userid}}" class="btn btn-round btn-lg qrbtn" style="background-color: #212121;" data-url="{% url 'qr-code' model.userid %}">
                         <em class="material-icons">qr_code</em></button>
                     </td>
                     <td class="td-actions text-left">  
-                      <button type="button" rel="tooltip" title="Print"  id="{{model.userid}}" class="btn btn-seconary btn-lg printBtn" data-url="{% url 'qr-code' model.userid %}">
+                      <button type="button" rel="tooltip" title="Print"  id="{{model.userid}}" class="btn btn-round btn-lg printBtn" style="background-color: #212121;" data-url="{% url 'qr-code' model.userid %}">
                         <em class="material-icons">print</em></button>
                         <img src='/static/media/qr_codes/qrcode-wwww.qrcode-air-quality/qr-code/{{model.userid}}.png' alt="" style="display: none;"/>
                     </td>
