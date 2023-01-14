@@ -1,64 +1,116 @@
-    <div class="sidebar" data-color="purple" data-background-color="white" data-image="/static/assets/img/sidebar-3.jpg">
-      <div class="logo">
-        <a target="_blank" rel="noopener noreferrer" 
-          href="" class="simple-text logo-normal">
-            QRCode Demo
+{% load static %}
+
+<style>
+
+.notices {
+  position: relative;
+  top: 0;
+  z-index: 1;
+  font-size: 24px;
+  color: white;
+}
+
+.count {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  font-size: 11px;
+  border-radius: 50%;
+  background: RGB(255,14,14);
+  width: 16px;
+  height: 16px;
+  line-height:16px;
+  display: block;
+  text-align: center;
+  color: white;
+  font-family: 'monospace';
+  font-weight: 900;
+}
+
+</style>
+
+<div class="sidebar" data-color="purple" data-background-color="white" data-image="/static/assets/img/sidebar-3.jpg">
+<div class="logo">
+  <a target="_blank" rel="noopener noreferrer" 
+    href="" class="simple-text logo-normal">
+      QRCode Demo
+  </a>
+</div>
+<div class="sidebar-wrapper">
+  
+  <ul class="nav">
+
+      {% if request.user.is_authenticated %}
+
+        <li class="nav-item {% if 'index' in segment %} active {% endif %}">
+          <a class="nav-link" href="{% url 'index' %}">
+            <i class="material-icons">dashboard</i>
+            <p class="d-lg-none d-md-block">
+            <p>Dashboard</p>
+          </a>
+        </li>
+
+        <li class="nav-item {% if 'page-user' in segment %} active {% endif %}">
+          <a class="nav-link" href="{% url 'page-user' %}">
+            <i class="material-icons">person</i>
+            <p>User Profile</p>
+          </a>
+        </li> 
+
+        <li class="nav-item {% if 'ui-tables' in segment %} active {% endif %}">
+          <a class="nav-link" href="{% url 'ui-tables' %}">
+            <i class="material-icons">content_paste</i>
+            <p>List Profile</p>
+          </a>
+        </li>
+
+        <li class="nav-item {% if 'ui-notic' in segment %} active {% endif %}">
+          <a class="nav-link" href="{% url 'ui-notic' %}" >
+            <i class="material-icons notices">notifications<span class="count" id="cnt">0</span></i>
+            <P>Notifications</P>
+          </a>
+        </li>
+
+      <li class="nav-item" style="clear: left;">
+        <a class="nav-link" href="{% url 'logout' %}" >
+          <i class="material-icons">directions_run</i>
+          <p>Logout</p>
         </a>
-      </div>
-      <div class="sidebar-wrapper">
-        <ul class="nav">
+      </li>
 
-            {% if request.user.is_authenticated %} 
+      <li class="nav-item active-pro ">
+        <a class="nav-link" 
+          target="_blank" rel="noopener noreferrer"  
+          href="https://www.mfec.co.th/">
+          <i class="material-icons">unarchive</i>
+          <p>Visit Website</p>
+        </a>
+      </li>
 
-          <li class="nav-item {% if 'index' in segment %} active {% endif %}">
-            <a class="nav-link" href="{% url 'index' %}">
-              <i class="material-icons">dashboard</i>
-              <p class="d-lg-none d-md-block">
-              <p>Dashboard</p>
-            </a>
-          </li>
-          <li class="nav-item {% if 'page-user' in segment %} active {% endif %}">
-            <a class="nav-link" href="{% url 'page-user' %}">
-              <i class="material-icons">person</i>
-              <p>User Profile</p>
-            </a>
-          </li>
-          <li class="nav-item {% if 'ui-tables' in segment %} active {% endif %}">
-            <a class="nav-link" href="{% url 'ui-tables' %}">
-              <i class="material-icons">content_paste</i>
-              <p>Quality Level</p>
-            </a>
-          </li>
-          
-          <li class="nav-item ">
-            <a class="nav-link" href="{% url 'logout' %}" >
-              <i class="material-icons">directions_run</i>
-              <p>Logout</p>
-            </a>
-          </li>
+  {% else %}
 
-          <li class="nav-item active-pro ">
-            <a class="nav-link" 
-              target="_blank" rel="noopener noreferrer"  
-              href="https://www.mfec.co.th/">
-              <i class="material-icons">unarchive</i>
-              <p>Visit Website</p>
-            </a>
-          </li>
+    <li class="nav-item active">
+      <a class="nav-link" 
+        target="_blank" rel="noopener noreferrer"  
+        href="https://www.mfec.co.th/">
+        <i class="material-icons">unarchive</i>
+        <p>Visit Website</p>
+      </a>
+    </li>          
 
-        {% else %}
+  {% endif %}
+  </ul>
+</div>
 
-          <li class="nav-item active">
-            <a class="nav-link" 
-              target="_blank" rel="noopener noreferrer"  
-              href="https://www.mfec.co.th/">
-              <i class="material-icons">unarchive</i>
-              <p>Visit Website</p>
-            </a>
-          </li>          
+</div>
 
-        {% endif %}
-        </ul>
-      </div>
+<!-- Specific Page JS goes HERE  -->
+{{ room_name|json_script:"room-name" }}
+{% block javascripts %}
+<script>
+  const count = `{{count|safe}}`
+  document.getElementById('cnt').innerHTML = count;
+</script>
 
-    </div>
+{% endblock javascripts %}

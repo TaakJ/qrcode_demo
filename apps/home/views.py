@@ -1,151 +1,54 @@
-import json, datetime, os
-from django.utils import timezone
-
+import json
+import datetime
 from django import template
-from django.contrib.auth.decorators import login_required
+
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template import loader
 from django.urls import reverse
-from django.shortcuts import render, redirect,  get_object_or_404
+from django.shortcuts import get_object_or_404
 
-from apps.home.models import company_profile, company_backup, company_qrcode, username, thai_province, thai_district, thai_sub_district, thai_postcode
+from apps.home.models import company_profile, company_notice, company_qrcode, username, BroadcastNotification
 from apps.home.forms import company_form 
 
 from django.views.generic import View
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+
+from django_celery_beat.models import PeriodicTask, CrontabSchedule, IntervalSchedule
+from .tasks import push_message_job, calculate_rating
 
 # Create your views here.
 
-def run_scheduled_job():
-    today = datetime.datetime.today().strftime('%Y-%m-%d')
-    model = company_profile.objects.all()
-    
-    for doc in model:
-        if (doc.schedule_plan.strftime('%Y-%m-%d') <= today) and (doc.expired1 is False):
-            print("follow schedule_plan timeout ....")
-            vote_star = doc.vote_star - 1
-            vote_percent, vote_status = calculate_rating(vote_star)
-                
-            # insert row to table company_backup
-            company_backup.objects.create(userid=doc.userid
-                                        ,vote_star=doc.vote_star
-                                        ,vote_percent=doc.vote_percent
-                                        ,vote_status=doc.vote_status
-                                        ,schedule_plan=doc.schedule_plan
-                                        ,updated=doc.schedule_plan)
-            
-            # update expired flag True to table company_profile
-            company_profile.objects.filter(userid=doc.userid).update(expired1=True
-                                                                    ,vote_percent=vote_percent
-                                                                    ,vote_star=vote_star
-                                                                    ,vote_status=vote_status
-                                                                    ,updated=datetime.datetime.now(tz=timezone.utc))
-            
-        elif (doc.schedule_plan + datetime.timedelta(1) == today) and (doc.expired1 is True) and (doc.expired2 is False) and (doc.updated.strftime('%Y-%m-%d') != today):
-            vote_star = doc.vote_star - 1
-            vote_percent, vote_status = calculate_rating(vote_star)
-                
-            # insert row to table company_backup
-            company_backup.objects.create(userid=doc.userid
-                                        ,vote_star=doc.vote_star
-                                        ,vote_percent=doc.vote_percent
-                                        ,vote_status=doc.vote_status
-                                        ,schedule_plan=doc.schedule_plan
-                                        ,updated=doc.schedule_plan + datetime.timedelta(2))
-            
-            # update expired flag True to table company_profile
-            company_profile.objects.filter(userid=doc.userid).update(expired2=True
-                                                                    ,vote_percent=vote_percent
-                                                                    ,vote_star=vote_star
-                                                                    ,vote_status=vote_status
-                                                                    ,updated=datetime.datetime.now(tz=timezone.utc))
-            
-        elif (doc.schedule_plan + datetime.timedelta(2) == today) and (doc.expired1 is True) and (doc.expired2 is True) and (doc.expired3 is False) and (doc.updated.strftime('%Y-%m-%d') != today):
-            vote_star = doc.vote_star - 1
-            vote_percent, vote_status = calculate_rating(vote_star)
-                
-            # insert row to table company_backup
-            company_backup.objects.create(userid=doc.userid
-                                        ,vote_star=doc.vote_star
-                                        ,vote_percent=doc.vote_percent
-                                        ,vote_status=doc.vote_status
-                                        ,schedule_plan=doc.schedule_plan
-                                        ,updated=doc.schedule_plan + datetime.timedelta(14))
-            
-            # update expired flag True to table company_profile
-            company_profile.objects.filter(userid=doc.userid).update(expired3=True
-                                                                    ,vote_percent=vote_percent
-                                                                    ,vote_star=vote_star
-                                                                    ,vote_status=vote_status
-                                                                    ,updated=datetime.datetime.now(tz=timezone.utc))
-            
-        elif (doc.schedule_plan + datetime.timedelta(3) == today) and (doc.expired1 is True) and (doc.expired2 is True) and (doc.expired3 is True) and (doc.expired4 is False) and (doc.updated.strftime('%Y-%m-%d') != today):
-            vote_star = doc.vote_star - 1 
-            vote_percent, vote_status = calculate_rating(vote_star) 
-                
-            # insert row to table company_backup
-            company_backup.objects.create(userid=doc.userid
-                                        ,vote_star=doc.vote_star
-                                        ,vote_percent=doc.vote_percent
-                                        ,vote_status=doc.vote_status
-                                        ,schedule_plan=doc.schedule_plan
-                                        ,updated=doc.schedule_plan + datetime.timedelta(3))
-            
-            # update expired flag True to table company_profile
-            company_profile.objects.filter(userid=doc.userid).update(expired4=True
-                                                                    ,vote_percent=vote_percent
-                                                                    ,vote_star=vote_star
-                                                                    ,vote_status=vote_status
-                                                                    ,updated=datetime.datetime.now(tz=timezone.utc))
-            
-        elif (doc.schedule_plan + datetime.timedelta(4) == today) and (doc.expired1 is True) and (doc.expired2 is True) and (doc.expired3 is True)  and (doc.expired4 is True) and (doc.expired5 is False) and (doc.updated.strftime('%Y-%m-%d') != today):
-            vote_star = doc.vote_star - 1  
-            vote_percent, vote_status = calculate_rating(vote_star)
-                
-            # insert row to table company_backup
-            company_backup.objects.create(userid=doc.userid
-                                        ,vote_star=doc.vote_star
-                                        ,vote_percent=doc.vote_percent
-                                        ,vote_status=doc.vote_status
-                                        ,schedule_plan=doc.schedule_plan
-                                        ,updated=doc.schedule_plan + datetime.timedelta(4))
-            
-            # update expired flag True to table company_profile
-            company_profile.objects.filter(userid=doc.userid).update(expired5=True
-                                                                    ,vote_percent=vote_percent
-                                                                    ,vote_star=vote_star
-                                                                    ,vote_status=vote_status
-                                                                    ,updated=datetime.datetime.now(tz=timezone.utc))
-        else:
-            print("run_scheduled_job every 1 min..")
-            
 
-def calculate_rating(vote_star):
-    if vote_star == 5: 
-        vote_percent = 100
-        vote_status = 'Excellent'
-    elif vote_star == 4:
-        vote_percent = 80
-        vote_status = 'Good'
-    elif vote_star == 3:
-        vote_percent = 60
-        vote_status = 'Fair'
-    elif vote_star == 2:
-        vote_percent = 40
-        vote_status = 'Poor'
-    elif vote_star == 1:
-        vote_percent = 20
-        vote_status = 'Bad'
-    else:
-        vote_percent = 0
-        vote_status = 'Emtry'
-    
-    return vote_percent, vote_status
+def test(request):
+    push_message_job.delay()
+    return HttpResponse("Done")
 
+# from channels.layers import get_channel_layer
+# from asgiref.sync import async_to_sync
+# def test(request):
+#     channel_layer = get_channel_layer()
+#     async_to_sync(channel_layer.group_send)(
+#         "realtime_broadcast",
+#         {
+#             'type': 'send_realtime',
+#             'message': json.dumps("realtime")
+#         }
+#     )
+#     return HttpResponse("Done")
+
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class indexiew(View):
+    
     def get(self, request):
         try:
-            context = {'segment': 'index'}
+            count = company_notice.objects.filter(expired=True).count()
+            context = {
+                'segment': 'index',
+                'room_name': 'broadcast',
+                'count': count
+                }
             html_template = loader.get_template('home/index.html')
             return  HttpResponse(html_template.render(context, request))
         
@@ -156,6 +59,7 @@ class indexiew(View):
             html_template = loader.get_template('home/page-500.html')
             return HttpResponse(html_template.render(context, request))
 
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class page_userview(View):
     form_class = company_form
     page = ""
@@ -170,19 +74,14 @@ class page_userview(View):
                 model = {'userid': userid}
             
             select_user = username.objects.values('name')
-            select_province = thai_province.objects.all()
-            select_district = thai_district.objects.all()
-            select_sub_district = thai_sub_district.objects.all()
-            select_postcode = thai_postcode.objects.all()
+            count = company_notice.objects.filter(expired=True).count() 
             
             context = {
                     'segment': 'page-user',
+                    'room_name': 'broadcast',
                     'model': model,
                     'select_user': select_user,
-                    'select_province': select_province,
-                    'select_district': select_district,
-                    'select_sub_district': select_sub_district,
-                    'select_postcode': select_postcode
+                    'count': count
                 }
             self.page = 'home/page-user.html'
             
@@ -190,123 +89,340 @@ class page_userview(View):
             # update
             model = get_object_or_404(company_profile, userid=userid)
             select_user = username.objects.values('name')
-            select_province = thai_province.objects.all()
-            select_district = thai_district.objects.all()
-            select_sub_district = thai_sub_district.objects.all()
-            select_postcode = thai_postcode.objects.all()
-
+            count = company_notice.objects.filter(expired=True).count()
+            
             context = {
                 'segment': 'page-user',
+                'room_name': 'broadcast',
                 'model': model,
                 'select_user': select_user,
-                'select_province': select_province,
-                'select_district': select_district,
-                'select_sub_district': select_sub_district,
-                'select_postcode': select_postcode
+                'count': count
             }
             self.page = 'home/page-user-edit.html'
             
         try:
             html_template = loader.get_template(self.page)    
             return HttpResponse(html_template.render(context, request))
-            
         except template.TemplateDoesNotExist:
             html_template = loader.get_template('home/page-404.html')
             return HttpResponse(html_template.render(context, request))
-            
         except:
             html_template = loader.get_template('home/page-500.html')
             return HttpResponse(html_template.render(context, request))
-    
+        
     @csrf_exempt
     def post(self, request, userid=None):
         form_data_dict = {}
         form_data_list = json.loads(self.request.POST.get('request'))
         form_data_dict = {field["name"]: field["value"] for field in form_data_list}
+        # add
         if userid is None:
             try:
                 form_data_dict['userid'] = company_profile.objects.latest('userid').userid + 1
             except company_profile.DoesNotExist:
                 form_data_dict['userid'] = 1
-                
-            vote_star = form_data_dict['vote_star']
-            vote_percent, vote_status = calculate_rating(int(vote_star))
+            
+            vote_star = int(form_data_dict['vote_star'])
+            vote_percent, vote_status = calculate_rating(vote_star)
             form_data_dict['vote_percent'] = int(vote_percent)
             form_data_dict['vote_status'] = vote_status
-            form_data_dict['expired'] = False
+            form_data_dict['cost'] = int(form_data_dict['cost'])
+            form_data_dict['percent_cost'] = int(form_data_dict['percent_cost'])
+            form_data_dict['discount'] = int(form_data_dict['discount'])
+            form_data_dict['schedule_plan'] = int(form_data_dict['schedule_plan'])
+            form_data_dict['dual_date'] = datetime.datetime.strptime(form_data_dict['end_date'], '%Y-%m-%d') + datetime.timedelta(days=int(form_data_dict['schedule_plan']))
+            form_data_dict['avg_vote'] =  vote_percent / int(form_data_dict['schedule_plan'])
             form = self.form_class(form_data_dict)
             
-            try:
-                qr_user = form_data_dict['userid']
-                company_qrcode.objects.create(userid=qr_user, name=f'wwww.qrcode-air-quality/qr-code/{qr_user}')
-            except company_qrcode.DoesNotExist:
-                pass
-            
+            qr_user = form_data_dict['userid']
+            company_qrcode.objects.update_or_create(
+                userid=qr_user,
+                defaults={
+                    'userid':qr_user,
+                    'name':f'wwww.qrcode-air-quality/qr-code/{qr_user}'
+                }
+            )
             if form.is_valid():
                 form.save()
+                
         else:
-            vote_star = int(form_data_dict['vote_star'])
-            vote_percent, vote_status = calculate_rating(int(vote_star))
-            company_profile.objects.filter(userid=userid).update(
-                company_name = form_data_dict['company_name'],
-                telephone = form_data_dict['telephone'],
-                address = form_data_dict['address'],
-                province = form_data_dict['province'],
-                district = form_data_dict['district'],
-                sub_district = form_data_dict['sub_district'],
-                postal_code = form_data_dict['postal_code'],
-                approve_user = form_data_dict['approve_user'],
-                update_by = form_data_dict['update_by'],
-                schedule_plan = form_data_dict['schedule_plan'],
-                vote_star = vote_star,
-                vote_percent = vote_percent,
-                vote_status = vote_status,
-                expired1 = False,
-                expired2 = False,
-                expired3 = False,
-                expired4 = False,
-                expired5 = False,
-            )
+            # update
+            record = get_object_or_404(company_profile,userid=userid)
+            
+            if (record.vote_star == int(form_data_dict['vote_star'])) and (record.schedule_plan == int(form_data_dict['schedule_plan'])) and (record.dual_date == form_data_dict['end_date']):
+                vote_star = record.vote_star
+                vote_percent = record.vote_percent
+                vote_status = record.vote_status
+                avg_vote = record.avg_vote
+            else:
+                vote_star = int(form_data_dict['vote_star'])
+                vote_percent, vote_status = calculate_rating(vote_star)
+                avg_vote = vote_percent / int(form_data_dict['schedule_plan'])
+            
+            record.company_name = form_data_dict['company_name']
+            record.telephone = form_data_dict['telephone']
+            record.address = form_data_dict['address']
+            record.province = form_data_dict['province']
+            record.district = form_data_dict['district']
+            record.sub_district = form_data_dict['sub_district']
+            record.postal_code = form_data_dict['postal_code']
+            record.job_id = form_data_dict['job_id']
+            record.cost = int(form_data_dict['cost'])
+            record.percent_cost = int(form_data_dict['percent_cost'])
+            record.discount = int(form_data_dict['discount'])
+            record.approve_user = form_data_dict['approve_user']
+            record.start_date = datetime.datetime.strptime(form_data_dict['start_date'], '%Y-%m-%d')
+            record.end_date = datetime.datetime.strptime(form_data_dict['end_date'], '%Y-%m-%d')
+            record.dual_date = record.end_date + datetime.timedelta(days=int(form_data_dict['schedule_plan']))
+            record.schedule_plan = int(form_data_dict['schedule_plan'])
+            record.avg_vote = avg_vote
+            record.vote_star = vote_star
+            record.vote_percent = vote_percent
+            record.vote_status = vote_status
+            record.save()
+            
+            notice = company_notice.objects.filter(userid=userid).exists()
+            if notice:
+                notices = get_object_or_404(company_notice, userid=userid)
+                if (notices.vote_star < record.vote_star) or ((notices.schedule_plan != record.schedule_plan) and (notices.vote_star != record.vote_star)) or (record.vote_star > 3):
+                    notices.delete()
+                    
+                    name = f"broadcast-notification-{str(userid)}"
+                    tasks = get_object_or_404(PeriodicTask, name=name)
+                    tasks.delete()
+                    
+                    broad = get_object_or_404(BroadcastNotification, userid=userid)
+                    broad.delete()
+                else:
+                    notices.company_name = record.company_name
+                    notices.job_id = record.job_id
+                    notices.dual_date = record.dual_date
+                    notices.schedule_plan = record.schedule_plan
+                    notices.save()
             
         form_data_dict['url'] = '/ui-tables/'
         return JsonResponse(form_data_dict)
 
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
+class page_copyview(View):
+    form_class = company_form
+    page = ""
+    
+    def get(self, request, userid=None):
+        
+        if userid is None:
+            try:
+                userid = company_profile.objects.latest('userid').userid
+                model = get_object_or_404(company_profile, userid=userid)
+            except company_profile.DoesNotExist:
+                pass
+            select_user = username.objects.values('name')
+            count = company_notice.objects.filter(expired=True).count()
+            
+            context = {
+                'segment': 'page-user',
+                'room_name': 'broadcast',
+                'model': model,
+                'select_user': select_user,
+                'count': count
+            }
+            self.page = 'home/page-user-copy.html'
+            
+            try:
+                html_template = loader.get_template(self.page)    
+                return HttpResponse(html_template.render(context, request))
+            except template.TemplateDoesNotExist:
+                html_template = loader.get_template('home/page-404.html')
+                return HttpResponse(html_template.render(context, request))
+            except:
+                html_template = loader.get_template('home/page-500.html')
+                return HttpResponse(html_template.render(context, request))
+    
+    @csrf_exempt
+    def post(self, request, userid=None): 
+        form_data_dict = {}
+        form_data_list = json.loads(self.request.POST.get('request'))
+        form_data_dict = {field["name"]: field["value"] for field in form_data_list}
+        
+        if userid is None:
+            try:
+                form_data_dict['userid'] = company_profile.objects.latest('userid').userid + 1
+            except company_profile.DoesNotExist:
+                form_data_dict['userid'] = 1
+            
+            # vote_star = 0
+            vote_percent, vote_status = calculate_rating(int(form_data_dict['vote_star']))
+            form_data_dict['vote_percent'] = int(vote_percent)
+            form_data_dict['vote_status'] = vote_status
+            form_data_dict['cost'] = int(form_data_dict['cost'])
+            form_data_dict['percent_cost'] = int(form_data_dict['percent_cost'])
+            form_data_dict['discount'] = int(form_data_dict['discount'])
+            form_data_dict['schedule_plan'] = int(form_data_dict['schedule_plan'])
+            form_data_dict['start_date'] = datetime.date.today().strftime('%Y-%m-%d')
+            form_data_dict['end_date'] =  datetime.datetime.strptime(form_data_dict['start_date'], '%Y-%m-%d') + datetime.timedelta(days=1)
+            form_data_dict['dual_date'] = form_data_dict['end_date'] + datetime.timedelta(days=int(form_data_dict['schedule_plan']))
+            form_data_dict['avg_vote'] =  vote_percent / int(form_data_dict['schedule_plan'])
+            form = self.form_class(form_data_dict)
+            
+            qr_user = form_data_dict['userid']
+            company_qrcode.objects.update_or_create(
+                userid=qr_user,
+                defaults={
+                    'userid':qr_user,
+                    'name':f'wwww.qrcode-air-quality/qr-code/{qr_user}'
+                }
+            )
+            
+            if form.is_valid():
+                form.save()
+            
+            form_data_dict['url'] = '/copy-user/'
+            return JsonResponse(form_data_dict)
+
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class ui_tablesview(View):
+    
     def get(self, request):
-        model = company_profile.objects.all()
+        model = company_profile.objects.all().order_by('userid')
+        count = company_notice.objects.filter(expired=True).count()
+        
         try:
-            context = {'segment': 'ui-tables',
-                    'model': model
+            context = {
+                    'segment': 'ui-tables',
+                    'room_name': 'broadcast',
+                    'model': model,
+                    'count': count
                     }
+            
             html_template = loader.get_template('home/ui-tables.html')
             return HttpResponse(html_template.render(context, request))
-        
         except template.TemplateDoesNotExist:
             html_template = loader.get_template('home/page-404.html')
             return HttpResponse(html_template.render(context, request))
-        
         except:
             html_template = loader.get_template('home/page-500.html')
             return HttpResponse(html_template.render(context, self.request))
+    
+    @csrf_exempt
+    def post(self, request, userid=None):
+        data = {'segment': 'ui-tables'}
+        if self.request.POST.get('checked') == 'true':
+            checked = True
+        else:
+            checked = False
+            
+        record = get_object_or_404(company_profile,userid=userid) 
+        record.feed = checked
+        record.save()
         
+        notice = company_notice.objects.filter(userid=userid).exists()
+        if notice:
+            notice = get_object_or_404(company_notice, userid=userid)
+            notice.expired = checked            
+            notice.save()
+            
+            # count notice 
+            count = company_notice.objects.filter(expired=True).count()
+            data['count'] = count
+            
+            name = f"broadcast-notification-{str(userid)}"
+            tasks = get_object_or_404(PeriodicTask, name=name)
+            tasks.enabled = checked
+            tasks.save()
+        
+        else:
+            count = company_notice.objects.filter(expired=True).count()
+            data['count'] = count
+        
+        return JsonResponse(data)
+
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
+class ui_noticview(View):
+    def get(self, request, userid=None):
+        model = company_notice.objects.all().order_by('userid')
+        count = company_notice.objects.filter(expired=True).count()
+        try:
+            context = {
+                    'segment': 'ui-notic',
+                    'room_name': 'broadcast',
+                    'model': model,
+                    'count': count
+                    }
+            
+            html_template = loader.get_template('home/ui-notic.html')
+            return HttpResponse(html_template.render(context, request))
+        except template.TemplateDoesNotExist:
+            html_template = loader.get_template('home/page-404.html')
+            return HttpResponse(html_template.render(context, request))
+        except:
+            html_template = loader.get_template('home/page-500.html')
+            return HttpResponse(html_template.render(context, self.request))
+    
+    @csrf_exempt
+    def post(self, request, userid=None):
+        data = {'segment': 'ui-notic'}
+        if self.request.POST.get('checked') == 'true':
+            checked = True
+        else:
+            checked = False
+            
+        record = get_object_or_404(company_notice,userid=userid) 
+        record.expired = checked
+        record.save()
+        
+        # count notice 
+        count = company_notice.objects.filter(expired=True).count()
+        data['count'] = count
+
+        name = f"broadcast-notification-{str(userid)}"
+        tasks = get_object_or_404(PeriodicTask, name=name)
+        tasks.enabled = checked
+        tasks.save()
+
+        return JsonResponse(data)
+
 def delete_userview(request, userid=None):
-    data = dict()
+    context = dict()
     model = get_object_or_404(company_profile, userid=userid)
-    data = {
+    qrcode = get_object_or_404(company_qrcode, userid=userid)
+    
+    try:
+        notice = company_notice.objects.filter(userid=userid).exists()
+        if notice:
+            notice = get_object_or_404(company_notice, userid=userid)
+            notice.delete()
+            
+            name = f"broadcast-notification-{str(userid)}"
+            tasks = get_object_or_404(PeriodicTask, name=name)
+            tasks.delete()
+            
+            broad = get_object_or_404(BroadcastNotification, userid=userid)
+            broad.delete()
+            
+    except company_notice.DoesNotExist:
+        html_template = loader.get_template('home/page-404.html')
+        return HttpResponse(html_template.render(context, request))
+    
+    context = {
         'resp': True,
         'userid': model.userid,
-        'company_name': model.company_name
+        'company_name': model.company_name,
     }
+    
     try:
         model.delete()
-        get_object_or_404(company_qrcode, userid=userid).delete()
-    except Exception as err:
-        data['resp'] = False
+        qrcode.delete()
+    except:
+        context['resp'] = False
     
-    return JsonResponse(data)
-        
+    return JsonResponse(context)
+
+# @method_decorator(login_required(login_url='/login/'), name='dispatch')
 class qrcodeview(View):
+    
     def get(self, request, userid=None):
+        count = company_notice.objects.filter(expired=True).count()
+        
         if userid is None:
             context = {'segment': 'ui-tables'}
         else:
@@ -314,18 +430,39 @@ class qrcodeview(View):
             qrcode = get_object_or_404(company_qrcode, userid=userid)
             context = {
                 'segment': 'qr-code',
+                'room_name': 'broadcast',
                 'model': model,
-                'qrcode':qrcode
+                'qrcode':qrcode,
+                'count': count
             }
+            
+            if self.request.GET.get('request') is not None:
+                qr_type_value = self.request.GET.get('request')
+                update = get_object_or_404(company_profile, userid=userid)
+                update.qr_type = qr_type_value
+                update.save()
         try:
             html_template = loader.get_template('home/test.html')
             return  HttpResponse(html_template.render(context, request))
-            
         except template.TemplateDoesNotExist:
             html_template = loader.get_template('home/page-404.html')
             return HttpResponse(html_template.render(context, request))
-            
         except:
             html_template = loader.get_template('home/page-500.html')
             return HttpResponse(html_template.render(context, request))
+    
+    @csrf_exempt
+    def post(self, request, userid=None):
+        model = get_object_or_404(company_profile, userid=userid)
+        qrcode = get_object_or_404(company_qrcode, userid=userid)
         
+        img_qrcode = str(qrcode.qr_code)
+        
+        data = {
+            'company_name': model.company_name,
+            'job_id': model.job_id,
+            'qr_type': model.qr_type
+            # 'img_qrcode': img_qrcode
+        }
+        
+        return JsonResponse(data)

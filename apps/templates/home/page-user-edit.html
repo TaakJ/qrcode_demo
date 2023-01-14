@@ -1,57 +1,89 @@
 {% extends "layouts/base.html" %}
 
-
 {% block title %} Page User {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
 <style>
 
-  select.form-control{
+@import url('https://rsms.me/inter/inter.css');
+
+:root {
+    --color-dark: #212121;
+    --color-text: var(--color-dark);
+    --size-bezel: .5rem;
+    --size-radius: 4px;
+    color: var(--color-text);
+}
+.card {
+    border-radius: var(--size-radius);
+    border: 3px solid var(--color-shadow, currentColor);
+    box-shadow: .5rem .5rem 0 var(--color-shadow, currentColor);
+}
+
+select.form-control{
+  display: inline-block;
+  width: 100%;
+}
+
+.rate {
+  display: inline-block;
+  border: 0;
+}
+/* Hide radio */
+.rate > input {
+    display: none;
+}
+/* Order correctly by floating highest to the right */
+.rate > label {
+    cursor: pointer;
+    float: right;
+}
+
+/* The star of the show */
+.rate > label:before {
     display: inline-block;
-    width: 100%;
-  }
+    font-size: 3rem;
+    padding: .3rem .4rem;
+    margin: 0;
+    font-family: FontAwesome;
+    content: "\f005 "; /* full star */
+}
 
-  .review-form + label  .fa {
-    cursor: pointer;
-  }
-  .review-form + label .fa {
-    color: #A9A9A9;
-  } 
-  .review-form:checked + label .fa,
-  .review-form:checked ~ label .fa{ 
-    color: #FFB03D;
-  }
-  .review-form:checked + label:after{
-    content: attr(data-label);
+/* Half star trick */
+.rate .half:before {
+    content: "\f089 "; /* half star no outline */
     position: absolute;
-    font-size: 16px;
-    top: 100%;
-    left: 50%;
-    transform: translate(-50%, 0);
-    width: 100%;
-    text-align: center;
-  }
+    padding-right: 0;
+}
 
-  .review-form + label  .fa {
-    font-size: 40px;
-    padding: auto;
-    cursor: pointer;
-  }
-  input[type="checkbox"] + label .fa:before {
-    color: #A9A9A9;
+input:checked + label:after{
+  content: attr(data-label);
+  position: absolute;
+  font-size: 1.5rem;
+  font-weight: bold;
+  top: 90%;
+  left: 50%;
+  transform: translate(-50%, 0); 
+  padding: .3rem .4rem;
+  width: 100%;
+  text-align: center;
+}
 
-  } 
-  input[type="checkbox"]:checked + label .fa:before {
-    color: #FFB03D;
-  }   
+/* Click + hover color */
+input:checked ~ label, /* color current and previous stars on checked */
+label:hover, label:hover ~ label { color: #fd9600;  } /* color previous stars on hover */
+
+/* Hover highlights */
+input:checked + label:hover, input:checked ~ label:hover, /* highlight current and previous stars */
+input:checked ~ label:hover ~ label, /* highlight previous selected stars for new rating */
+label:hover ~ input:checked ~ label /* highlight previous selected stars */ { color: #ffb03d;  } 
 
 </style>
 
 {% endblock stylesheets %}
 
 {% block content %}
-
           <div class="row">
             <div class="col-md-12">
               <div class="card">
@@ -65,20 +97,20 @@
                     <div class="row">
                       <div class="col-md-2">
                         <div class="form-group">
-                          <label class="bmd-label-floating">UserID</label>
-                          <input type="text" class="form-control" name="userid" value="{{ model.userid }}" disabled>
+                          <label class="bmd-label-floating" style="font-size: 12px;">UserID</label>
+                          <input type="text" class="form-control" name="userid" value="{{ model.userid|safe }}" disabled>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label class="bmd-label-floating">Customer Name</label>
-                          <input type="text" class="form-control" name="company_name" value="{{ model.company_name }}" required>
+                          <label class="bmd-label-floating" style="font-size: 12px;">Customer Name</label>
+                          <input type="text" class="form-control" name="company_name" value="{{ model.company_name|safe }}" required>
                         </div>
                       </div>
                       <div class="col-md-4">
                         <div class="form-group">
-                          <label class="bmd-label-floating">Contract Customer</label>
-                          <input type="tel" class="form-control" name="telephone" value="{{ model.telephone }}" required>
+                          <label class="bmd-label-floating" style="font-size: 12px;">Contract Customer</label>
+                          <input type="tel" class="form-control" name="telephone" value="{{ model.telephone|safe }}" required>
                         </div>
                       </div>
                     </div>
@@ -86,8 +118,8 @@
                     <div class="row">
                       <div class="col-md-12">
                         <div class="form-group">
-                          <label class="bmd-label-floating">Address Customer</label>
-                          <input type="text" class="form-control" name="address" value="{{ model.address }}">
+                          <label class="bmd-label-floating" style="font-size: 12px;">Address Customer</label>
+                          <input type="text" class="form-control" name="address" value="{{ model.address|safe }}">
                         </div>
                       </div>
                     </div>
@@ -95,84 +127,85 @@
                     <div class="row">
                       <div class="col-md-3">
                         <div class="form-group">
-                          <label class="bmd-label-floating">Province</label>       
-                          <input type="text" class="form-control" name="province" value="{{ model.province }}" required>
+                          <label class="bmd-label-floating" style="font-size: 12px;">Province</label>       
+                          <input type="text" class="form-control" name="province" value="{{ model.province|safe }}" required>
                         </div>
                       </div>
                       <div class="col-md-3">
                         <div class="form-group">
-                          <label class="bmd-label-floating">District</label>       
-                          <input type="text" class="form-control" name="district" value="{{ model.district }}" required>
+                          <label class="bmd-label-floating" style="font-size: 12px;">District</label>       
+                          <input type="text" class="form-control" name="district" value="{{ model.district|safe }}" required>
                         </div>
                       </div>
                       <div class="col-md-3">
                         <div class="form-group">
-                          <label class="bmd-label-floating">Sub-district</label>       
-                          <input type="text" class="form-control" name="sub_district" value="{{ model.sub_district }}" required>
+                          <label class="bmd-label-floating" style="font-size: 12px;">Sub-district</label>       
+                          <input type="text" class="form-control" name="sub_district" value="{{ model.sub_district|safe }}" required>
                         </div>
                       </div>
                       <div class="col-md-3">
                         <div class="form-group">
-                          <label class="bmd-label-floating">Postal Code</label>       
-                          <input type="text" class="form-control" name="postal_code" value="{{ model.postal_code }}" required>
+                          <label class="bmd-label-floating" style="font-size: 12px;">Postal Code</label>       
+                          <input type="text" class="form-control" name="postal_code" value="{{ model.postal_code|safe}}" required>
                         </div>
                       </div>
                     </div>
-                    <!--
+                    &nbsp;
+                    &nbsp;
                     <div class="row">
-                      <div class="col-md-3">
+                      <div class="col-md-6">
                         <div class="form-group">
-                          <label class="bmd-label-static" style="font-size: 12px;">Province</label>
-                          <select class="form-control" name="province_id" id="province" required>
-                            <option value="{{ model.province }}"> &nbsp;  {{ model.province }}  &nbsp; </option>
-                            {% for province in select_province %}   
-                              <option value="{{province.province}}" id="{{province.key}}">&nbsp; {{province.province}} &nbsp;</option>
-                            {% endfor %}
+                          <label class="bmd-label-floating" style="font-size: 12px;">Job Description</label>
+                          <select class="form-control" name="job_id" id="job_id" required>
+                            <option value=""></option>
+                            <option value="AHU">&nbsp; AHU &nbsp;</option>
+                            <option value="Air Duct">&nbsp; Air Duct &nbsp;</option>
+                            <option value="Hood">&nbsp; Hood &nbsp;</option>
+                            <option value="Gel-Gel refill">&nbsp; Gel-Gel refill &nbsp;</option>
+                            <option value="Comment / est.">&nbsp; Comment / est. &nbsp;</option>
+                            
                           </select>
                         </div>
                       </div>
-                      <div class="col-md-3">
+                      <div class="col-md-2 align-self-end">
                         <div class="form-group">
-                          <label class="bmd-label-static" style="font-size: 12px;">District</label>
-                          <select class="form-control " name="district_id" id="district" required>
-                            <option value="{{ model.district }}"> &nbsp;  {{ model.district }}  &nbsp; </option>
-                            {% for district in select_district %}   
-                              <option value="{{district.district}}" data-section="{{district.key}}" id="{{district.district_id}}">&nbsp; {{district.district}}</option>
-                            {% endfor %}
+                          <label class="bmd-label-floating" style="font-size: 12px;" >Cost (Bath)</label>
+                          <input  type="number" min="0" oninput="validity.valid||(value='');" class="form-control" name="cost" id="cost" value="{{ model.cost|safe }}"required>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label class="bmd-label-floating" style="font-size: 12px;">Percent</label>
+                          <select class="form-control" name="percent_cost" id="percent_cost" required>
+                            <option value=""></option>
+                            <option value="0">&nbsp; None &nbsp;</option>
+                            <option value="5">&nbsp;  5% &nbsp;</option>
+                            <option value="10">&nbsp; 10% &nbsp;</option>
+                            <option value="15">&nbsp; 15% &nbsp;</option>
+                            <option value="20">&nbsp; 20% &nbsp;</option>
+                            <option value="25">&nbsp; 25% &nbsp;</option>
+                            <option value="30">&nbsp; 30% &nbsp;</option>
+                            <option value="35">&nbsp; 35% &nbsp;</option>
+                            <option value="40">&nbsp; 40% &nbsp;</option>
+                            <option value="45">&nbsp; 45% &nbsp;</option>
+                            <option value="50">&nbsp; 50% &nbsp;</option>
                           </select>
                         </div>
                       </div>
-                      <div class="col-md-3">
+                      <div class="col-md-2 align-self-end">
                         <div class="form-group">
-                          <label class="bmd-label-static" style="font-size: 12px;">Sub-district</label>
-                          <select class="form-control" name="sub_district_id" id="sub_district">
-                            <option value="{{ model.sub_district }}"> &nbsp;  {{ model.sub_district }}  &nbsp; </option> 
-                            {% for sub_district in select_sub_district %}   
-                              <option value="{{sub_district.sub_district}}" id="{{sub_district.district_id}}" >&nbsp; {{sub_district.sub_district}}  &nbsp;</option>
-                            {% endfor %}
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="form-group">
-                          <label class="bmd-label-static" style="font-size: 12px;" >Postal Code</label>
-                          <select class="form-control" name="postal_code_id" id="postal_code">
-                          <option value="" >&nbsp; select option &nbsp;</option>
-                            {% for postcode in select_postcode %}   
-                              <option value="{{postcode.postcode}}" id="{{postcode.district_id}}" >&nbsp; {{postcode.postcode}}  &nbsp;</option>
-                            {% endfor %}
-                          </select>
+                          <label class="bmd-label-floating" style="font-size: 12px;" >Discount (Bath)</label>
+                          <input type="text" class="form-control" name="discount" id="discount" value="{{ model.discount|safe }}" readonly>
                         </div>
                       </div>
                     </div>
-                  -->
                     &nbsp;
                     <div class="row">
                       <div class="col-md-12">
                         <div class="form-group">
-                          <label class="bmd-label-static" style="font-size: 12px;">Comment</label>
+                          <label class="bmd-label-floating" style="font-size: 12px;">Comment</label>
                           <div class="form-group">
-                            <textarea class="form-control" rows="3"></textarea>
+                            <textarea class="form-control type_job" rows="2" disabled></textarea>
                           </div>
                         </div>
                       </div>
@@ -181,53 +214,58 @@
                     <div class="row">
                       <div class="col-md-3">
                         <div class="form-group">
-                          <label class="bmd-label-static" style="font-size: 12px;">Apporved By</label>
+                          <label class="bmd-label-floating" style="font-size: 12px;">Sales Representative</label>
                             <select class="form-control" name="approve_user" id="approve_user" required>
-                              <option value="{{ model.approve_user }}">&nbsp; {{ model.approve_user }} &nbsp;</option>
+                              <option value=""></option>
                               {% for user in select_user %}   
                               <option value="{{user.name}}">&nbsp; {{user.name}} &nbsp;</option>
                               {% endfor %}
                             </select>
                         </div>
                       </div>
-                      <!---->
                       <div class="col-md-3 align-self-end">
                         <div class="form-group">
-                          <label class="bmd-label-floating">Updated By</label>
-                          <input type="date" class="form-control" name="update_by" id="update_by" value="{{ model.update_by }}" required>
+                          <label class="bmd-label-floating"  style="font-size: 12px;">Start Date</label>
+                          <input type="date" class="form-control" name="start_date" id="start_date" value="{{ model.start_date|safe }}" required>
                         </div>
                       </div>
                       <div class="col-md-3 align-self-end">
                         <div class="form-group">
-                          <label class="bmd-label-floating">Schedule Plan</label>
-                          <input type="date" class="form-control" name="schedule_plan" id="schedule_plan" value="{{ model.schedule_plan }}" required>
+                          <label class="bmd-label-floating"  style="font-size: 12px;">Set Date</label>
+                          <input type="date" class="form-control" name="end_date" id="end_date" value="{{ model.end_date|safe }}" required>
+                        </div>
+                      </div>
+                      <div class="col-md-1 align-self-end">
+                        <div class="form-group">
+                          <label class="bmd-label-floating"  style="font-size: 12px;">Dual Date</label>
+                          <input type="number" min="0" oninput="validity.valid||(value='');" class="form-control" name="schedule_plan" id="schedule_plan"  value="{{ model.schedule_plan|safe }}" required>
                         </div>
                       </div>
                     </div>
                     <div class="row">
                       <div class="col md-2">
                         <div class="form-group">
-                          <label class="bmd-label-static" style="font-size: 12px;">Voting Point</label>
+                          <label class="bmd-label-floating" style="font-size: 12px;">Voting Point</label>
                           <div class="rating">
                           <br>
                           <div class="d-sm-inline-flex flex-row-reverse justify-content-center position-relative">
-                            <input class="form-check-input d-none review-form" type="radio" name="vote_star" id="rate-5" value="5">
-                            <label class="mx-1" for="rate-5" data-label="Excellent"><i class="fa fa-fw fa-star fa-lg"></i></label>
-                            <input class="form-check-input d-none review-form" type="radio" name="vote_star" id="rate-4" value="4">
-                            <label class="mx-1" for="rate-4" data-label="Good"><i class="fa fa-fw fa-star fa-lg"></i></label>
-                            <input class="form-check-input d-none review-form" type="radio" name="vote_star" id="rate-3" value="3">
-                            <label class="mx-1" for="rate-3" data-label="Fair"><i class="fa fa-fw fa-star fa-lg"></i></label>
-                            <input class="form-check-input d-none review-form" type="radio" name="vote_star" id="rate-2" value="2">
-                            <label class="mx-1" for="rate-2" data-label="Poor"><i class="fa fa-fw fa-star fa-lg"></i></label>
-                            <input class="form-check-input d-none review-form" type="radio" name="vote_star" id="rate-1" value="1">
-                            <label class="mx-1" for="rate-1" data-label="Bad"><i class="fa fa-fw fa-star fa-lg"></i></label>
+                            <div class="rate">
+                              <input type="radio" id="rating7" name="vote_star" value="7" required/><label for="rating7" title="5 stars" data-label="Fantastic !!"></label>
+                              <input type="radio" id="rating6" name="vote_star" value="6" required/><label class="half" for="rating6" title="4.5 stars" data-label="Excellent !!"></label>
+                              <input type="radio" id="rating5" name="vote_star" value="5" required/><label for="rating5" title="4 stars" data-label="Great !!"></label>
+                              <input type="radio" id="rating4" name="vote_star" value="4" required/><label class="half" for="rating4" title="3.5 stars" data-label="Good !!"></label>
+                              <input type="radio" id="rating3" name="vote_star" value="3" required/><label for="rating3" title="3 stars" data-label="Okay !!"></label>
+                              <input type="radio" id="rating2" name="vote_star" value="2" required/><label for="rating2" title="2 stars" data-label="Fair !!"></label>
+                              <input type="radio" id="rating1" name="vote_star" value="1" required/><label for="rating1" title="1 star" data-label="Bad !!"></label>
+                            </div>
                           </div>
                         </div>
                         </div>
                       </div>
                     </div>
-                    <button type="button" class="btn btn-warning pull-right cancel" style="margin-left: 1%" data-url="{% url 'ui-tables' %}">Cancel Profile </button>
-                    <button type="submit" class="btn btn-success pull-right">Update Profile <a href="{% url 'ui-tables' %}" ></a></button>
+                    <button type="button" class="btn btn-warning pull-right cancel" style="margin-left: 1%" data-url="{% url 'ui-tables' %}">Cancel Profile</button>
+                    <button type="submit" class="btn btn-success pull-right submitbtn" name="update">Update Profile<a href="{% url 'ui-tables' %}"></a></button>
+                    <button type="submit" class="btn btn-primary pull-right submitbtn" name="copy" style="margin-right: 1%">Copy Profile</button>
                     <div class="clearfix"></div>
                   </form>
                 </div>
@@ -242,95 +280,163 @@
 <script src="/static/assets/js/core/styles.js"></script>
 <script>
 
-  const update_by = `{{ model.update_by }}`;
-  const schedule_plan = `{{ model.schedule_plan }}`;
+  const start_date = `{{ model.start_date|safe }}`;
+  const end_date = `{{ model.end_date|safe }}`;
+  const score_vote =  `{{ model.vote_star|safe }}`;
+  const job_id = `{{ model.job_id|safe }}`;
+  const percent_cost = `{{ model.percent_cost|safe }}`;
+  const approve_user = `{{ model.approve_user|safe }}`;
 
-  // update_by
-  var upDate = new Date(update_by)
-  var day = ("0" + upDate.getDate()).slice(-2);
-  var month = ("0" + (upDate.getMonth() + 1)).slice(-2);
-  var year = upDate.getFullYear()
-  var updateby = (year) +"-"+(month)+"-"+(day);
-  $('#update_by').val(updateby);
+  // start_date
+  var upDate = new Date(start_date)
+  var startdate = (upDate.getFullYear()) +"-"+( ("0" + (upDate.getMonth() + 1)).slice(-2))+"-"+(("0" + upDate.getDate()).slice(-2));
+  $('#start_date').val(startdate);
 
-  // schedule_plan
-  var schDate = new Date(schedule_plan)
-  var dd = ("0" + schDate.getDate()).slice(-2);
-  var mm = ("0" + (schDate.getMonth() + 1)).slice(-2);
-  var yy = schDate.getFullYear()
-  var scheduleplan = (yy) +"-"+(mm)+"-"+(dd);
-  $('#schedule_plan').val(scheduleplan);
+  // end_date
+  var schDate = new Date(end_date)
+  var enddate = (schDate.getFullYear()) +"-"+(("0" + (schDate.getMonth() + 1)).slice(-2))+"-"+(("0" + schDate.getDate()).slice(-2));
+  $('#end_date').val(enddate);
+  
+  // now
+  var now = new Date();
+  var today = now.getFullYear()+"-"+(("0" + (now.getMonth() + 1)).slice(-2))+"-"+(("0" + now.getDate()).slice(-2));
+  $('#start_date').attr('min', today);
+  // $('#start_date').attr('max', today);
+
+  // add date
+  var add = now.setDate(now.getDate() + 1);
+  var someDate = new Date(add)
+  var adddate = now.getFullYear()+"-"+(("0" + (someDate.getMonth() + 1)).slice(-2))+"-"+(("0" + someDate.getDate()).slice(-2));
+  $('#end_date').attr('min', adddate);
 
   $(document).ready(function() {
 
-    // var $select1 = $('#province');
-    // var	$select2 = $('#district');
-    // var	$select3 = $('#sub_district');
-    // var	$select4 = $('#postal_code');
-    // var	$options2 = $select2.find('option');
-    // var	$options3 = $select3.find('option');
-    // var	$options4 = $select4.find('option');
+    $('#start_date').blur(function() {
+      if (schDate != someDate) {
+        $('#start_date').val(today);
+        $('#end_date').val(adddate);
+      }
+    });
 
-    // $select1.on('change', function(e){
-    //     $select2.html(
-    //       $options2.filter( 
-    //         function() {
-    //           return $(this).data('section') == $select1[0].selectedOptions[0].id;
-    //           // return $(this).data('section') == $select1[0].selectedOptions[0].value;
-    //         })
-    //     );
-    //     $select2.trigger('change');
-    // }).trigger('change');
-
-    // $select2.on('change', function(e) {
-    //   $select3.html(
-    //     $options3.filter(
-    //       function() {
-    //         return $(this).attr('id') == $select2[0].selectedOptions[0].id;
-    //         // return $(this).val() == $select2[0].selectedOptions[0].value;
-    //       }
-    //     )
-    //   );
-    // }).trigger('change');
-
-    // $select2.on('change', function(e) {
-    //   $select4.html(
-    //     $options4.filter(
-    //       function() {
-    //         return $(this).attr('id') == $select2[0].selectedOptions[0].id;
-    //         //return $(this).val() == $select2[0].selectedOptions[0].value;
-    //       }
-    //     )
-    //   );
-    // }).trigger('change');
-    
-    
-    var score_vote =  `{{ model.vote_star }}`;
     var $radios = $('input:radio[name=vote_star]');
     if($radios.is(':checked') === false) {
-        console.log($radios)
         $radios.filter('[value='+ score_vote +']').prop('checked', true);
     }
 
-    $('#page-edit-userid').submit(function (e) {
-        e.preventDefault();
-        var $this = $(this);
-        var url = $this.attr('data-url');
-        var formData = JSON.stringify($this.serializeArray());
-        $.ajax({
+    $("#job_id option").each(function() {
+      $('#job_id option[value=""]').text('\xA0 '+job_id+'\xA0').attr("disabled", "disabled").css('background-color', '#E8E8E8');
+      if ($(this).attr('value') == "") {
+        document.getElementById('job_id').value = job_id;
+      }
+    });
+
+    $('#job_id').change(function(){ 
+      if ($(this).val() == 'Comment / est.') {
+        $(".type_job").prop( "disabled", false );
+      } else {
+        $('.type_job').prop( "disabled", true );
+      }
+    });
+
+    $("#percent_cost option").each(function() {
+      switch (percent_cost) {
+        case '0':
+          $('#percent_cost option[value=""]').text('\xA0 None \xA0');
+          break;
+        case '5':
+          $('#percent_cost option[value=""]').text('\xA0 5% \xA0');
+          break;
+        case '10':
+          $('#percent_cost option[value=""]').text('\xA0 10% \xA0');
+          break;
+        case '15':
+          $('#percent_cost option[value=""]').text('\xA0 15% \xA0');
+          break;
+        case '20':
+          $('#percent_cost option[value=""]').text('\xA0 20% \xA0');
+          break;
+        case '25':
+          $('#percent_cost option[value=""]').text('\xA0 25% \xA0');
+          break;
+        case '30':
+          $('#percent_cost option[value=""]').text('\xA0 30% \xA0');
+          break;
+        case '35':
+          $('#percent_cost option[value=""]').text('\xA0 35% \xA0');
+          break;
+        case '40':
+          $('#percent_cost option[value=""]').text('\xA0 40% \xA0');
+          break;
+        case '45':
+          $('#percent_cost option[value=""]').text('\xA0 45% \xA0');
+          break;
+        case '50':
+          $('#percent_cost option[value=""]').text('\xA0 50% \xA0');
+          break;
+      }
+
+      $('#percent_cost option[value=""]').attr("disabled", "disabled").css('background-color', '#E8E8E8');
+        if ($(this).attr('value') == "") {
+          document.getElementById('percent_cost').value = percent_cost
+        }
+    });
+
+    $("#cost").on("keyup",function(){
+      $('#percent_cost').prop('selectedIndex',0);
+        var cost = $('#cost').val();
+        var discont = cost;
+        $('#discount').val(discont);
+    });
+
+    $('#percent_cost').change(function(){ 
+        var cost = $('#cost').val();
+        var dec = ($(this).val()/100).toFixed(2);
+        var mult = cost*dec;
+        var discont = cost - mult;
+        $('#discount').val(discont);
+    });
+
+    $("#approve_user option").each(function() {
+      $('#approve_user option[value=""]').text('\xA0 '+approve_user+'\xA0').attr("disabled", "disabled").css('background-color', '#E8E8E8');
+      if ($(this).attr('value') == "") {
+        document.getElementById('approve_user').value = approve_user;
+      }
+    });
+
+    var buttonpressed;
+    $('.submitbtn').click(function() {
+        buttonpressed = $(this).attr('name');
+    });
+    $('#page-edit-userid').submit(function() {
+          //e.preventDefault();
+          var $this = $(this);
+          switch (buttonpressed) {
+            case "update":
+              var state = "update";
+              var url = $this.attr('data-url');
+              break;
+            case "copy":
+              var state = "copy";
+              var url = "/copy-user/";
+              break;
+          }
+          var formData = JSON.stringify($this.serializeArray());
+          $.ajax({
             url: url,
             async: false,
-            type:'post',
-            data: { 'request': formData},
+            type: 'post',
+            data: {'request': formData},
             dataType: 'json',
             success: function(data) {
-                window.location.href = data.url;
+              window.location.href = data.url;
             },
             error: function(error) {
                 console.log(error);
             }
-        });
-    });
+          });
+            buttonpressed=''
+        return(false)
+    })
 
     $('#page-edit-userid').on('click', '.cancel', function (e) {
         e.preventDefault();
@@ -340,15 +446,13 @@
             async: false,
             type:'get',
             success: function(data) {
-                //console.log(data);
-                window.location.href = url;
+              window.location.href = url;
             },
             error: function(error) {
                 console.log(error);
             }
         });
     });
-    
 });
 
 </script>

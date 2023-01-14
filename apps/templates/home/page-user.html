@@ -8,44 +8,79 @@
 
 <style>
 
+@import url('https://rsms.me/inter/inter.css');
+
+  :root {
+    --color-dark: #212121;
+    --color-text: var(--color-dark);
+    --size-bezel: .5rem;
+    --size-radius: 4px;
+    color: var(--color-text);
+  }
+  .card {
+    border-radius: var(--size-radius);
+    border: 3px solid var(--color-shadow, currentColor);
+    box-shadow: .5rem .5rem 0 var(--color-shadow, currentColor);
+  }
+
+
   select.form-control{
     display: inline-block;
     width: 100%;
   }
 
-  .review-form + label  .fa {
-    cursor: pointer;
+  .rate {
+    display: inline-block;
+    border: 0;
   }
-  .review-form + label .fa {
-    color: #A9A9A9;
-  } 
-  .review-form:checked + label .fa,
-  .review-form:checked ~ label .fa{ 
-    color: #FFB03D;
+  /* Hide radio */
+  .rate > input {
+      display: none;
   }
-  .review-form:checked + label:after{
+  /* Order correctly by floating highest to the right */
+  .rate > label {
+      cursor: pointer;
+      float: right;
+  }
+
+  /* The star of the show */
+  .rate > label:before {
+      display: inline-block;
+      font-size: 3rem;
+      padding: .3rem .4rem;
+      margin: 0;
+      font-family: FontAwesome;
+      content: "\f005 "; /* full star */
+  }
+
+  /* Half star trick */
+  .rate .half:before {
+      content: "\f089 "; /* half star no outline */
+      position: absolute;
+      padding-right: 0;
+  }
+
+  input:checked + label:after{
     content: attr(data-label);
     position: absolute;
-    font-size: 16px;
-    top: 100%;
+    font-size: 1.5rem;
+    font-weight: bold;
+    top: 90%;
     left: 50%;
-    transform: translate(-50%, 0);
+    transform: translate(-50%, 0); 
+    padding: .3rem .4rem;
     width: 100%;
     text-align: center;
   }
 
-  .review-form + label  .fa {
-    font-size: 40px;
-    padding: auto;
-    cursor: pointer;
-  }
-  input[type="checkbox"] + label .fa:before {
-    color: #A9A9A9;
+  /* Click + hover color */
+  input:checked ~ label, /* color current and previous stars on checked */
+  label:hover, label:hover ~ label { color: #fd9600;  } /* color previous stars on hover */
 
-  } 
-  input[type="checkbox"]:checked + label .fa:before {
-    color: #FFB03D;
-  } 
+  /* Hover highlights */
+  input:checked + label:hover, input:checked ~ label:hover, /* highlight current and previous stars */
+  input:checked ~ label:hover ~ label, /* highlight previous selected stars for new rating */
+  label:hover ~ input:checked ~ label /* highlight previous selected stars */ { color: #ffb03d;  } 
 
   </style>
 
@@ -58,7 +93,7 @@
               <div class="card">
                 <div class="card-header card-header-success">
                   <h4 class="card-title">Edit Profile</h4>
-                  <p class="card-category">Complete company profile</p>
+                  <p class="card-category">Scope of Company Profile</p>
                 </div>
                 <div class="card-body">
                     <form id="page-userid">
@@ -66,20 +101,20 @@
                     <div class="row">
                       <div class="col-md-2">
                         <div class="form-group">
-                          <label class="bmd-label-floating">UserID</label>
-                          <input type="text" class="form-control" name="userid" value="{{ model.userid }}" disabled>
+                          <label class="bmd-label-floating" style="font-size: 12px;" >UserID</label>
+                          <input type="text" class="form-control" name="userid" value="{{ model.userid|safe }}" disabled>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label class="bmd-label-floating">Customer Name</label>
-                          <input type="text" class="form-control" name="company_name" value="{{ model.company_name }}" required>
+                          <label class="bmd-label-floating" style="font-size: 12px;">Customer Name</label>
+                          <input type="text" class="form-control" name="company_name" value="{{ model.company_name|safe }}" required>
                         </div>
                       </div>
                       <div class="col-md-4">
                         <div class="form-group">
-                          <label class="bmd-label-floating">Contract Customer</label>
-                          <input type="tel" class="form-control" name="telephone" value="{{ model.telephone }}" required>
+                          <label class="bmd-label-floating" style="font-size: 12px;">Contract Customer</label>
+                          <input type="tel" class="form-control" name="telephone" value="{{ model.telephone|safe }}" required>
                         </div>
                       </div>
                     </div>
@@ -87,8 +122,8 @@
                     <div class="row">
                       <div class="col-md-12">
                         <div class="form-group">
-                          <label class="bmd-label-floating">Address Customer</label>       
-                          <input type="text" class="form-control" name="address" value="{{ model.address }}" required>
+                          <label class="bmd-label-floating" style="font-size: 12px;">Address Customer</label>       
+                          <input type="text" class="form-control" name="address" value="{{ model.address|safe }}" required>
                         </div>
                       </div>
                     </div>
@@ -96,81 +131,81 @@
                     <div class="row">
                       <div class="col-md-3">
                         <div class="form-group">
-                          <label class="bmd-label-floating">Province</label>       
-                          <input type="text" class="form-control" name="province" value="{{ model.province }}" required>
+                          <label class="bmd-label-floating" style="font-size: 12px;">Province</label>       
+                          <input type="text" class="form-control" name="province" value="{{ model.province|safe }}" required>
                         </div>
                       </div>
                       <div class="col-md-3">
                         <div class="form-group">
-                          <label class="bmd-label-floating">District</label>       
-                          <input type="text" class="form-control" name="district" value="{{ model.district }}" required>
+                          <label class="bmd-label-floating" style="font-size: 12px;">District</label>       
+                          <input type="text" class="form-control" name="district" value="{{ model.district|safe }}" required>
                         </div>
                       </div>
                       <div class="col-md-3">
                         <div class="form-group">
-                          <label class="bmd-label-floating">Sub-district</label>       
-                          <input type="text" class="form-control" name="sub_district" value="{{ model.sub_district }}" required>
+                          <label class="bmd-label-floating" style="font-size: 12px;">Sub-district</label>       
+                          <input type="text" class="form-control" name="sub_district" value="{{ model.sub_district|safe }}" required>
                         </div>
                       </div>
                       <div class="col-md-3">
                         <div class="form-group">
-                          <label class="bmd-label-floating">Postal Code</label>       
-                          <input type="text" class="form-control" name="postal_code" value="{{ model.postal_code }}" required>
+                          <label class="bmd-label-floating" style="font-size: 12px;">Postal Code</label>       
+                          <input type="text" class="form-control" name="postal_code" value="{{ model.postal_code|safe }}" required>
                         </div>
                       </div>
-                      
-                      <!-- <div class="col-md-3">
+                    </div>
+                    &nbsp;
+                    <div class="row">
+                      <div class="col-md-6">
                         <div class="form-group">
-                          <label class="bmd-label-static" style="font-size: 12px;">Province</label>
-                          <select class="form-control" name="province_id" id="province" required>
-                            <option value="">&nbsp; select option &nbsp;</option> 
-                            {% for province in select_province %}   
-                              <option value="{{province.province}}" id="{{province.key}}">&nbsp; {{province.province}} &nbsp;</option>
-                            {% endfor %}
+                          <label class="bmd-label-floating" style="font-size: 12px;">Job Description</label>
+                          <select class="form-control" name="job_id" id="job_id" required>
+                            <option value="AHU">&nbsp; AHU &nbsp;</option>
+                            <option value="Air Duct">&nbsp; Air Duct &nbsp;</option>
+                            <option value="Hood">&nbsp; Hood &nbsp;</option>
+                            <option value="Gel-Gel refill">&nbsp; Gel-Gel refill &nbsp;</option>
+                            <option value="Comment / est.">&nbsp; Comment / est. &nbsp;</option>
                           </select>
                         </div>
                       </div>
-                      <div class="col-md-3">
+                      <div class="col-md-2 align-self-end">
                         <div class="form-group">
-                          <label class="bmd-label-static" style="font-size: 12px;">District</label>
-                          <select class="form-control " name="district_id" id="district" required>
-                            <option value="">&nbsp; select option &nbsp;</option> 
-                            {% for district in select_district %}   
-                              <option value="{{district.district}}" data-section="{{district.key}}" id="{{district.district_id}}">&nbsp; {{district.district}}</option>
-                            {% endfor %}
+                          <label class="bmd-label-floating" style="font-size: 12px;" >Cost (Bath)</label>
+                          <input  type="number" min="0" oninput="validity.valid||(value='');" class="form-control" name="cost" id="cost" value=0 required>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label class="bmd-label-floating" style="font-size: 12px;">Percent</label>
+                          <select class="form-control" name="percent_cost" id="percent_cost" required>
+                            <option value="0"> &nbsp; None &nbsp;</option>
+                            <option value="5">&nbsp; 5% &nbsp;</option>
+                            <option value="10">&nbsp; 10% &nbsp;</option>
+                            <option value="15">&nbsp; 15% &nbsp;</option>
+                            <option value="20">&nbsp; 20% &nbsp;</option>
+                            <option value="25">&nbsp; 25% &nbsp;</option>
+                            <option value="30">&nbsp; 30% &nbsp;</option>
+                            <option value="35">&nbsp; 35% &nbsp;</option>
+                            <option value="40">&nbsp; 40% &nbsp;</option>
+                            <option value="45">&nbsp; 45% &nbsp;</option>
+                            <option value="50">&nbsp; 50% &nbsp;</option>
                           </select>
                         </div>
                       </div>
-                      <div class="col-md-3">
+                      <div class="col-md-2 align-self-end">
                         <div class="form-group">
-                          <label class="bmd-label-static" style="font-size: 12px;">Sub-district</label>
-                          <select class="form-control" name="sub_district_id" id="sub_district">
-                            <option value="" >&nbsp; select option &nbsp;</option> 
-                            {% for sub_district in select_sub_district %}   
-                              <option value="{{sub_district.sub_district}}" id="{{sub_district.district_id}}" >&nbsp; {{sub_district.sub_district}}  &nbsp;</option>
-                            {% endfor %}
-                          </select>
+                          <label class="bmd-label-floating" style="font-size: 12px;" >Discount (Bath)</label>
+                          <input type="text" class="form-control" name="discount" id="discount" value=0 readonly>
                         </div>
                       </div>
-                      <div class="col-md-3">
-                        <div class="form-group">
-                          <label class="bmd-label-static" style="font-size: 12px;" >Postal Code</label>
-                          <select class="form-control" name="postal_code_id" id="postal_code">
-                            <option value="" >&nbsp; select option &nbsp;</option> 
-                            {% for postcode in select_postcode %}   
-                              <option value="{{postcode.postcode}}" id="{{postcode.district_id}}" >&nbsp; {{postcode.postcode}}  &nbsp;</option>
-                            {% endfor %}
-                          </select>
-                        </div>
-                      </div> -->
                     </div>
                     &nbsp;
                     <div class="row">
                       <div class="col-md-12">
                         <div class="form-group">
-                          <label class="bmd-label-static" style="font-size: 12px;">Comment</label>
+                          <label class="bmd-label-floating" style="font-size: 12px;">Comment</label>
                           <div class="form-group">
-                            <textarea class="form-control" rows="3"></textarea>
+                            <textarea class="form-control type_job" rows="2" disabled></textarea>
                           </div>
                         </div>
                       </div>
@@ -179,7 +214,7 @@
                     <div class="row">
                       <div class="col-md-3">
                         <div class="form-group">
-                          <label class="bmd-label-static" style="font-size: 12px;">Apporved By</label>
+                          <label class="bmd-label-floating" style="font-size: 12px;">Sales Representative</label>
                             <select class="form-control" name="approve_user" id="approve_user" required>
                               <option value="">&nbsp; select option &nbsp;</option>
                               {% for user in select_user %}   
@@ -190,14 +225,20 @@
                       </div>
                       <div class="col-md-3 align-self-end">
                         <div class="form-group">
-                          <label class="bmd-label-floating">Updated By</label>
-                          <input type="date" class="form-control" name="update_by" id="update_by" value="{{ model.update_by }}" required>
+                          <label class="bmd-label-floating"  style="font-size: 12px;">Start Date</label>
+                          <input type="date" class="form-control" name="start_date" id="start_date"  required>
                         </div>
                       </div>
                       <div class="col-md-3 align-self-end">
                         <div class="form-group">
-                          <label class="bmd-label-floating">Schedule Plan</label>
-                          <input type="date" class="form-control" name="schedule_plan" id="schedule_plan" value="{{ model.schedule_plan }}" required>
+                          <label class="bmd-label-floating"  style="font-size: 12px;">Set Date</label>
+                          <input type="date" class="form-control"  name="end_date" id="end_date" required>
+                        </div>
+                      </div>
+                      <div class="col-md-1 align-self-end">
+                        <div class="form-group">
+                          <label class="bmd-label-floating"  style="font-size: 12px;">Dual Date</label>
+                          <input type="number" min="0" value="1" oninput="validity.valid||(value='');" class="form-control" name="schedule_plan" id="schedule_plan" required>
                         </div>
                       </div>
                     </div>
@@ -208,22 +249,20 @@
                           <div class="rating">
                           <br>
                           <div class="d-sm-inline-flex flex-row-reverse justify-content-center position-relative">
-                            <input class="form-check-input d-none review-form" type="radio" name="vote_star" id="rate-5" value="5">
-                            <label class="mx-1" for="rate-5" data-label="Excellent"><i class="fa fa-fw fa-star fa-lg"></i></label>
-                            <input class="form-check-input d-none review-form" type="radio" name="vote_star" id="rate-4" value="4">
-                            <label class="mx-1" for="rate-4" data-label="Good"><i class="fa fa-fw fa-star fa-lg"></i></label>
-                            <input class="form-check-input d-none review-form" type="radio" name="vote_star" id="rate-3" value="3">
-                            <label class="mx-1" for="rate-3" data-label="Fair"><i class="fa fa-fw fa-star fa-lg"></i></label>
-                            <input class="form-check-input d-none review-form" type="radio" name="vote_star" id="rate-2" value="2">
-                            <label class="mx-1" for="rate-2" data-label="Poor"><i class="fa fa-fw fa-star fa-lg"></i></label>
-                            <input class="form-check-input d-none review-form" type="radio" name="vote_star" id="rate-1" value="1">
-                            <label class="mx-1" for="rate-1" data-label="Bad"><i class="fa fa-fw fa-star fa-lg"></i></label>
+                            <div class="rate">
+                              <input type="radio" id="rating7" name="vote_star" value="7" required/><label for="rating7" title="5 stars" data-label="Fantastic !!"></label>
+                              <input type="radio" id="rating6" name="vote_star" value="6" required/><label class="half" for="rating6" title="4.5 stars" data-label="Excellent !!"></label>
+                              <input type="radio" id="rating5" name="vote_star" value="5" required/><label for="rating5" title="4 stars" data-label="Great !!"></label>
+                              <input type="radio" id="rating4" name="vote_star" value="4" required/><label class="half" for="rating4" title="3.5 stars" data-label="Good !!"></label>
+                              <input type="radio" id="rating3" name="vote_star" value="3" required/><label for="rating3" title="3 stars" data-label="Okay !!"></label>
+                              <input type="radio" id="rating2" name="vote_star" value="2" required/><label for="rating2" title="2 stars" data-label="Fair !!"></label>
+                              <input type="radio" id="rating1" name="vote_star" value="1" required/><label for="rating1" title="1 star" data-label="Bad !!"></label>
+                            </div>
                           </div>
                         </div>
                         </div>
                       </div>
                     </div>
-                  
                     &nbsp;
                     <button type="submit" id="test" class="btn btn-success pull-right">Update Profile</button>
                     <div class="clearfix"></div>
@@ -231,87 +270,54 @@
                 </div>
               </div>
             </div>
-            
           </div>
 
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
-  <script>
+<script>
 
-    // today
-    var now = new Date();
-    var day = ("0" + now.getDate()).slice(-2);
-    var month = ("0" + (now.getMonth() + 1)).slice(-2);
-    var today = now.getFullYear()+"-"+(month)+"-"+(day);
+  // start date
+  var now = new Date();
+  var today = now.getFullYear()+"-"+(("0" + (now.getMonth() + 1)).slice(-2))+"-"+(("0" + now.getDate()).slice(-2));
+  $('#start_date').val(today);
+  $('#start_date').attr('min', today);
+  $('#start_date').attr('max', today);
 
-    // add 30 days
-    var add = now.setDate(now.getDate() + 7);
-    var someDate = new Date(add)
-    var dd = ("0" + someDate.getDate()).slice(-2);
-    var mm = ("0" + (someDate.getMonth() + 1)).slice(-2);
-    var adddate = now.getFullYear()+"-"+(mm)+"-"+(dd);
+  // end date
+  var add = now.setDate(now.getDate() + 1);
+  var someDate = new Date(add)
+  var adddate = now.getFullYear()+"-"+(("0" + (someDate.getMonth() + 1)).slice(-2))+"-"+(("0" + someDate.getDate()).slice(-2));
+  $('#end_date').val(adddate);
+  $('#end_date').attr('min', adddate);
 
-    $('#update_by').val(today);
-    $('#schedule_plan').val(adddate);
+  $(document).ready(function() {
 
-    $(document).ready(function() {
-      
-      // var $select1 = $('#province');
-      // var	$select2 = $('#district');
-      // var	$select3 = $('#sub_district');
-      // var	$select4 = $('#postal_code');
-      // var	$options2 = $select2.find('option');
-      // var	$options3 = $select3.find('option');
-      // var	$options4 = $select4.find('option');
-
-      // $select1.on('change', function(e){
-      //     $select2.html(
-      //       $options2.filter( 
-      //         function() {
-      //           return $(this).data('section') == $select1[0].selectedOptions[0].id;
-      //           // return $(this).data('section') == $select1[0].selectedOptions[0].value;
-      //         })
-      //     );
-      //     $select2.trigger('change');
-      // }).trigger('change');
-
-      // $select2.on('change', function(e) {
-      //   $select3.html(
-      //     $options3.filter(
-      //       function() {
-      //         return $(this).attr('id') == $select2[0].selectedOptions[0].id;
-      //         // return $(this).val() == $select2[0].selectedOptions[0].value;
-      //       }
-      //     )
-      //   );
-      // }).trigger('change');
-
-      // $select2.on('change', function(e) {
-      //   $select4.html(
-      //     $options4.filter(
-      //       function() {
-      //         return $(this).attr('id') == $select2[0].selectedOptions[0].id;
-      //         //return $(this).val() == $select2[0].selectedOptions[0].value;
-      //       }
-      //     )
-      //   );
-      // }).trigger('change');
-
-    var ratingList = $(".rating").find(".stars-container");
-    ratingList.each(function(){
-      var id = "#" + $(this).attr("id");
-      var score = $(this).attr("value");
-      var intScore = Math.floor(score);
-      
-      $(id + ' .star').on('click', function () {
-        $(id + ' .star').removeClass('selected');
-        $(this).addClass('selected');
-        });
+    $('#job_id').change(function(){ 
+      if ($(this).val() == 'Comment / est.') {
+        $(".type_job").prop( "disabled", false );
+      } else {
+        $('.type_job').prop( "disabled", true );
+      }
+    });
+    
+    $("#cost").on("keyup",function(){
+      $('#percent_cost').prop('selectedIndex',0);
+      var cost = $('#cost').val();
+      $('#discount').val(cost);
+    });
+    
+    $('#percent_cost').change(function(){ 
+      var cost = $('#cost').val();
+      var dec = ($(this).val()/100).toFixed(2);
+      var mult = cost*dec;
+      var discont = cost - mult;
+      $('#discount').val(discont);
     });
 
-  });
-  </script>
-  <script src="/static/assets/js/core/styles.js"></script>
+});
+</script>
+<script src="/static/assets/js/core/styles.js"></script>
+
 {% endblock javascripts %}

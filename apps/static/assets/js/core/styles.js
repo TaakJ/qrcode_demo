@@ -49,27 +49,27 @@ $(document).ready(function() {
     });
 
     $('#delpopup').on('click', '#del', function (e) {
-        e.preventDefault();
+        // e.preventDefault();
         $.ajax({
             url: $url,
             async: false,
             dataType: 'json',
             success: function(data) {
                 if (data.resp) {
-                    md.showNotification('top','center', 'DELETE TO <b>Customer Contract <b>' + data.company_name + '(' + data.userid  + ')' + '</b> - on database SQLite.');
+                    md.showNotification('top','center', '<b> DELETE TO Customer Profile' + data.company_name + '(' + data.userid  + ')' + '- on database SQLite.</b>');
                     setTimeout(function () {
-                    window.location.reload(true);
-                }, 3000)
+                        window.location.reload(true);
+                }, 2000);
                 } else {
-                    md.showNotification('top','center', '<b> CAN NOT DELETE Customer Contract</b>.');
+                    md.showNotification('top','center', '<b> PROBLEM !! CAN NOT DELETE Customer Profile' + data.company_name + '(' + data.userid  + ')' + '- on database SQLite.</b>');
                 }
             },
-            error: function(data) {
-                console.log(data);
+            error: function(error) {
+                console.log(error);
             },
         });
+        return(false)
     });
-
 
     $('#dataTable tbody').on('click', '.qrbtn', function (e) {
         e.preventDefault();
@@ -82,11 +82,77 @@ $(document).ready(function() {
                 window.location.href = url;
             },
             error: function(error) {
-                alert(error)
+                console.log(error);
             }
         });
     });
 
+    $('#dataTable tbody').on('click', '.printBtn', function (e) {
+        e.preventDefault();
+        var url = $(this).attr('data-url');
+        $.ajax({
+            url: url,
+            async: false,
+            type:'post',
+            dataType: 'json',
+            success: function(data) {
+                var img = document.querySelector('img').src;
+                var win = window.open('');
+                win.document.write('<center>');
+                win.document.write('<br>');
+                win.document.write('<br>');
+                win.document.write('<h2 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;">' + data.company_name +  '</h2>');
+                win.document.write('<h2 style="font-family:monospace;"> Subject Area: ' + data.job_id +  '</h2>');
+                win.document.write('<img src=' + img + ' height=350, width=320 />');
+                win.document.write('<br>');
+                win.document.write('<h3 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;"> https://wwww.indoor-air-quality.co.th </h3>');
+                win.document.write('</center>');
+                win.print();
+                win.close();
+                win.focus();
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+
+    $('#dataTable input[type=checkbox]').each(function () {
+        if ($(this).val() == 'False') {
+            $(this).prop('checked', false);
+            $(this).closest('tr').css('color','#959596');
+        } else {
+            $(this).prop('checked', true);
+        }
+        $(this).closest('tr').find(":input:not(:first)").attr('disabled', !this.checked);
+        
+        $(this).change(function () {
+            var bool = $(this).prop('checked');
+            var url =  $(this).attr('data-url');
+            if (!bool) {
+                $(this).closest('tr').find('td').css('color','#959596');
+            } else {
+                $(this).closest('tr').find('td').css('color','black');
+            }
+            $(this).closest('tr').find(":input:not(:first)").attr('disabled', !this.checked);
+
+            $.ajax({
+                url: url,
+                async: false,
+                type:'post',
+                data: {'checked': bool},
+                dataType: 'json',
+                success: function(data) {
+                    //console.log(data)
+                    document.getElementById('cnt').innerHTML = data.count;
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        });
+    });
+    
     function getCookie(name) {
             var cookieValue = null;
             if (document.cookie && document.cookie !== '') {

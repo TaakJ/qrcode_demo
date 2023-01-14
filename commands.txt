@@ -1,0 +1,2 @@
+celery -A qrcode_demo.celery worker --pool=solo -l info
+celery -A qrcode_demo beat -l info  

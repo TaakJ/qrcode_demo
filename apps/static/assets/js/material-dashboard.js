@@ -165,8 +165,8 @@ md = {
   },
 
   showNotification: function(from, align, message) {
-    type = ['', 'info', 'danger', 'success', 'warning', 'rose', 'primary'];
-    color = Math.floor((Math.random() * 6) + 1);
+    type = ['danger', 'warning', 'rose', 'primary'];
+    color = Math.floor(Math.random() * 4);
 
     $.notify({
       icon: "add_alert",
@@ -174,7 +174,7 @@ md = {
 
     }, {
       type: type[color],
-      timer: 2000,
+      timer: 5000,
       placement: {
         from: from,
         align: align

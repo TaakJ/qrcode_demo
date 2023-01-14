@@ -1,101 +1,423 @@
+
 {% extends "layouts/base.html" %}
 
 {% block title %} UI Tables {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+<style>
+
+@import url('https://rsms.me/inter/inter.css');
+
+:root {
+  --color-dark: #212121;
+  --color-text: var(--color-dark);
+  --size-bezel: .5rem;
+  --size-radius: 4px;
+  --text: #FFFFFF;
+  --slider: #E0E0E0; 
+  --shadow: #0000001a;
+
+  color: var(--color-text);
+
+  --col-1-up: #70A7FF;
+  --col-1: #3A86FF;
+  --col-1-down: #0056E0;
+}
+.card {
+  padding-bottom: calc(4 * var(--size-bezel));
+  border-radius: var(--size-radius);
+  border: 3px solid var(--color-shadow, currentColor);
+  box-shadow: .5rem .5rem 0 var(--color-shadow, currentColor);
+}
+
+table {
+  width: 70%;
+  margin: 0 auto;
+  background-color: white;
+  border-collapse: collapse; 
+}
+
+th.highlight div.bod {
+  padding:0;
+  width: 4px;
+  transition: all 0.2s ease-in-out;
+}
+
+tr {
+  border: 1px solid transparent;
+  z-index: 7;
+}
+
+td {
+  padding: 20px;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+td.highlight {
+  padding:0;
+  width: 4px;
+}
+
+td.highlight div {
+  width: 4px;
+  height: 40px;
+  /* background-color: white; */
+  transition: all 0.2s ease-in-out;
+}
+tr:hover {
+  box-shadow: 0px 9px 4px -6px #57595D;
+}
+tr:hover td {
+  cursor:pointer;
+  color: #959596 !important;
+  border-bottom: 1px solid gray;
+  border-top: 1px solid gray;
+}
+
+tr:hover td.highlight div.bod {
+  transform: scaleX(3);
+}
+
+.switch  {
+    position: relative;
+    display: inline-block;
+    width: 2rem;
+    height: 1.2rem;
+    margin: 0 auto;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer; 
+    background-color: var(--slider);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 1.5rem;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: '';
+    background-color: var(--text);
+    height: .95rem;
+    width: .95rem;
+    left: .125rem;
+    bottom: .125rem;
+    border-radius: 50%;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(.85rem);
+    -ms-transform: translateX(.85rem);
+    transform: translateX(.85rem);
+}
+
+/* input:checked + .slider-1 {
+    background-color: var(--col-1);
+} */
+
+input:checked + .slider-1 {
+    background-color: var(--col-1);
+    /* box-shadow:
+    .01rem -.01rem 0.5rem 0 var(--col-1-down),
+    0.5rem 0.5rem 1.25rem 0 var(--shadow),
+    0.25rem 0.25rem 0.5rem 0 var(--shadow); */
+}
+input:checked + .slider-1:before {
+    background: var(--col-1-down);
+}
+
+</style>
+
+{% endblock stylesheets %}
 
 {% block content %}
 
-        <div class="row">
-            <div class="col-md-12">
-              <div class="card">
-                <div class="card-header card-header-warning">
-                  <h4 class="card-title mt-0"> Quality Plan</h4>
-                  <p class="card-category">Submit by apporved</p>
-                </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="table table-hover" id="dataTable">
-                      <thead>
-                        <th style="font-weight:bold; font-size: 15px; color:#9b9b9b;">
-                          Userid
-                        </th>
-                        <th style="font-weight:bold; font-size: 15px; color:#9b9b9b;">
-                          Customer
-                        </th>
-                        <th style="font-weight:bold; font-size: 15px; color:#9b9b9b;">
-                          Apporved By
-                        </th>
-                        <th style="font-weight:bold; font-size: 15px; color:#9b9b9b;">
-                          Last Updated
-                        </th>
-                        <th style="font-weight:bold; font-size: 15px; color:#9b9b9b;">
-                          Schedule Plan
-                        </th>
-                        <th style="font-weight:bold; font-size: 15px; color:#9b9b9b;">
-                          Vote Point
-                        </th>
-                        <th style="font-weight:bold; font-size: 15px; color:#9b9b9b;">
-                          Submit
-                        </th>
-                      </thead>
-                      <tbody>
-                        {% for model in model %}
-                        <tr>
-                          <td class="{% if model.expired1 %}text-danger{% endif %}"> {{ model.userid }}  </td>
-                          <td class="{% if model.expired1 %}text-danger{% endif %}"> {{ model.company_name }} </td>
-                          <td class="{% if model.expired1 %}text-danger{% endif %}"> {{ model.approve_user }} </td>
-                          <td class="{% if model.expired1 %}text-danger{% endif %}"> {{ model.update_by }} </td>
-                          <td class="{% if model.expired1 %}text-danger{% endif %}"> {{ model.schedule_plan }} </td>
-                          <td class="td-actions text-left">  
-                            <button type="button" rel="tooltip" title="QR Code" class="btn btn-info btn-lg qrbtn" data-url="{% url 'qr-code' model.userid %}">
-                              <i class="material-icons">qr_code</i></button>
-                          </td>
-                          <td class="td-actions text-left">
-                            <button type="button" rel="tooltip" title="Edit Task" class="btn btn-success btn-round btn-lg editbtn" data-url="{% url 'edit-user' model.userid %}">
-                                <i class="material-icons">edit</i></button>&nbsp;
-                            <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-round btn-lg delbtn" data-url="{% url 'del-user' model.userid %}">
-                                <i class="material-icons">close</i></button>
-                          </td>
-                        </tr>
-                        {% endfor %}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
+  <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-primary" >
+            <h4 class="card-title mt-0"> List Profile </h4>
+            <p class="card-category">List Details of Company Profile.</p>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover" id="dataTable">
+                <thead>
+                  <tr>
+                  <th class="highlight"><div class="bod"></div></th>
+                  <th style="font-weight:bold; font-size: 15px; color:#212121;">
+                    Feed
+                  </th>
+                  <th style="font-weight:bold; font-size: 15px; color:#212121;">
+                    Userid
+                  </th>
+                  <th style="font-weight:bold; font-size: 15px; color:#212121;">
+                    Customer
+                  </th>
+                  <th style="font-weight:bold; font-size: 15px; color:#212121;">
+                    Job Description
+                  </th>
+                  <th style="font-weight:bold; font-size: 15px; color:#212121;">
+                    Sales Representative
+                  </th>
+                  <th style="font-weight:bold; font-size: 15px; color:#212121;">
+                    Set Date
+                  </th>
+                  <th style="font-weight:bold; font-size: 15px; color:#212121;">
+                    Running Time
+                  </th>
+                  <th style="font-weight:bold; font-size: 15px; color:#212121;">
+                    Dual Date
+                  </th>
+                  <th style="font-weight:bold; font-size: 15px; color:#212121;">
+                    Edit / Delete
+                  </th>
+                  <th style="font-weight:bold; font-size: 15px; color:#212121;">
+                    View
+                  </th>
+                  <th style="font-weight:bold; font-size: 15px; color:#212121;">
+                    Print
+                  </th>
+                  <th class="highlight"><div class="bod"></div></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for model in model %}
+                  <tr>
+                    <td class="highlight"><div></div></td>
+                    <td class="td-actions text-left">
+                      <label class="switch switch-1" for="{{ model.userid }}">
+                          <input type="checkbox" name="{{ model.userid }}" id="{{ model.userid }}" data-url="/ui-tables/{{model.userid}}" value="{{ model.feed }}">
+                          <span class="slider round slider-1"></span>
+                      </label>
+                    </td>
+                    <td class="td-actions text-left"> {{ model.userid|safe}}  </td>
+                    <td class="td-actions text-left"> {{ model.company_name|safe}} </td>
+                    <td class="td-actions text-left"> {{ model.job_id|safe}} </td>
+                    <td class="td-actions text-left"> {{ model.approve_user|safe}} </td>
+                    <td class="td-actions text-left"> {{ model.end_date}} </td>
+                    <td class="td-actions text-left"></td>
+                    <td class="td-actions text-left"> {{ model.dual_date}}   ({{ model.schedule_plan|safe}})</td>
+                    <td style="display: none;">{{ model.vote_star|safe}}</td>
+                    <td style="display: none;"> {{ model.dual_date|safe}} </td>
+                    <td class="td-actions text-left">
+                      <button type="button" rel="tooltip" title="Edit" id="{{model.userid}}" class="btn btn-success btn-round btn-lg editbtn" data-url="{% url 'edit-user' model.userid %}">
+                          <em class="material-icons">edit</em></button>&nbsp;
+                      <button type="button" rel="tooltip" title="Remove" id="{{model.userid}}" class="btn btn-danger btn-round btn-lg delbtn" data-url="{% url 'del-user' model.userid %}">
+                          <em class="material-icons">close</em></button>
+                    </td>
+                    <td class="td-actions text-left">  
+                      <button type="button" rel="tooltip" title="QR Code" id="{{model.userid}}" class="btn btn-info btn-lg qrbtn" data-url="{% url 'qr-code' model.userid %}">
+                        <em class="material-icons">qr_code</em></button>
+                    </td>
+                    <td class="td-actions text-left">  
+                      <button type="button" rel="tooltip" title="Print"  id="{{model.userid}}" class="btn btn-seconary btn-lg printBtn" data-url="{% url 'qr-code' model.userid %}">
+                        <em class="material-icons">print</em></button>
+                        <img src='/static/media/qr_codes/qrcode-wwww.qrcode-air-quality/qr-code/{{model.userid}}.png' alt="" style="display: none;"/>
+                    </td>
+                    <td class="highlight"><div></div></td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
             </div>
-
-            <div class="modal fade" id="delpopup"  tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog"  role="document">
-                  <div class="modal-content">
-                      <div class="modal-header">
-                        <i class="material-icons" style="color: red;">notifications_active</i>&nbsp;&nbsp;
-                        <span class="modal-title"><b>DELETE</b></span>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                      </div>
-                      <div class="modal-body">
-                          <h5>Are you sure you want to delete <strong></strong>?</h5>
-                      </div>
-                      <form role="form" >
-                        <div class="modal-footer">
-                          <button type="button" data-dismiss="modal" class="btn btn-danger btn-sm" id="del" >comfirm</button>
-                        </div>
-                      </form>
-                  </div>
-              </div>
-            </div>
-
+          </div>
         </div>
+      </div>
+      <div class="modal fade" id="delpopup"  tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog"  role="document">
+            <div class="modal-content">
+                <div class="modal-header ">
+                  <em class="material-icons" style="color: red;">notifications_active</em>&nbsp;&nbsp;
+                  <span class="modal-title"><strong>DELETE</strong></span>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <h5>Are you sure you want to delete <strong></strong>?</h5>
+                </div>
+                <form role="form" >
+                  <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-danger btn-sm" id="del" >comfirm</button>
+                  </div>
+                </form>
+            </div>
+        </div>
+      </div>
+  </div>
 
   
 
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
+{{ room_name|json_script:"room-name" }}
 {% block javascripts %}
-
 <script src="/static/assets/js/core/styles.js"></script>
+<script>
+  
+$(document).ready(function() {
 
+  var table = document.getElementById("dataTable");
+
+  var x = setInterval(
+  function () {
+
+  for (var i = 1, row; row = table.rows[i]; i++) {
+
+    var feed = row.cells[1].getElementsByTagName('input')[0].checked;
+
+    var dualdate = row.cells[10];
+    countDownDate = new Date(dualdate.innerHTML.replace(/-/g, "/")).getTime();
+    var now = new Date().getTime();
+
+    var distance = countDownDate - now;
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    var setdate = row.cells[6];
+    countDate = new Date(setdate.innerHTML.replace(/-/g, "/")).getTime();
+
+    var cnt_out = row.cells[7];
+    if (new Date() < new Date(setdate.innerText)) {
+        cnt_out.innerHTML = "Upcoming.."
+    } else {
+        var dis_date = now - countDate;
+        var dd = Math.floor(dis_date / (1000 * 60 * 60 * 24));
+        var hh = Math.floor((dis_date % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var mm = Math.floor((dis_date % (1000 * 60 * 60)) / (1000 * 60));
+        var ss = Math.floor((dis_date % (1000 * 60)) / 1000);
+        cnt_out.innerHTML = (dd + "d  " + hh + "h  " + mm + "m  " + ss + "s ");
+    }
+
+    if (distance < 0) {
+      clearInterval(x);
+      cnt_out.innerHTML = "Timeout..";
+    } 
+
+    var vote = row.cells[9];
+    for (var j = 0, col; col = row.cells[j]; j++) {
+      if (feed) {
+        if (vote.innerText <= 3) {
+          col.style.color  = "red";
+        } else {
+          col.style.color  = "black";
+        }
+      }
+      
+      if (cnt_out.innerText == "Timeout..") {
+          row.cells[1].getElementsByTagName('input')[0].checked = false
+          col.style.color  = "#959596";
+      }
+
+    } 
+
+  }
+  }, 1000);
+
+  // const roomName  = JSON.parse(document.getElementById('room-name').textContent);
+
+  // var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+  // const realtimeSocket = new WebSocket(
+  //     ws_scheme + '://'
+  //     + window.location.host
+  //     + '/ws/realtime/'
+  //     + roomName
+  //     + '/'
+  // );
+
+  // realtimeSocket.onmessage = function(e) {
+  //     const currentObject = JSON.parse(e.data);
+  //     const table = document.getElementById("dataTable");
+  //     const feed_arr = [],
+  //           userid_arr = [], 
+  //           company_arr = [],
+  //           job_id_arr = [],
+  //           approve_arr = [],
+  //           set_date_arr = [],
+  //           schedule_arr = [],
+  //           dual_date_arr = [],
+  //           vote_arr = [];
+
+  //     for(var key in currentObject){
+  //       if(currentObject.hasOwnProperty(key)) {
+  //         feed_arr[key] = currentObject[key].feed;
+  //         userid_arr[key] = currentObject[key].userid;
+  //         company_arr[key] = currentObject[key].company_name;
+  //         job_id_arr[key] = currentObject[key].job_id;
+  //         // approve_arr[key] = currentObject[key].approve_user;
+  //         // set_date_arr[key] = currentObject[key].end_date;
+  //         // schedule_arr[key] = currentObject[key].schedule_plan;
+  //         // dual_date_arr[key] = currentObject[key].dual_date;
+  //         vote_arr[key] = currentObject[key].vote;
+  //       }
+  //     }
+
+  //     let k = 0;
+  //     for (var i = 1, row; row = table.rows[i]; i++) {
+  //       var time_now = moment().calendar();
+  //       var feed = row.cells[1].getElementsByTagName('input')[0].checked;
+  //       var userid = row.cells[2];
+  //       var company_name = row.cells[3];
+  //       var job_id = row.cells[4];
+  //       var vote = row.cells[9];
+  //       const idx = k++;
+
+  //       if (userid_arr.indexOf(parseInt(userid.innerText)) !== -1) {
+
+  //         if (feed != feed_arr[idx]) {
+  //           // row.cells[1].getElementsByTagName('input')[0].checked = feed_arr[idx]
+  //           // row.cells[1].getElementsByTagName('input')[0].disabled = feed_arr[idx]
+  //           var message = "<b>"+ time_now + "<br> See notiefications profile page: userid" + " ( "+ userid.innerText + " ) " + "was enabled / disabled !! </b>";
+  //           md.showNotification('bottom','left', message);
+
+  //         }
+  //         if (company_name != company_arr[idx]) {
+  //           company_name.innerText = company_arr[idx];
+  //         }
+  //         if (job_id != job_id_arr[idx]) {
+  //           job_id.innerText = job_id_arr[idx];
+  //         }
+  //         if (vote != vote_arr[idx]) {
+  //           vote.innerText = vote_arr[idx] 
+  //         }
+
+  //       } else {
+  //         var message = "<b>"+ time_now + "<br> see list profile page userid" + " ( " + userid.innerText + " ) " + "was created / deleted !! </b>";
+  //         md.showNotification('bottom','left', message);
+  //       }
+
+  //       for (var j = 0, col; col = row.cells[j]; j++) { 
+  //         if (vote.innerText <= 3) {
+  //             col.style.color  = "red";
+  //         } else {
+  //             col.style.color  = "black";
+  //         }
+  //       }
+  //     }
+  // };
+
+  // realtimeSocket.onclose = function(e) {
+  //     console.error('Chat socket closed unexpectedly');
+  // };
+
+  });
+
+</script>
 {% endblock javascripts %}

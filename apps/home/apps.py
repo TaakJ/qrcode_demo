@@ -7,7 +7,7 @@ class HomeConfig(AppConfig):
     name = 'apps.home'
     label = 'apps_home'
 
-    def ready(self):
-        if settings.SCHEDULER_DEFAULT:
-            from apps.home import backup
-            backup.start()
+    # def ready(self):
+    #     if settings.SCHEDULER_DEFAULT:
+    #         from apps.home import backup
+    #         backup.start()

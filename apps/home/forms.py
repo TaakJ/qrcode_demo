@@ -30,6 +30,34 @@ class company_form(forms.ModelForm):
             }
         ))
     
+    job_id = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control"
+            }
+        ))
+    
+    cost = forms.IntegerField(
+        widget=forms.NumberInput(
+            attrs={
+                "class": "form-control"
+            }
+        ))
+    
+    percent_cost = forms.IntegerField(
+        widget=forms.NumberInput(
+            attrs={
+                "class": "form-control"
+            }
+        ))
+    
+    discount = forms.IntegerField(
+        widget=forms.NumberInput(
+            attrs={
+                "class": "form-control"
+            }
+        ))
+    
     approve_user = forms.CharField(
         widget=forms.TextInput(
             attrs={
@@ -37,14 +65,28 @@ class company_form(forms.ModelForm):
             }
         ))
     
-    update_by = forms.DateField(
+    start_date = forms.DateField(
         widget=forms.DateInput(
             attrs={
                 "type": "date"
             }
         ))
     
-    schedule_plan = forms.DateField(
+    end_date = forms.DateField(
+        widget=forms.DateInput(
+            attrs={
+                "type": "date"
+            }
+        ))
+    
+    schedule_plan = forms.IntegerField(
+        widget=forms.NumberInput(
+            attrs={
+                "class": "form-control"
+            }
+        ))
+    
+    dual_date = forms.DateField(
         widget=forms.DateInput(
             attrs={
                 "type": "date"
@@ -52,14 +94,14 @@ class company_form(forms.ModelForm):
         ))
             
     vote_star = forms.IntegerField(
-        widget=forms.TextInput(
+        widget=forms.NumberInput(
             attrs={
                 "class": "form-control"
             }
         ))
     
     vote_percent = forms.IntegerField(
-        widget=forms.TextInput(
+        widget=forms.NumberInput(
             attrs={
                 "class": "form-control"
             }
@@ -102,7 +144,11 @@ class company_form(forms.ModelForm):
     
     class Meta:
         model = company_profile
-        fields= ('userid', 'company_name', 'address', 'telephone', 'approve_user', 'update_by', 'schedule_plan', 'vote_star', 'vote_percent', 'vote_status', 'district', 'sub_district', 'province', 'postal_code')
+        fields= ('userid', 'company_name', 'address', 'telephone',
+                'district', 'sub_district', 'province', 'postal_code',
+                'job_id', 'cost', 'percent_cost', 'discount',
+                'approve_user', 'start_date', 'end_date', 'schedule_plan', 'dual_date',
+                'avg_vote','vote_star', 'vote_percent', 'vote_status')
 
 class username_form(forms.ModelForm):    
     class Meta:
