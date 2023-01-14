@@ -25,8 +25,8 @@ CORE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-wj(iy$6b+tu81v0t!lk^(6w_@yojb8tf!=v_uwbky0ge8xk*l='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = False
+DEBUG = True
+# DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -150,27 +150,27 @@ MEDIA_ROOT = os.path.join(CORE_DIR, 'apps/static/media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels_redis.core.RedisChannelLayer",
-#         "CONFIG": {
-#             "hosts": [("127.0.0.1", 6379)],
-#             "capacity": 1500,
-#             "expiry": 10,
-#         },
-#     },
-# }
-
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+            "hosts": [("127.0.0.1", 6379)],
             "capacity": 1500,
             "expiry": 10,
         },
     },
 }
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+#             "capacity": 1500,
+#             "expiry": 10,
+#         },
+#     },
+# }
 
 # CELERY SETTING
 # CELERY_BROKER_URL = os.environ['REDIS_URL']
