@@ -12,7 +12,7 @@ from django.conf import settings
 urlpatterns = [
     
     # test
-    # re_path(r'test/$', views.test, name='test'),
+    re_path(r'test/$', views.test, name='test'),
     
     re_path(r'^$', views.indexiew.as_view(), name='index'),
     re_path(r'page-user/$', views.page_userview.as_view(), name='page-user'),
