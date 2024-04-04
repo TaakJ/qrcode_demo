@@ -145,10 +145,11 @@ USE_TZ = True
 
 # MEDIA_URL = '/media/'
 # MEDIA_ROOT = os.path.join(CORE_DIR, 'apps/static/media')
+
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR , 'apps/static')    
+STATIC_ROOT = os.path.join(CORE_DIR , 'apps/static')    
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR , 'apps/static/media')
+MEDIA_ROOT = os.path.join(CORE_DIR , 'apps/static/media')
 STATICFILES_DIRS = [
     # os.path.join(CORE_DIR, 'apps/static'),              
 ] 
@@ -156,29 +157,29 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels_redis.core.RedisChannelLayer",
-#         "CONFIG": {
-#             "hosts": [("127.0.0.1", 6379)],
-#             "capacity": 1500,
-#             "expiry": 10,
-#         },
-#     },
-# }
-
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+            "hosts": [("127.0.0.1", 6379)],
+            "capacity": 1500,
+            "expiry": 10,
         },
     },
 }
 
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+#         },
+#     },
+# }
+
 # CELERY SETTING
-CELERY_BROKER_URL = os.environ['REDIS_URL']
-# CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+# CELERY_BROKER_URL = os.environ['REDIS_URL']
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SELERLIZER = 'json'
