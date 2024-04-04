@@ -20,10 +20,10 @@ constantly==15.1.0
 cryptography==38.0.4
 daphne==3.0.2
 dj-database-url==0.5.0
-Django==4.2.11
-django-celery-beat==2.4.0
-django-celery-results==2.4.0
-django-timezone-field==5.0
+Django==3.2.25
+django-celery-beat==2.2.1
+django-celery-results==2.2.0
+django-timezone-field==4.2.3
 hiredis==2.0.0
 hyperlink==21.0.0
 idna==3.4
@@ -49,7 +49,6 @@ service-identity==21.1.0
 six==1.16.0
 sqlparse==0.4.3
 Twisted==22.10.0
-twisted-iocpsupport==1.0.2
 txaio==22.2.1
 typing_extensions==4.4.0
 tzdata==2022.6
