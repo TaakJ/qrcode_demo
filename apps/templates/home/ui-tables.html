@@ -208,7 +208,10 @@ input:checked + .slider-1:before {
                     <td class="td-actions text-left">  
                       <button type="button" rel="tooltip" title="Print"  id="{{model.userid}}" class="btn btn-round btn-lg printBtn" style="background-color: #212121;" data-url="{% url 'qr-code' model.userid %}">
                         <em class="material-icons">print</em></button>
+                        <!--
                         <img src='/static/media/qr_codes/qrcode-wwww.qrcode-air-quality/qr-code/{{model.userid}}.png' alt="" style="display: none;"/>
+                        -->
+                        <img src='/static/media/qr_codes/qrcode-iaq-tracking-app-01d83c6b548e.herokuapp.com/qr-code/{{model.userid}}.png' alt="" style="display: none;"/>
                     </td>
                     <td class="highlight"><div></div></td>
                   </tr>

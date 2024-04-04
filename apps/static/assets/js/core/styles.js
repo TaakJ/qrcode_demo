@@ -105,7 +105,7 @@ $(document).ready(function() {
                 win.document.write('<h2 style="font-family:monospace;"> Subject Area: ' + data.job_id +  '</h2>');
                 win.document.write('<img src=' + img + ' height=350, width=320 />');
                 win.document.write('<br>');
-                win.document.write('<h3 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;"> https://wwww.indoor-air-quality.co.th </h3>');
+                win.document.write('<h3 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;"> https://iaq-tracking-app-01d83c6b548e.herokuapp.com </h3>');
                 win.document.write('</center>');
                 win.print();
                 win.close();

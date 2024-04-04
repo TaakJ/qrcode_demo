@@ -139,7 +139,7 @@ class page_userview(View):
                 userid=qr_user,
                 defaults={
                     'userid':qr_user,
-                    'name':f'wwww.qrcode-air-quality/qr-code/{qr_user}'
+                    'name':f'iaq-tracking-app-01d83c6b548e.herokuapp.com/qr-code/{qr_user}'
                 }
             )
             if form.is_valid():
@@ -269,7 +269,7 @@ class page_copyview(View):
                 userid=qr_user,
                 defaults={
                     'userid':qr_user,
-                    'name':f'wwww.qrcode-air-quality/qr-code/{qr_user}'
+                    'name':f'iaq-tracking-app-01d83c6b548e.herokuapp.com/qr-code/{qr_user}'
                 }
             )
             
