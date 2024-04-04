@@ -145,11 +145,10 @@ USE_TZ = True
 
 # MEDIA_URL = '/media/'
 # MEDIA_ROOT = os.path.join(CORE_DIR, 'apps/static/media')
-
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(CORE_DIR , 'apps/static')    
+STATIC_ROOT = os.path.join(BASE_DIR , 'apps/static')    
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(CORE_DIR , 'apps/static/media')
+MEDIA_ROOT = os.path.join(BASE_DIR , 'apps/static/media')
 STATICFILES_DIRS = [
     # os.path.join(CORE_DIR, 'apps/static'),              
 ] 
@@ -173,8 +172,6 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
-            "capacity": 1500,
-            "expiry": 10,
         },
     },
 }
