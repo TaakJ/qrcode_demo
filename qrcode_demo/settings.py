@@ -26,9 +26,8 @@ SECRET_KEY = 'django-insecure-wj(iy$6b+tu81v0t!lk^(6w_@yojb8tf!=v_uwbky0ge8xk*l=
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
+CSRF_TRUSTED_ORIGINS = ['https://iaq-tracking-app-01d83c6b548e.herokuapp.com']
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 INSTALLED_APPS = [
