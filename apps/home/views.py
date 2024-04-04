@@ -21,9 +21,9 @@ from .tasks import push_message_job, calculate_rating
 # Create your views here.
 
 
-def test(request):
-    push_message_job.delay()
-    return HttpResponse("Done")
+# def test(request):
+#     push_message_job.delay()
+#     return HttpResponse("Done")
 
 # from channels.layers import get_channel_layer
 # from asgiref.sync import async_to_sync
@@ -64,6 +64,7 @@ class page_userview(View):
     form_class = company_form
     page = ""
     
+    @csrf_exempt
     def get(self, request, userid=None): 
         if userid is None:
             # add
@@ -208,6 +209,7 @@ class page_copyview(View):
     form_class = company_form
     page = ""
     
+    @csrf_exempt
     def get(self, request, userid=None):
         
         if userid is None:
@@ -282,6 +284,7 @@ class page_copyview(View):
 @method_decorator(login_required(login_url='/login/'), name='dispatch')
 class ui_tablesview(View):
     
+    @csrf_exempt
     def get(self, request):
         model = company_profile.objects.all().order_by('userid')
         count = company_notice.objects.filter(expired=True).count()
@@ -338,6 +341,7 @@ class ui_tablesview(View):
 
 @method_decorator(login_required(login_url='/login/'), name='dispatch')
 class ui_noticview(View):
+    @csrf_exempt
     def get(self, request, userid=None):
         model = company_notice.objects.all().order_by('userid')
         count = company_notice.objects.filter(expired=True).count()
@@ -419,7 +423,7 @@ def delete_userview(request, userid=None):
 
 # @method_decorator(login_required(login_url='/login/'), name='dispatch')
 class qrcodeview(View):
-    
+    @csrf_exempt
     def get(self, request, userid=None):
         count = company_notice.objects.filter(expired=True).count()
         
