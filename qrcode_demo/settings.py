@@ -76,7 +76,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'qrcode_demo.wsgi.application'
+# WSGI_APPLICATION = 'qrcode_demo.wsgi.application'
 ASGI_APPLICATION = 'qrcode_demo.asgi.application' 
 
 # Database
@@ -157,8 +157,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #         "BACKEND": "channels_redis.core.RedisChannelLayer",
 #         "CONFIG": {
 #             "hosts": [("127.0.0.1", 6379)],
-#             "capacity": 1500,
-#             "expiry": 10,
 #         },
 #     },
 # }
