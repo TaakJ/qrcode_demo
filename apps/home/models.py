@@ -155,7 +155,7 @@ def notification_handler(sender, instance, created, **kwargs):
         
         schedule, created = CrontabSchedule.objects.get_or_create(
                                                             hour = '*',
-                                                            minute = '*/5',
+                                                            minute = '*/1',
                                                             day_of_month = '*', 
                                                             month_of_year = '*', 
                                                             timezone = "Asia/Bangkok"
