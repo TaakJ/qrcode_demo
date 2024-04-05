@@ -119,13 +119,12 @@ def broadcast_notification(self, data):
 @shared_task(bind=True)
 def push_message_job(self):
     
-    # date_now = datetime.date.today()
-    # model_profile = company_profile.objects.filter(end_date__lte=date_now, feed=True).values()
-
-    date_now = datetime.date.today() + datetime.timedelta(days=1)
-    model_profile = company_profile.objects.filter(
-        end_date__lte=date_now, feed=True
-    ).values()
+    # date_now = datetime.date.today() + datetime.timedelta(days=1)
+    # model_profile = company_profile.objects.filter(
+    #     end_date__lte=date_now, feed=True
+    # ).values()
+    date_now = datetime.date.today()
+    model_profile = company_profile.objects.filter(end_date__lte=date_now, feed=True).values()
     
     for instance in model_profile:
         userid = instance["userid"]
