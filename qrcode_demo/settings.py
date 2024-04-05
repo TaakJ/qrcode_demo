@@ -25,7 +25,7 @@ CORE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = "django-insecure-wj(iy$6b+tu81v0t!lk^(6w_@yojb8tf!=v_uwbky0ge8xk*l="
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 CSRF_TRUSTED_ORIGINS = ["https://iaq-trackking-app-df045633f579.herokuapp.com"]
 ALLOWED_HOSTS = ["*"]
 
@@ -157,8 +157,8 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": [os.environ.get("REDIS_URL", "redis://localhost:6379")],
-            "capacity": 1500,
-            "expiry": 10,
+            # "capacity": 1500,
+            # "expiry": 10,
         },
     },
 }
