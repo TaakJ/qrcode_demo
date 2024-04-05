@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -78,7 +79,6 @@ TEMPLATES = [
 
 # WSGI_APPLICATION = 'qrcode_demo.wsgi.application'
 ASGI_APPLICATION = 'qrcode_demo.asgi.application' 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
