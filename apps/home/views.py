@@ -17,26 +17,25 @@ from django.utils.decorators import method_decorator
 
 from django_celery_beat.models import PeriodicTask, CrontabSchedule, IntervalSchedule
 from .tasks import push_message_job, calculate_rating
-
 # Create your views here.
 
 
-def test(request):
-    push_message_job.delay()
-    return HttpResponse("Done")
-
-# from channels.layers import get_channel_layer
-# from asgiref.sync import async_to_sync
 # def test(request):
-#     channel_layer = get_channel_layer()
-#     async_to_sync(channel_layer.group_send)(
-#         "realtime_broadcast",
-#         {
-#             'type': 'send_realtime',
-#             'message': json.dumps("realtime")
-#         }
-#     )
+#     push_message_job.delay()
 #     return HttpResponse("Done")
+
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+def test(request):
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        "realtime_broadcast",
+        {
+            'type': 'send_realtime',
+            'message': json.dumps("realtime")
+        }
+    )
+    return HttpResponse("Done")
 
 @method_decorator(login_required(login_url='/login/'), name='dispatch')
 class indexiew(View):

@@ -170,7 +170,7 @@ def push_message_job(self):
                 obj_cn.vote_percent = vote_percent
                 obj_cn.vote_status = vote_status
                 obj_cn.save()
-                text = 'update'
+                # text = 'update'
             else:
                 BroadcastNotification.objects.update_or_create(
                             userid = userid,
@@ -180,6 +180,5 @@ def push_message_job(self):
                                 'broadcast_on': datetime.datetime.now()
                                 }
                             )
-                text = 'create'
-                
-    return f'Completed_{text}'
+                # text = 'create'
+    return 'Done'
