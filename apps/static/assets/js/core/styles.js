@@ -96,19 +96,9 @@ $(document).ready(function() {
             type:'post',
             dataType: 'json',
             success: function(data) {
-                var img = document.querySelector('img').src;
+                var img = document.querySelector('img').src + url + '.png';
                 var win = window.open('');
-                win.document.write('<center>');
-                win.document.write('<br>');
-                win.document.write('<br>');
-                win.document.write('<h2 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;">' + data.company_name +  '</h2>');
-                win.document.write('<h2 style="font-family:monospace;"> Subject Area: ' + data.job_id +  '</h2>');
-                win.document.write('<img src=' + img + ' height=350, width=320 />');
-                win.document.write('<br>');
-                win.document.write('<h3 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;"> https://iaq-trackking-app-df045633f579.herokuapp.com </h3>');
-                win.document.write('</center>');
-                win.print();
-                win.close();
+                win.document.write('<center><br><br><h2 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;">"'+  data.company_name +'"</h2><h2 style="font-family:monospace;"> Subject Area: "' + data.job_id +  '"</h2><img src="' + img + '"height=200, width=220; onload="window.print();window.close()" /><br><h3 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;"> https://iaq-trackking-app-df045633f579.herokuapp.com </h3></center>');
                 win.focus();
             },
             error: function(error) {
