@@ -54,6 +54,7 @@ class page_userview(View):
     form_class = company_form
     page = ""
 
+    @csrf_exempt
     def get(self, request, userid=None):
         if userid is None:
             # add
@@ -222,6 +223,7 @@ class page_copyview(View):
     form_class = company_form
     page = ""
 
+    @csrf_exempt
     def get(self, request, userid=None):
 
         if userid is None:
@@ -307,6 +309,7 @@ class page_copyview(View):
 @method_decorator(login_required(login_url="/login/"), name="dispatch")
 class ui_tablesview(View):
 
+    @csrf_exempt
     def get(self, request):
         model = company_profile.objects.all().order_by("userid")
         qrcode = company_qrcode.objects.all()
@@ -449,6 +452,7 @@ def delete_userview(request, userid=None):
 
 class qrcodeview(View):
 
+    @csrf_exempt
     def get(self, request, userid=None):
         count = company_notice.objects.filter(expired=True).count()
 
