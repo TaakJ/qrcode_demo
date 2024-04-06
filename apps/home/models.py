@@ -114,7 +114,7 @@ class company_qrcode(models.Model):
         qr.add_data(self.name)
         qr.make(fit=True)
         qrcode_img = qr.make_image()  
-        cwd =  os.path.join(os.getcwd(), 'apps/static/media/qr_codes')
+        cwd =  os.path.join(os.getcwd(), 'apps/static/qr_codes')
         print(cwd)
         if os.path.exists(f'{cwd}/qrcode-{self.name}.png'):
             os.remove(f'{cwd}/qrcode-{self.name}.png')
@@ -125,7 +125,6 @@ class company_qrcode(models.Model):
         _buffer = BytesIO()
         qrcode_img.save(_buffer,'PNG')
         self.qr_code.save(fname, File(_buffer), save=False)
-        print(self.qr_code)
         super().save(*args, **kwargs)
             
     class Meta:
