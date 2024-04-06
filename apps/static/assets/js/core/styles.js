@@ -97,9 +97,18 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(data) {
                 var img = document.querySelector('img').src + url + '.png';
+                var embed = document.querySelector('embed').src +  data.qr_type + '.png';
                 var win = window.open('');
-                win.document.write('<center><br><br><h2 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;">"'+  data.company_name +'"</h2><h2 style="font-family:monospace;"> Subject Area: "' + data.job_id +  '"</h2><img src="' + img + '"height=200, width=220; onload="window.print();window.close()" /><br><h3 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;"> https://iaq-trackking-app-df045633f579.herokuapp.com </h3></center>');
-                win.focus();
+                if (data.qr_type == 1) {
+                    win.document.write('<center><br><br><h2 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;">"'+  data.company_name +'"</h2><h2 style="font-family:monospace;"> Subject Area: "' + data.job_id +  '"</h2><img src="'+ embed +'" /><div style="position: absolute; top:290px; left: 261px;"><img src="' + img + '"height=220, width=220; onload="window.print();window.close()"/></div><br><h3 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;"> https://iaq-trackking-app-df045633f579.herokuapp.com </h3></center>');
+                    win.focus();
+                } else if (data.qr_type == 2) {
+                    win.document.write('<center><br><br><h2 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;">"'+  data.company_name +'"</h2><h2 style="font-family:monospace;"> Subject Area: "' + data.job_id +  '"</h2><img src="'+ embed +'" /><div style="position: absolute; top:264px; left: 261px;"><img src="' + img + '"height=220, width=220; onload="window.print();window.close()"/></div><br><h3 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;"> https://iaq-trackking-app-df045633f579.herokuapp.com </h3></center>');
+                    win.focus();
+                } else {
+                    win.document.write('<center><br><br><h2 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;">"'+  data.company_name +'"</h2><h2 style="font-family:monospace;"> Subject Area: "' + data.job_id +  '"</h2><img src="'+ embed +'" /><div style="position: absolute; top:295px; right: 261px;"><img src="' + img + '"height=220, width=220; onload="window.print();window.close()"/></div><br><h3 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;"> https://iaq-trackking-app-df045633f579.herokuapp.com </h3></center>');
+                    win.focus();
+                }
             },
             error: function(error) {
                 console.log(error);
