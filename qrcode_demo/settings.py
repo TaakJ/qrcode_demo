@@ -143,22 +143,22 @@ MEDIA_ROOT = os.path.join(CORE_DIR, "apps/static/media")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels_redis.core.RedisChannelLayer",
-#         "CONFIG": {
-#             "hosts": [("127.0.0.1", 6379)],
-#         },
-#     },
-# }
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": [os.environ.get("REDIS_URL", "redis://localhost:6379")],
-            "capacity": 1500,
-            "expiry": 10,
+            # "capacity": 1500,
+            # "expiry": 10,
         },
     },
 }
