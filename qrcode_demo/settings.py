@@ -140,12 +140,6 @@ STATICFILES_DIRS = (os.path.join(CORE_DIR, "apps/static"),)
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # CLOUDUNARY_STORAGE SETTING
-# cloudinary.config( 
-#     cloud_name = "dzwffbeuq", 
-#     api_key = "126965395949196", 
-#     api_secret = "1gjo14Diw6W-n1-Z-walFn4Apnk" 
-# )
-
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dzwffbeuq',
     'API_KEY': '126965395949196',
