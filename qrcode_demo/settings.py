@@ -29,7 +29,6 @@ DEBUG = False
 CSRF_TRUSTED_ORIGINS = ["https://iaq-trackking-app-df045633f579.herokuapp.com"]
 ALLOWED_HOSTS = ["*"]
 
-
 # Application definition
 INSTALLED_APPS = [
     "daphne",
@@ -122,35 +121,28 @@ LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Asia/Bangkok"
 USE_I18N = True
 USE_TZ = True
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.0/howto/static-files/
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 STATIC_ROOT = os.path.join(CORE_DIR, "staticfiles")
 STATIC_URL = "/static/"
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = (os.path.join(CORE_DIR, "apps/static"),)
-
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
-
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(CORE_DIR, "apps/static/media")
+MEDIA_ROOT = os.path.join(CORE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels_redis.core.RedisChannelLayer",
-#         "CONFIG": {
-#             "hosts": [("127.0.0.1", 6379)],
-#         },
-#     },
-# }
+# CHANNEL SETTING
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 CHANNEL_LAYERS = {
     "default": {
