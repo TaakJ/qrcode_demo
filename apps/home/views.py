@@ -31,21 +31,6 @@ def test(request):
     push_message_job.delay()
     return HttpResponse("Done")
 
-
-# from channels.layers import get_channel_layer
-# from asgiref.sync import async_to_sync
-# def test(request):
-#     channel_layer = get_channel_layer()
-#     async_to_sync(channel_layer.group_send)(
-#         "realtime_broadcast",
-#         {
-#             'type': 'send_realtime',
-#             'message': json.dumps("realtime")
-#         }
-#     )
-#     return HttpResponse("Done")
-
-
 @method_decorator(login_required(login_url="/login/"), name="dispatch")
 class indexiew(View):
 
@@ -324,6 +309,7 @@ class ui_tablesview(View):
 
     def get(self, request):
         model = company_profile.objects.all().order_by("userid")
+        qrcode = company_qrcode.objects.all()
         count = company_notice.objects.filter(expired=True).count()
 
         try:
@@ -331,6 +317,7 @@ class ui_tablesview(View):
                 "segment": "ui-tables",
                 "room_name": "broadcast",
                 "model": model,
+                "qrcode": qrcode,
                 "count": count,
             }
 
@@ -459,8 +446,6 @@ def delete_userview(request, userid=None):
 
     return JsonResponse(context)
 
-
-# @method_decorator(login_required(login_url='/login/'), name='dispatch')
 class qrcodeview(View):
 
     def get(self, request, userid=None):
@@ -498,14 +483,11 @@ class qrcodeview(View):
     def post(self, request, userid=None):
         model = get_object_or_404(company_profile, userid=userid)
         qrcode = get_object_or_404(company_qrcode, userid=userid)
-
-        img_qrcode = str(qrcode.qr_code)
-
         data = {
             "company_name": model.company_name,
             "job_id": model.job_id,
             "qr_type": model.qr_type,
-            # 'img_qrcode': img_qrcode
+            "qrcode": qrcode.qr_code.url
         }
 
         return JsonResponse(data)

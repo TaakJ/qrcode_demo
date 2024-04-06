@@ -10,13 +10,16 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+import cloudinary_storage
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 CORE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -42,6 +45,8 @@ INSTALLED_APPS = [
     "apps.home",
     "django_celery_results",
     "django_celery_beat",
+    "cloudinary",
+    "cloudinary_storage",
 ]
 
 MIDDLEWARE = [
@@ -76,7 +81,7 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'qrcode_demo.wsgi.application'
+WSGI_APPLICATION = "qrcode_demo.wsgi.application"
 ASGI_APPLICATION = "qrcode_demo.asgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
@@ -126,23 +131,38 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(CORE_DIR, "staticfiles")
 STATIC_URL = "/static/"
 # Extra places for collectstatic to find static files.
-STATICFILES_DIRS = (os.path.join(CORE_DIR, "apps/static"),os.path.join(CORE_DIR, "apps/static/media"))
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(CORE_DIR, "apps/static/media")
+STATICFILES_DIRS = (os.path.join(CORE_DIR, "apps/static"),)
+# # Default primary key field type
+# # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
+# MEDIA_URL = "/media/"
+# MEDIA_ROOT = os.path.join(CORE_DIR, "apps/static/media")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# CHANNEL SETTING
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
-        },
-    },
+# CLOUDUNARY_STORAGE SETTING
+# cloudinary.config( 
+#     cloud_name = "dzwffbeuq", 
+#     api_key = "126965395949196", 
+#     api_secret = "1gjo14Diw6W-n1-Z-walFn4Apnk" 
+# )
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dzwffbeuq',
+    'API_KEY': '126965395949196',
+    'API_SECRET': '1gjo14Diw6W-n1-Z-walFn4Apnk'
 }
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+
+# CHANNEL SETTING
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [("127.0.0.1", 6379)],
+#         },
+#     },
+# }
 
 CHANNEL_LAYERS = {
     "default": {
@@ -157,7 +177,7 @@ CHANNEL_LAYERS = {
 
 # CELERY SETTING
 CELERY_BROKER_URL = os.environ["REDIS_URL"]
-# CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+# CELERY_BROKER_URL = "redis://127.0.0.1:6379"
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_SELERLIZER = "json"
