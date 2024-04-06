@@ -96,8 +96,7 @@ $(document).ready(function() {
             type:'post',
             dataType: 'json',
             success: function(data) {
-            
-                var img = document.querySelector('img').src +  data.qr_type + '.png'
+                var img = 'https://res.cloudinary.com/dzwffbeuq/image/upload/v1/image/' + data.qr_type
                 var win = window.open('');
                 if (data.qr_type == 1) {
                     var top = 290;
