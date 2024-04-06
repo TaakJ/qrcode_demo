@@ -156,13 +156,13 @@ input:checked + .slider-1:before {
                     Sales Representative
                   </th>
                   <th style="font-weight:bold; font-size: 15px; color:#212121;">
-                    Set Date
+                    Start Date
                   </th>
                   <th style="font-weight:bold; font-size: 15px; color:#212121;">
                     Running Time
                   </th>
                   <th style="font-weight:bold; font-size: 15px; color:#212121;">
-                    Dual Date
+                    End Date
                   </th>
                   <th style="font-weight:bold; font-size: 15px; color:#212121;">
                     Edit / Delete
@@ -208,7 +208,10 @@ input:checked + .slider-1:before {
                     <td class="td-actions text-left">  
                       <button type="button" rel="tooltip" title="Print"  id="{{model.userid}}" class="btn btn-round btn-lg printBtn" style="background-color: #212121;" data-url="{% url 'qr-code' model.userid %}">
                         <em class="material-icons">print</em></button>
-                        <img src='/static/media/qr_codes/qrcode-wwww.qrcode-air-quality/qr-code/{{model.userid}}.png' alt="" style="display: none;"/>
+                        <!--
+                        <img src='/static/media/qr_codes/qrcode-iaq-trackking-app-df045633f579.herokuapp.com/qr-code/{{model.userid}}.png' alt="" style="display: none;"/>
+                        <img src="/static/assets/img/bg_qr/" alt=""  style="display: none;"/>
+                        -->
                     </td>
                     <td class="highlight"><div></div></td>
                   </tr>

@@ -96,19 +96,19 @@ $(document).ready(function() {
             type:'post',
             dataType: 'json',
             success: function(data) {
-                var img = document.querySelector('img').src;
+                var img = 'https://res.cloudinary.com/dzwffbeuq/image/upload/v1/image/' + data.qr_type
                 var win = window.open('');
-                win.document.write('<center>');
-                win.document.write('<br>');
-                win.document.write('<br>');
-                win.document.write('<h2 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;">' + data.company_name +  '</h2>');
-                win.document.write('<h2 style="font-family:monospace;"> Subject Area: ' + data.job_id +  '</h2>');
-                win.document.write('<img src=' + img + ' height=350, width=320 />');
-                win.document.write('<br>');
-                win.document.write('<h3 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;"> https://wwww.indoor-air-quality.co.th </h3>');
-                win.document.write('</center>');
-                win.print();
-                win.close();
+                if (data.qr_type == 1) {
+                    var top = 290;
+                } else if (data.qr_type == 2) {
+                    var top = 264;
+                } else {
+                    var top = 295;
+                }
+                win.document.write('<center><br><br><h2 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;">"'
+                +  data.company_name +'"</h2><h2 style="font-family:monospace;"> Subject Area: "' 
+                + data.job_id +  '"</h2><img src="'+ img +'" /><div style="position: absolute; top:'+ top + 'px; left: 261px;"><img src="' 
+                + data.qrcode + '"onload="window.print();window.close()"/></div><br><h3 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;"> https://iaq-trackking-app-df045633f579.herokuapp.com </h3></center>');
                 win.focus();
             },
             error: function(error) {

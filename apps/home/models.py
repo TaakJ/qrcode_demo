@@ -1,15 +1,12 @@
 from django.db import models
 import qrcode
-import os
 from io import BytesIO
 from django.core.files import File
-from PIL import Image, ImageDraw
-
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django_celery_beat.models import MINUTES, PeriodicTask, CrontabSchedule
+from django_celery_beat.models import PeriodicTask, CrontabSchedule
 import json
-
+import base64
 
 # Create your models here.
 
@@ -110,24 +107,22 @@ class company_qrcode(models.Model):
         return str(self.name)
     
     def save(self, *args, **kwargs):
-        qr = qrcode.QRCode(box_size=10, border=1)
+        qr = qrcode.QRCode(box_size=6, border=2)
         qr.add_data(self.name)
         qr.make(fit=True)
-        qrcode_img = qr.make_image()    
-        cwd =  os.path.join(os.getcwd(), 'apps/static/media/qr_codes')
+        qrcode_img = qr.make_image(fill_color="black", back_color="white")
         
-        if os.path.exists(f'{cwd}/qrcode-{self.name}.png'):
-            os.remove(f'{cwd}/qrcode-{self.name}.png')
-            
-        fname = f'qrcode-{self.name}.png' 
+        fname = f"qrcode-{self.userid}.png"
         _buffer = BytesIO()
         qrcode_img.save(_buffer,'PNG')
+        _buffer.seek(0)
         self.qr_code.save(fname, File(_buffer), save=False)
         super().save(*args, **kwargs)
         
     class Meta:
         db_table = "company_qrcode"
-        
+
+
 class username(models.Model):
     name = models.CharField(max_length = 150)
     
@@ -151,11 +146,11 @@ class BroadcastNotification(models.Model):
 def notification_handler(sender, instance, created, **kwargs):
     # call group_send function directly to send notificatoions or you can create a dynamic task in celery beat
     if created:
-        print(str(instance.broadcast_on.hour) + " " + str(instance.broadcast_on.minute))
+        # print(str(instance.broadcast_on.hour) + " " + str(instance.broadcast_on.minute))
         
         schedule, created = CrontabSchedule.objects.get_or_create(
                                                             hour = '*',
-                                                            minute = '*/5',
+                                                            minute = '*/2',
                                                             day_of_month = '*', 
                                                             month_of_year = '*', 
                                                             timezone = "Asia/Bangkok"
