@@ -110,20 +110,28 @@ class company_qrcode(models.Model):
         return str(self.name)
     
     def save(self, *args, **kwargs):
-        qr = qrcode.QRCode(box_size=10, border=1)
-        qr.add_data(self.name)
-        qr.make(fit=True)
-        qrcode_img = qr.make_image()    
-        cwd =  os.path.join(os.getcwd(), 'apps/static/media/qr_codes')
-        
-        if os.path.exists(f'{cwd}/qrcode-{self.name}.png'):
-            os.remove(f'{cwd}/qrcode-{self.name}.png')
+        try:
+            qr = qrcode.QRCode(box_size=10, border=1)
+            qr.add_data(self.name)
+            qr.make(fit=True)
+            qrcode_img = qr.make_image()  
+            print(qrcode_img)  
+            print(os.getcwd())
+            cwd =  os.path.join(os.getcwd(), 'apps/static/media/qr_codes')
             
-        fname = f'qrcode-{self.name}.png' 
-        _buffer = BytesIO()
-        qrcode_img.save(_buffer,'PNG')
-        self.qr_code.save(fname, File(_buffer), save=False)
-        super().save(*args, **kwargs)
+            print(self.name)
+            if os.path.exists(f'{cwd}/qrcode-{self.name}.png'):
+                os.remove(f'{cwd}/qrcode-{self.name}.png')
+                
+            fname = f'qrcode-{self.name}.png' 
+            print(fname)
+            _buffer = BytesIO()
+            qrcode_img.save(_buffer,'PNG')
+            self.qr_code.save(fname, File(_buffer), save=False)
+            super().save(*args, **kwargs)
+            
+        except Exception as err:
+            print(err)
         
     class Meta:
         db_table = "company_qrcode"
