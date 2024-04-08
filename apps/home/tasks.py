@@ -39,7 +39,6 @@ def calculate_rating(vote_star):
 def broadcast_realtime(self):
     try:
         qs = company_profile.objects.all()
-        # [{'userid': qs_json.userid, 'comoany_name': qs_json.company_name} for qs_json in qs]
         message = json.dumps(
             [
                 {
@@ -72,9 +71,6 @@ def broadcast_realtime(self):
             state="FAILURE",
             meta={
                 "exe": "Failed"
-                # 'exc_type': type(ex).__name__,
-                # 'exc_message': traceback.format_exc().split('\n')
-                # 'custom': '...'
             },
         )
         raise Ignore()
@@ -190,4 +186,4 @@ def push_message_job(self):
                         "broadcast_on": datetime.datetime.now(),
                     },
                 )
-    return "completed"
+    return "Done"

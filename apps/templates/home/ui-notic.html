@@ -153,7 +153,7 @@ input:checked + .slider-1:before {
                         <thead>
                             <th class="highlight"><div class="bod"></div></th>
                             <th style="font-weight:bold; font-size: 15px; color:#212121;">
-                                Expired
+                                Feed
                             </th>
                             <th style="font-weight:bold; font-size: 15px; color:#212121;">
                                 Userid
@@ -165,10 +165,10 @@ input:checked + .slider-1:before {
                                 Job Description
                             </th>
                             <th style="font-weight:bold; font-size: 15px; color:#212121;">
-                                Dual Date
+                                End Date
                             </th>
                             <th style="font-weight:bold; font-size: 15px; color:#212121;">
-                                Countdown
+                                Timing
                             </th>
                             <th style="font-weight:bold; font-size: 15px; color:#212121;">
                                 Vote Star
@@ -198,7 +198,7 @@ input:checked + .slider-1:before {
                                 <td><span></span></td>
                                 <td>{{ model.vote_star|safe}}</td>
                                 <td> {{ model.vote_status|safe }} </td>
-                                <td> {{ model.updated }} </td>
+                                <td> {{ model.updated|safe}} </td>
                                 <td><div class="bod"></div></td>
                             </tr>
                             {% endfor %}
