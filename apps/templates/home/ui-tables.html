@@ -195,6 +195,7 @@ input:checked + .slider-1:before {
                     <td class="td-actions text-left"></td>
                     <td style="display: none;">{{ model.vote_star|safe}}</td>
                     <td style="display: none;"> {{ model.end_date|safe}} </td>
+                    <td class="td-actions text-left"> {{model.start_date}} </td>
                     <td class="td-actions text-left">
                       <button type="button" rel="tooltip" title="Edit" id="{{model.userid}}" class="btn btn-success btn-round btn-lg editbtn" data-url="{% url 'edit-user' model.userid %}">
                           <em class="material-icons">edit</em></button>&nbsp;
@@ -271,7 +272,8 @@ $(document).ready(function() {
     var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    var setdate = row.cells[6];
+    var setdate = row.cells[11];
+    
     countDate = new Date(setdate.innerHTML.replace(/-/g, "/")).getTime();
 
     var cnt_out = row.cells[8];

@@ -143,6 +143,7 @@ class page_userview(View):
             if (
                 (record.vote_star == int(form_data_dict["vote_star"]))
                 and (record.schedule_plan == int(form_data_dict["schedule_plan"]))
+                and (record.end_date == form_data_dict["start_date"])
             ):
                 vote_star = record.vote_star
                 vote_percent = record.vote_percent
@@ -186,7 +187,6 @@ class page_userview(View):
                     or (
                         (notices.schedule_plan != record.schedule_plan)
                         and (notices.vote_star != record.vote_star)
-                        and (notices.end_date != record.end_date)
                     )
                     or (record.vote_star > 3)
                 ):

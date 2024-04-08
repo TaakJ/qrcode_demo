@@ -115,7 +115,7 @@ def push_message_job(self):
     # date_now = datetime.date.today() + datetime.timedelta(days=1)
     date_now = datetime.date.today()
     model_profile = company_profile.objects.filter(
-        end_date__lte=date_now, feed=True
+        start_date__lte=date_now, feed=True
     ).values() 
     
     for instance in model_profile:
@@ -137,7 +137,7 @@ def push_message_job(self):
             vote_percent = 0
             vote_star = 0
             _, vote_status = calculate_rating(vote_star)
-            
+        
         # for company_profile
         obj_cp = get_object_or_404(company_profile, userid=userid)
         obj_cp.vote_star = vote_star
@@ -163,6 +163,7 @@ def push_message_job(self):
             )
 
             if not created_cn:
+                # new add broadcast
                 if vote_star != obj_cn.vote_star:
                     obj_cn.expired = True
                     name = f"broadcast-notification-{str(userid)}"
@@ -178,6 +179,7 @@ def push_message_job(self):
                 obj_cn.vote_status = vote_status
                 obj_cn.save()
             else:
+                # update broadcast
                 BroadcastNotification.objects.update_or_create(
                     userid=userid,
                     defaults={
