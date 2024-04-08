@@ -4,7 +4,6 @@ from django import template
 
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template import loader
-from django.urls import reverse
 from django.shortcuts import get_object_or_404
 
 from apps.home.models import (
@@ -105,7 +104,7 @@ class page_userview(View):
         form_data_dict = {}
         form_data_list = json.loads(self.request.POST.get("request"))
         form_data_dict = {field["name"]: field["value"] for field in form_data_list}
-        # add
+        # add new data
         if userid is None:
             try:
                 form_data_dict["userid"] = (
@@ -122,14 +121,14 @@ class page_userview(View):
             form_data_dict["percent_cost"] = int(form_data_dict["percent_cost"])
             form_data_dict["discount"] = int(form_data_dict["discount"])
             form_data_dict["schedule_plan"] = int(form_data_dict["schedule_plan"])
-            form_data_dict["dual_date"] = datetime.datetime.strptime(
-                form_data_dict["end_date"], "%Y-%m-%d"
+            form_data_dict["end_date"] = datetime.datetime.strptime(
+                form_data_dict["start_date"], "%Y-%m-%d"
             ) + datetime.timedelta(days=int(form_data_dict["schedule_plan"]))
             form_data_dict["avg_vote"] = vote_percent / int(
                 form_data_dict["schedule_plan"]
             )
             form = self.form_class(form_data_dict)
-
+            
             qr_user = form_data_dict["userid"]
             company_qrcode.objects.update_or_create(
                 userid=qr_user,
@@ -142,13 +141,11 @@ class page_userview(View):
                 form.save()
 
         else:
-            # update
+            # update data
             record = get_object_or_404(company_profile, userid=userid)
-
             if (
                 (record.vote_star == int(form_data_dict["vote_star"]))
                 and (record.schedule_plan == int(form_data_dict["schedule_plan"]))
-                and (record.dual_date == form_data_dict["end_date"])
             ):
                 vote_star = record.vote_star
                 vote_percent = record.vote_percent
@@ -174,10 +171,7 @@ class page_userview(View):
             record.start_date = datetime.datetime.strptime(
                 form_data_dict["start_date"], "%Y-%m-%d"
             )
-            record.end_date = datetime.datetime.strptime(
-                form_data_dict["end_date"], "%Y-%m-%d"
-            )
-            record.dual_date = record.end_date + datetime.timedelta(
+            record.end_date = record.start_date + datetime.timedelta(
                 days=int(form_data_dict["schedule_plan"])
             )
             record.schedule_plan = int(form_data_dict["schedule_plan"])
@@ -209,7 +203,7 @@ class page_userview(View):
                 else:
                     notices.company_name = record.company_name
                     notices.job_id = record.job_id
-                    notices.dual_date = record.dual_date
+                    notices.end_date = record.end_date
                     notices.schedule_plan = record.schedule_plan
                     notices.save()
 
@@ -257,7 +251,7 @@ class page_copyview(View):
         form_data_dict = {}
         form_data_list = json.loads(self.request.POST.get("request"))
         form_data_dict = {field["name"]: field["value"] for field in form_data_list}
-
+        
         if userid is None:
             try:
                 form_data_dict["userid"] = (
@@ -276,13 +270,10 @@ class page_copyview(View):
             form_data_dict["percent_cost"] = int(form_data_dict["percent_cost"])
             form_data_dict["discount"] = int(form_data_dict["discount"])
             form_data_dict["schedule_plan"] = int(form_data_dict["schedule_plan"])
-            form_data_dict["start_date"] = datetime.date.today().strftime("%Y-%m-%d")
             form_data_dict["end_date"] = datetime.datetime.strptime(
                 form_data_dict["start_date"], "%Y-%m-%d"
-            ) + datetime.timedelta(days=1)
-            form_data_dict["dual_date"] = form_data_dict[
-                "end_date"
-            ] + datetime.timedelta(days=int(form_data_dict["schedule_plan"]))
+            ) + datetime.timedelta(days=int(form_data_dict["schedule_plan"]))
+            
             form_data_dict["avg_vote"] = vote_percent / int(
                 form_data_dict["schedule_plan"]
             )

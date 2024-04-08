@@ -218,16 +218,10 @@ text-align: center;
                         </select>
                     </div>
                     </div>
-                    <div class="col-md-3 align-self-end" style="display: none;">
-                    <div class="form-group">
-                        <label class="bmd-label-floating"  style="font-size: 12px;">Register Date</label>
-                        <input type="date" class="form-control" name="start_date" id="start_date"  required>
-                    </div>
-                    </div>
                     <div class="col-md-3 align-self-end">
                     <div class="form-group">
                         <label class="bmd-label-floating"  style="font-size: 12px;">Start Date</label>
-                        <input type="date" class="form-control" name="end_date" id="end_date"  required>
+                        <input type="date" class="form-control" name="start_date" id="start_date"  required>
                     </div>
                     </div>
                     <div class="col-md-1 align-self-end">
@@ -274,21 +268,11 @@ text-align: center;
 <script src="/static/assets/js/core/styles.js"></script>
 <script>
 
- // start date
+  // start date
 var now = new Date();
 var today = now.getFullYear()+"-"+(("0" + (now.getMonth() + 1)).slice(-2))+"-"+(("0" + now.getDate()).slice(-2));
-
-// end date
-var add = now.setDate(now.getDate() + 1);
-var someDate = new Date(add)
-var adddate = now.getFullYear()+"-"+(("0" + (someDate.getMonth() + 1)).slice(-2))+"-"+(("0" + someDate.getDate()).slice(-2));
-
 $('#start_date').val(today);
 $('#start_date').attr('min', today);
-$('#start_date').attr('max', today);
-
-$('#end_date').val(adddate);
-$('#end_date').attr('min', adddate);
 
 
 $(document).ready(function() {
@@ -361,13 +345,13 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(data) {
                 if (data.resp) {
-                    md.showNotification('top','center', '<b> DELETE TO Customer Profile' + data.company_name + '(' + data.userid  + ')' + '- on database SQLite. </b>');
+                    md.showNotification('top','center', '<b> Delete To Customer Profile&nbsp;"' + data.company_name + '"&nbsp(' + data.userid  + ')' + '&nbspOn Database. </b>');
                     setTimeout(function () {
                         // window.location.reload(true);
                         window.location.href = '/ui-tables/'
                     }, 3000);
                 } else {
-                    md.showNotification('top','center', '<b> PROBLEM !! CAN NOT DELETE Customer Profile<b>' + data.company_name + '(' + data.userid  + ')' + '- on database SQLite. </b>');
+                    md.showNotification('top','center', '<b> Problem !! Can Not Delete Customer Profile&nbsp;"' + data.company_name + '"&nbsp(' + data.userid  + ')' + '&nbspOn Database. </b>');
                 }    
             },
             error: function(error) {

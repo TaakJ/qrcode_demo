@@ -6,7 +6,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django_celery_beat.models import PeriodicTask, CrontabSchedule
 import json
-import base64
 
 # Create your models here.
 
@@ -27,7 +26,6 @@ class company_profile(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     schedule_plan = models.IntegerField(null=True)
-    dual_date = models.DateField()
     vote_star  = models.IntegerField(null=True)
     vote_percent = models.IntegerField(null=True)
     vote_status = models.CharField(max_length=10000, null=True)
@@ -58,7 +56,6 @@ class company_profile(models.Model):
             'start_date': self.start_date,
             'end_date': self.end_date,
             'schedule_plan': self.schedule_plan,
-            'dual_date': self.dual_date,
             'vote_star':  self.vote_star,
             'vote_percent': self.vote_percent,
             'vote_status': self.vote_status,
@@ -73,7 +70,7 @@ class company_notice(models.Model):
     company_name = models.CharField(max_length=10000, null=True)
     job_id = models.CharField(max_length=10000, null=True)
     schedule_plan = models.IntegerField(null=True)
-    dual_date = models.DateField()
+    end_date = models.DateField()
     vote_star  = models.IntegerField(null=True)
     vote_percent = models.IntegerField(null=True)
     vote_status = models.CharField(max_length=10000, null=True)
@@ -89,7 +86,7 @@ class company_notice(models.Model):
             'company_name': self.company_name,
             'job_id': self.job_id,
             'schedule_plan': self.schedule_plan,
-            'dual_date': self.dual_date,
+            'end_date': self.dual_date,
             'updated': self.updated,
             'vote_star': self.vote_star,
             'vote_percent': self.vote_percent,

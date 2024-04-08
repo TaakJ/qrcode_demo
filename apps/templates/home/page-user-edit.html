@@ -223,16 +223,10 @@ label:hover ~ input:checked ~ label /* highlight previous selected stars */ { co
                             </select>
                         </div>
                       </div>
-                      <div class="col-md-3 align-self-end" style="display: none;">
-                        <div class="form-group">
-                          <label class="bmd-label-floating"  style="font-size: 12px;">Register Date</label>
-                          <input type="date" class="form-control" name="start_date" id="start_date" value="{{ model.start_date|safe }}" required>
-                        </div>
-                      </div>
                       <div class="col-md-3 align-self-end">
                         <div class="form-group">
                           <label class="bmd-label-floating"  style="font-size: 12px;">Start Date</label>
-                          <input type="date" class="form-control" name="end_date" id="end_date" value="{{ model.end_date|safe }}" required>
+                          <input type="date" class="form-control" name="start_date" id="start_date" value="{{ model.start_date|safe }}" required>
                         </div>
                       </div>
                       <div class="col-md-1 align-self-end">
@@ -281,42 +275,17 @@ label:hover ~ input:checked ~ label /* highlight previous selected stars */ { co
 <script>
 
   const start_date = `{{ model.start_date|safe }}`;
-  const end_date = `{{ model.end_date|safe }}`;
   const score_vote =  `{{ model.vote_star|safe }}`;
   const job_id = `{{ model.job_id|safe }}`;
   const percent_cost = `{{ model.percent_cost|safe }}`;
   const approve_user = `{{ model.approve_user|safe }}`;
 
-  // start_date
-  var upDate = new Date(start_date)
-  var startdate = (upDate.getFullYear()) +"-"+( ("0" + (upDate.getMonth() + 1)).slice(-2))+"-"+(("0" + upDate.getDate()).slice(-2));
-  $('#start_date').val(startdate);
-
-  // end_date
-  var schDate = new Date(end_date)
-  var enddate = (schDate.getFullYear()) +"-"+(("0" + (schDate.getMonth() + 1)).slice(-2))+"-"+(("0" + schDate.getDate()).slice(-2));
-  $('#end_date').val(enddate);
-  
   // now
   var now = new Date();
   var today = now.getFullYear()+"-"+(("0" + (now.getMonth() + 1)).slice(-2))+"-"+(("0" + now.getDate()).slice(-2));
   $('#start_date').attr('min', today);
-  // $('#start_date').attr('max', today);
-
-  // add date
-  var add = now.setDate(now.getDate() + 1);
-  var someDate = new Date(add)
-  var adddate = now.getFullYear()+"-"+(("0" + (someDate.getMonth() + 1)).slice(-2))+"-"+(("0" + someDate.getDate()).slice(-2));
-  $('#end_date').attr('min', adddate);
 
   $(document).ready(function() {
-
-    $('#start_date').blur(function() {
-      if (schDate != someDate) {
-        $('#start_date').val(today);
-        $('#end_date').val(adddate);
-      }
-    });
 
     var $radios = $('input:radio[name=vote_star]');
     if($radios.is(':checked') === false) {
