@@ -17,8 +17,8 @@
 }
 .card {
     border-radius: var(--size-radius);
-    border: 3px solid var(--color-shadow, currentColor);
-    box-shadow: .5rem .5rem 0 var(--color-shadow, currentColor);
+    /* border: 3px solid var(--color-shadow, currentColor);
+    box-shadow: .5rem .5rem 0 var(--color-shadow, currentColor); */
 }
 
 select.form-control{
@@ -88,8 +88,8 @@ label:hover ~ input:checked ~ label /* highlight previous selected stars */ { co
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header card-header-success">
-                  <h4 class="card-title">Edit Profile</h4>
-                  <p class="card-category">Complete company profile</p>
+                  <h4 class="card-title">IAQ Profile</h4>
+                  <p class="card-category">Create new IAQ profile and update information for existing IAQ profile</p>
                 </div>
                 <div class="card-body">
                     <form id="page-edit-userid" data-url="{% url 'edit-user' model.userid %}">

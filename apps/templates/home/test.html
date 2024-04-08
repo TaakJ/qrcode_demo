@@ -11,25 +11,25 @@
 
 :root {
     --color-dark: #212121;
-
     --color-text: var(--color-dark);
-
     --size-bezel: .5rem;
     --size-radius: 4px;
-
-    font-size: calc(.6rem + .4vw);
     color: var(--color-text);
-    padding: 0 calc(var(--size-bezel) * 3);
 }
 
+.card { 
+    border-radius: var(--size-radius);
+    padding: calc(4 * var(--size-bezel));
+    margin-top: calc(4 * var(--size-bezel));
+}
 
-.card {
+/* .card {
     padding: calc(4 * var(--size-bezel));
     margin-top: calc(4 * var(--size-bezel));
     border-radius: var(--size-radius);
     border: 3px solid var(--color-shadow, currentColor);
     box-shadow: .5rem .5rem 0 var(--color-shadow, currentColor);
-}
+} */
 
 .gradient-background {
 width: 100%;
@@ -59,7 +59,7 @@ background: linear-gradient(62deg, #EE7752, #f08ab1, #65c0e1, #23D5AB);
 100% {
     background-position: 0% 50%;
 }
-}
+} 
 
 .container {
     display: grid;
@@ -118,7 +118,6 @@ background: linear-gradient(62deg, #EE7752, #f08ab1, #65c0e1, #23D5AB);
 .group_border {
     display: inline-block;
     position: relative;
-    /* font-weight: bold; */
     padding: 5px 5px 0px 5px;
     margin-bottom: 0%;
     left: 50%;
@@ -137,6 +136,7 @@ background: linear-gradient(62deg, #EE7752, #f08ab1, #65c0e1, #23D5AB);
 .rate > span {
     float: right;
 }
+
 
 /* The star of the show */
 .rate .star:before {
@@ -281,15 +281,10 @@ input {
                         <i class="material-icons">devices</i>
                     </div>
                 </div>
-                <div class="card-header">  
-                    <div class="box">                        
-                        <div class="group_border" style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;">
-                            <h2> "{{ model.company_name }}" </h2>
-                        </div>
-                    </div>
-                    <div class="box">
-                        <h2 style="color: white;">IAQ Tracking</h2>
-                        <h2 style="text-decoration: underline #212121; text-underline-position: under;"><span id="">{{ model.job_id }}</span></h2> 
+                <div class="card-header">
+                    <div class="box ">
+                        <h2 style="color: #212121;">IAQ Tracking</h2>
+                        <div style="text-align: center;"><span id="statusid" style="color: #212121;">Job description: </span><span>{{ model.job_id }}</span></div>
                     </div>
                     <br>
                     <div class="box">
@@ -301,12 +296,9 @@ input {
                             <span id="star3" class="star" title="3 stars"></span>
                             <span id="star2" class="star" title="2 stars"></span>
                             <span id="star1"  class="star" title="1 star"></span>
-                        </div>
-                    </div>
-                    <div class="box">
-                        <div class="group_border" style="color: #212121;">
-                            <h2><span id="statusid" style="color: white;">"{{ model.vote_status }}"</span></h2>
-                        </div>
+                            
+                            <span> Rating:</span>
+                        </div>      
                     </div>
                     <div class="container">
                         <div class="chartbox">
@@ -315,7 +307,6 @@ input {
                             </div>
                         </div>
                         <div class="box">
-                        <div id="box">
                             <div class="emoji">
                                 {% if model.vote_star == 7 %} 
                                     <img id="emoji" src="/static/assets/img/fantastic.gif" alt="" style="mix-blend-mode: multiply;">
@@ -333,7 +324,7 @@ input {
                                     <img id="emoji" src="/static/assets/img/bad.gif" alt="" style="mix-blend-mode: multiply;">
                                 {% endif %}
                             </div>
-                        </div>
+                            <div style="text-align: center;"><span id="statusid" style="color: #212121;">{{ model.vote_status }}</span></div>
                         </div>
                     </div>
                 </div>
@@ -465,7 +456,7 @@ input {
                             <ul>
                                 <h4 style="text-decoration: underline #212121; text-underline-position: under; font-weight: 900;">square</h4>
                                 <li><input type="radio" id="cb1" name="chk" value="1" checked/>
-                                    <label for="cb1"><img src='https://res.cloudinary.com/dzwffbeuq/image/upload/v1/image/1' + data.qr_type"  alt=""  style="mix-blend-mode: multiply; height: 180px;"/></label>
+                                    <label for="cb1"><img src='https://res.cloudinary.com/dzwffbeuq/image/upload/v1/image/1' + data.qr_type"  alt=""  style="mix-blend-mode: multiply;  height: 180px;"/></label>
                                 </li>
                             </ul>
                         </div>

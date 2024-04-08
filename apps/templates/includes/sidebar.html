@@ -52,26 +52,26 @@
           </a>
         </li>
 
+        <li class="nav-item {% if 'page-user' in segment %} active {% endif %}">
+          <a class="nav-link" href="{% url 'page-user' %}">
+            <i class="material-icons">person</i>
+            <p>IAQ Profile</p>
+          </a>
+        </li> 
+
         <li class="nav-item {% if 'ui-tables' in segment %} active {% endif %}">
           <a class="nav-link" href="{% url 'ui-tables' %}">
             <i class="material-icons">content_paste</i>
-            <p>List Profile</p>
+            <p>IAQ List</p>
           </a>
         </li>
 
         <li class="nav-item {% if 'ui-notic' in segment %} active {% endif %}">
           <a class="nav-link" href="{% url 'ui-notic' %}" >
             <i class="material-icons notices">notifications<span class="count" id="cnt">0</span></i>
-            <P>Notifications</P>
+            <P>IAQ Notifications</P>
           </a>
         </li>
-
-        <li class="nav-item {% if 'page-user' in segment %} active {% endif %}">
-          <a class="nav-link" href="{% url 'page-user' %}">
-            <i class="material-icons">person</i>
-            <p>User Profile</p>
-          </a>
-        </li> 
 
       <li class="nav-item" style="clear: left;">
         <a class="nav-link" href="{% url 'logout' %}" >

@@ -15,9 +15,10 @@
   <!-- ======= Hero Section ======= -->
   <section id="hero">
     <div class="hero-container">
-      <h3><strong>Welcome</strong></h3>
-      <h1>IAQ Tracking Application</h1>
-      <!-- <h2>We are team of talented designers making websites with Bootstrap</h2> -->
+      <h3>Welcome to <strong>Application</strong></h3>
+      <h1>IAQ Tracking</h1>
+      <h2>One of the customer service which easy to track and notice the machine's
+        <br> maintenance to prevent machine problem for more effective and steady work.</h2>
       <a href="#services" class="btn-get-started scrollto">Get Started</a>
     </div>
   </section><!-- End Hero -->
@@ -29,46 +30,42 @@
       <div class="container">
 
         <div class="section-title">
-          <h2>Services</h2>
           <h3>We do offer  <span>Services</span></h3>
-          <!-- <p>Ut possimus qui ut temporibus culpa velit eveniet modi omnis est adipisci expedita at voluptas atque vitae autem.</p> -->
         </div>
 
         <div class="row">
           
+          <div class="col-md-6 col-lg-4 d-flex align-items-stretch mb-5 mb-lg-0">
+            <div class="icon-box">
+              <div class="icon"><i class="bx bx-user"></i></div>
+              <h4 class="title"><a href="{% url 'page-user' %}">IAQ Profile</a></h4>
+              <p class="description">Create new IAQ profile and update information for existing IAQ profile.</p>
+            </div>
+          </div>
 
           <div class="col-md-6 col-lg-4 d-flex align-items-stretch mb-5 mb-lg-0">
             <div class="icon-box">
               <div class="icon"><i class="bx bx-clipboard"></i></div>
-              <h4 class="title"><a href="{% url 'ui-tables' %}">List Profile</a></h4>
-              <p class="description" style="visibility: hidden;">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore </p>
+              <h4 class="title"><a href="{% url 'ui-tables' %}">IAQ List</a></h4>
+              <p class="description">List all of IAQ which need to be monitored and maintenanced.</p>
             </div>
           </div>
 
           <div class="col-md-6 col-lg-4 d-flex align-items-stretch mb-5 mb-lg-0">
             <div class="icon-box">
               <div class="icon"><i class="bx bx-bell"></i></div>
-              <h4 class="title"><a href="{% url 'ui-notic' %}">Notification</a></h4>
-              <p class="description" style="visibility: hidden;">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia</p>
+              <h4 class="title"><a href="{% url 'ui-notic' %}">IAQ Notification</a></h4>
+              <p class="description">Notice IAQ which reach maintenance period according to the end date.</p>
             </div>
           </div>
 
-          <div class="col-md-6 col-lg-4 d-flex align-items-stretch mb-5 mb-lg-0">
-            <div class="icon-box">
-              <div class="icon"><i class="bx bx-user"></i></div>
-              <h4 class="title"><a href="{% url 'page-user' %}">User Profile</a></h4>
-              <p class="description" style="visibility: hidden;">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-            </div>
-          </div>
-
-          <!-- <div class="col-md-6 col-lg-4 d-flex align-items-stretch mb-5 mb-lg-0">
+          <!-- <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
             <div class="icon-box">
               <div class="icon"><i class="bx bx-log-out"></i></div>
               <h4 class="title"><a href="{% url 'logout' %}">Exit</a></h4>
               <p class="description">Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
             </div>
           </div> -->
-
         </div>
 
       </div>
