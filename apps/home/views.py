@@ -29,7 +29,7 @@ def test(request):
 
 @method_decorator(login_required(login_url="/login/"), name="dispatch")
 class indexiew(View):
-
+    @csrf_exempt
     def get(self, request):
         try:
             count = company_notice.objects.filter(expired=True).count()
@@ -49,7 +49,7 @@ class indexiew(View):
 class page_userview(View):
     form_class = company_form
     page = ""
-
+    @csrf_exempt
     def get(self, request, userid=None):
         if userid is None:
             # add
@@ -212,7 +212,7 @@ class page_userview(View):
 class page_copyview(View):
     form_class = company_form
     page = ""
-
+    @csrf_exempt
     def get(self, request, userid=None):
 
         if userid is None:
@@ -292,7 +292,7 @@ class page_copyview(View):
 
 @method_decorator(login_required(login_url="/login/"), name="dispatch")
 class ui_tablesview(View):
-
+    @csrf_exempt
     def get(self, request):
         model = company_profile.objects.all().order_by("userid")
         qrcode = company_qrcode.objects.all()
@@ -351,6 +351,7 @@ class ui_tablesview(View):
 
 @method_decorator(login_required(login_url="/login/"), name="dispatch")
 class ui_noticview(View):
+    @csrf_exempt
     def get(self, request, userid=None):
         model = company_notice.objects.all().order_by("userid")
         count = company_notice.objects.filter(expired=True).count()
@@ -433,6 +434,7 @@ def delete_userview(request, userid=None):
 
 class qrcodeview(View):
 
+    @csrf_exempt
     def get(self, request, userid=None):
         count = company_notice.objects.filter(expired=True).count()
 
