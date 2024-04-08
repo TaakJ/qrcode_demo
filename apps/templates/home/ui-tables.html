@@ -130,7 +130,7 @@ input:checked + .slider-1:before {
   <div class="row">
       <div class="col-md-12">
         <div class="card">
-          <div class="card-header card-header-success" >
+          <div class="card-header card-header-primary" >
             <h4 class="card-title mt-0"> List Profile </h4>
             <p class="card-category">List Details of Company Profile.</p>
           </div>
@@ -159,13 +159,13 @@ input:checked + .slider-1:before {
                     Start Date
                   </th>
                   <th style="font-weight:bold; font-size: 15px; color:#212121;">
-                    Running Time
-                  </th>
-                  <th style="font-weight:bold; font-size: 15px; color:#212121;">
                     End Date
                   </th>
                   <th style="font-weight:bold; font-size: 15px; color:#212121;">
-                    Edit / Delete
+                    Timing
+                  </th>
+                  <th style="font-weight:bold; font-size: 15px; color:#212121;">
+                    Modified
                   </th>
                   <th style="font-weight:bold; font-size: 15px; color:#212121;">
                     View
@@ -190,11 +190,11 @@ input:checked + .slider-1:before {
                     <td class="td-actions text-left"> {{ model.company_name|safe}} </td>
                     <td class="td-actions text-left"> {{ model.job_id|safe}} </td>
                     <td class="td-actions text-left"> {{ model.approve_user|safe}} </td>
-                    <td class="td-actions text-left"> {{ model.end_date}} </td>
+                    <td class="td-actions text-left"> {{ model.start_date|safe}} </td>
+                    <td class="td-actions text-left"> {{ model.end_date|safe}}   ({{ model.schedule_plan|safe}})</td>
                     <td class="td-actions text-left"></td>
-                    <td class="td-actions text-left"> {{ model.dual_date}}   ({{ model.schedule_plan|safe}})</td>
                     <td style="display: none;">{{ model.vote_star|safe}}</td>
-                    <td style="display: none;"> {{ model.dual_date|safe}} </td>
+                    <td style="display: none;"> {{ model.end_date|safe}} </td>
                     <td class="td-actions text-left">
                       <button type="button" rel="tooltip" title="Edit" id="{{model.userid}}" class="btn btn-success btn-round btn-lg editbtn" data-url="{% url 'edit-user' model.userid %}">
                           <em class="material-icons">edit</em></button>&nbsp;
@@ -208,10 +208,6 @@ input:checked + .slider-1:before {
                     <td class="td-actions text-left">  
                       <button type="button" rel="tooltip" title="Print"  id="{{model.userid}}" class="btn btn-round btn-lg printBtn" style="background-color: #212121;" data-url="{% url 'qr-code' model.userid %}">
                         <em class="material-icons">print</em></button>
-                        <!--
-                        <img src='/static/media/qr_codes/qrcode-iaq-trackking-app-df045633f579.herokuapp.com/qr-code/{{model.userid}}.png' alt="" style="display: none;"/>
-                        <img src="/static/assets/img/bg_qr/" alt=""  style="display: none;"/>
-                        -->
                     </td>
                     <td class="highlight"><div></div></td>
                   </tr>
@@ -269,6 +265,7 @@ $(document).ready(function() {
     var now = new Date().getTime();
 
     var distance = countDownDate - now;
+
     var days = Math.floor(distance / (1000 * 60 * 60 * 24));
     var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -277,7 +274,7 @@ $(document).ready(function() {
     var setdate = row.cells[6];
     countDate = new Date(setdate.innerHTML.replace(/-/g, "/")).getTime();
 
-    var cnt_out = row.cells[7];
+    var cnt_out = row.cells[8];
     if (new Date() < new Date(setdate.innerText)) {
         cnt_out.innerHTML = "Upcoming.."
     } else {
@@ -313,92 +310,6 @@ $(document).ready(function() {
 
   }
   }, 1000);
-
-  // const roomName  = JSON.parse(document.getElementById('room-name').textContent);
-
-  // var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-  // const realtimeSocket = new WebSocket(
-  //     ws_scheme + '://'
-  //     + window.location.host
-  //     + '/ws/realtime/'
-  //     + roomName
-  //     + '/'
-  // );
-
-  // realtimeSocket.onmessage = function(e) {
-  //     const currentObject = JSON.parse(e.data);
-  //     const table = document.getElementById("dataTable");
-  //     const feed_arr = [],
-  //           userid_arr = [], 
-  //           company_arr = [],
-  //           job_id_arr = [],
-  //           approve_arr = [],
-  //           set_date_arr = [],
-  //           schedule_arr = [],
-  //           dual_date_arr = [],
-  //           vote_arr = [];
-
-  //     for(var key in currentObject){
-  //       if(currentObject.hasOwnProperty(key)) {
-  //         feed_arr[key] = currentObject[key].feed;
-  //         userid_arr[key] = currentObject[key].userid;
-  //         company_arr[key] = currentObject[key].company_name;
-  //         job_id_arr[key] = currentObject[key].job_id;
-  //         // approve_arr[key] = currentObject[key].approve_user;
-  //         // set_date_arr[key] = currentObject[key].end_date;
-  //         // schedule_arr[key] = currentObject[key].schedule_plan;
-  //         // dual_date_arr[key] = currentObject[key].dual_date;
-  //         vote_arr[key] = currentObject[key].vote;
-  //       }
-  //     }
-
-  //     let k = 0;
-  //     for (var i = 1, row; row = table.rows[i]; i++) {
-  //       var time_now = moment().calendar();
-  //       var feed = row.cells[1].getElementsByTagName('input')[0].checked;
-  //       var userid = row.cells[2];
-  //       var company_name = row.cells[3];
-  //       var job_id = row.cells[4];
-  //       var vote = row.cells[9];
-  //       const idx = k++;
-
-  //       if (userid_arr.indexOf(parseInt(userid.innerText)) !== -1) {
-
-  //         if (feed != feed_arr[idx]) {
-  //           // row.cells[1].getElementsByTagName('input')[0].checked = feed_arr[idx]
-  //           // row.cells[1].getElementsByTagName('input')[0].disabled = feed_arr[idx]
-  //           var message = "<b>"+ time_now + "<br> See notiefications profile page: userid" + " ( "+ userid.innerText + " ) " + "was enabled / disabled !! </b>";
-  //           md.showNotification('bottom','left', message);
-
-  //         }
-  //         if (company_name != company_arr[idx]) {
-  //           company_name.innerText = company_arr[idx];
-  //         }
-  //         if (job_id != job_id_arr[idx]) {
-  //           job_id.innerText = job_id_arr[idx];
-  //         }
-  //         if (vote != vote_arr[idx]) {
-  //           vote.innerText = vote_arr[idx] 
-  //         }
-
-  //       } else {
-  //         var message = "<b>"+ time_now + "<br> see list profile page userid" + " ( " + userid.innerText + " ) " + "was created / deleted !! </b>";
-  //         md.showNotification('bottom','left', message);
-  //       }
-
-  //       for (var j = 0, col; col = row.cells[j]; j++) { 
-  //         if (vote.innerText <= 3) {
-  //             col.style.color  = "red";
-  //         } else {
-  //             col.style.color  = "black";
-  //         }
-  //       }
-  //     }
-  // };
-
-  // realtimeSocket.onclose = function(e) {
-  //     console.error('Chat socket closed unexpectedly');
-  // };
 
   });
 

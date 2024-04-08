@@ -108,9 +108,6 @@ def broadcast_notification(self, data):
             state="FAILURE",
             meta={
                 "exe": "Failed"
-                # 'exc_type': type(ex).__name__,
-                # 'exc_message': traceback.format_exc().split('\n')
-                # 'custom': '...'
             },
         )
         raise Ignore()
@@ -120,19 +117,17 @@ def broadcast_notification(self, data):
 def push_message_job(self):
     
     # date_now = datetime.date.today() + datetime.timedelta(days=1)
-    # model_profile = company_profile.objects.filter(
-    #     end_date__lte=date_now, feed=True
-    # ).values() 
-    
     date_now = datetime.date.today()
-    model_profile = company_profile.objects.filter(end_date__lte=date_now, feed=True).values()
+    model_profile = company_profile.objects.filter(
+        end_date__lte=date_now, feed=True
+    ).values() 
     
     for instance in model_profile:
         userid = instance["userid"]
         company_name = instance["company_name"]
         job_id = instance["job_id"]
-        dual_date = datetime.datetime.strptime(str(instance["dual_date"]), "%Y-%m-%d")
-        schedule_plan = (dual_date.date() - date_now).days
+        end_date = datetime.datetime.strptime(str(instance["end_date"]), "%Y-%m-%d")
+        schedule_plan = (end_date.date() - date_now).days
         
         if schedule_plan != 0:
             vote_percent = int(instance["vote_percent"] - instance["avg_vote"])
@@ -163,7 +158,7 @@ def push_message_job(self):
                     "company_name": company_name,
                     "job_id": job_id,
                     "schedule_plan": schedule_plan,
-                    "dual_date": dual_date,
+                    "end_date": end_date,
                     "vote_star": vote_star,
                     "vote_percent": vote_percent,
                     "vote_status": vote_status,
@@ -180,21 +175,19 @@ def push_message_job(self):
                     tasks.save()
                 obj_cn.company_name = company_name
                 obj_cn.job_id = job_id
-                obj_cn.dual_date = dual_date
+                obj_cn.end_date = end_date
                 obj_cn.schedule_plan = schedule_plan
                 obj_cn.vote_star = vote_star
                 obj_cn.vote_percent = vote_percent
                 obj_cn.vote_status = vote_status
                 obj_cn.save()
-                # text = 'update'
             else:
                 BroadcastNotification.objects.update_or_create(
                     userid=userid,
                     defaults={
                         "userid": userid,
-                        "message": f"You received notifications userid ({userid}) {company_name} is expired!!",
+                        "message": f"You received notifications userid ({userid}), from {company_name} is expired !!",
                         "broadcast_on": datetime.datetime.now(),
                     },
                 )
-                # text = 'create'
     return "completed"

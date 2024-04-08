@@ -2,7 +2,7 @@ import json
 import datetime
 from django import template
 
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from django.shortcuts import get_object_or_404
 
@@ -19,13 +19,10 @@ from django.views.generic import View
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-
-from django_celery_beat.models import PeriodicTask, CrontabSchedule, IntervalSchedule
+from django_celery_beat.models import PeriodicTask
 from .tasks import push_message_job, calculate_rating
 
 # Create your views here.
-
-
 def test(request):
     push_message_job.delay()
     return HttpResponse("Done")
@@ -189,6 +186,7 @@ class page_userview(View):
                     or (
                         (notices.schedule_plan != record.schedule_plan)
                         and (notices.vote_star != record.vote_star)
+                        and (notices.end_date != record.end_date)
                     )
                     or (record.vote_star > 3)
                 ):
@@ -209,7 +207,6 @@ class page_userview(View):
 
         form_data_dict["url"] = "/ui-tables/"
         return JsonResponse(form_data_dict)
-
 
 @method_decorator(login_required(login_url="/login/"), name="dispatch")
 class page_copyview(View):
@@ -294,7 +291,6 @@ class page_copyview(View):
             form_data_dict["url"] = "/copy-user/"
             return JsonResponse(form_data_dict)
 
-
 @method_decorator(login_required(login_url="/login/"), name="dispatch")
 class ui_tablesview(View):
 
@@ -353,7 +349,6 @@ class ui_tablesview(View):
             data["count"] = count
 
         return JsonResponse(data)
-
 
 @method_decorator(login_required(login_url="/login/"), name="dispatch")
 class ui_noticview(View):

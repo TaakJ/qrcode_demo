@@ -56,12 +56,12 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(data) {
                 if (data.resp) {
-                    md.showNotification('top','center', '<b> DELETE TO Customer Profile' + data.company_name + '(' + data.userid  + ')' + '- on database SQLite.</b>');
+                    md.showNotification('top','center', '<b> Delete To Customer Profile&nbsp;"' + data.company_name + '"&nbsp(' + data.userid  + ')' + '&nbspOn Database. </b>');
                     setTimeout(function () {
                         window.location.reload(true);
                 }, 2000);
                 } else {
-                    md.showNotification('top','center', '<b> PROBLEM !! CAN NOT DELETE Customer Profile' + data.company_name + '(' + data.userid  + ')' + '- on database SQLite.</b>');
+                    md.showNotification('top','center', '<b> Problem !! Can Not Delete Customer Profile&nbsp;"' + data.company_name + '"&nbsp(' + data.userid  + ')' + '&nbspOn Database. </b>');
                 }
             },
             error: function(error) {

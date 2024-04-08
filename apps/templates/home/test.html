@@ -389,15 +389,8 @@ input {
                         <i class="material-icons">access_time</i>
                     </div>
                     <p class="card-category">Schedule Plan</p>
-                    <h5 class="card-title" id="plan_id" style="color: #212121; font-weight: bold; font-size: 1.5rem;">
-                        {{ model.schedule_plan|safe }} <span style="color: #212121; font-weight: bold; font-size: 1rem;">(Day)
+                    <h5 class="card-title" id="plan_id" style="color: #212121; font-weight: bold; font-size: 1.5rem;"></h5>
                 </div>
-                <!-- <div class="card-footer">
-                    <div class="stats">
-                        <i class="material-icons">date_range</i>&nbsp;
-                        <span id='countdownid' style="color: #212121; font-weight: bold; font-size: 1rem;"></span>
-                    </div>
-                </div> -->
             </div>
         </div>     
     </div>
@@ -508,8 +501,8 @@ input {
 
 $(document).ready(function() {
 
-const start_date = `{{ model.end_date|safe }}`;
-const dual_date = `{{ model.dual_date|safe }}`;
+const start_date = `{{ model.start_date|safe }}`;
+const end_date = `{{ model.end_date|safe }}`;
 const vote_star =  `{{ model.vote_star|safe }}`;
 const vote_percent = `{{ model.vote_percent|safe }}`;
 const qr_type = `{{ model.qr_type|safe }}`;
@@ -548,7 +541,7 @@ const plan = `{{ model.schedule_plan }}`;
         hour = minute * 60,
         day = hour * 24;
 
-    let schedule = new Date(dual_date),
+    let schedule = new Date(end_date),
         dual_dd = String(schedule.getDate()).padStart(2, "0"),
         dual_mm = String(schedule.getMonth() + 1).padStart(2, "0"),
         dual_yyyy = schedule.getFullYear(),
@@ -576,7 +569,7 @@ const plan = `{{ model.schedule_plan }}`;
 
             x1 =  cd + " day : " +  ch + " hour : " +  cmi + " min : " +  cms + " sec";
             document.getElementById('countdownid').innerHTML = x1;
-            document.getElementById('plan_id').innerHTML = cd;
+            document.getElementById('plan_id').innerHTML = cd + "&nbsp;Days"
 
         },1000); 
 }());

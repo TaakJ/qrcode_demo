@@ -115,10 +115,8 @@ class company_qrcode(models.Model):
         _buffer.seek(0)
         self.qr_code.save(fname, File(_buffer), save=False)
         super().save(*args, **kwargs)
-        
     class Meta:
         db_table = "company_qrcode"
-
 
 class username(models.Model):
     name = models.CharField(max_length = 150)
@@ -143,8 +141,6 @@ class BroadcastNotification(models.Model):
 def notification_handler(sender, instance, created, **kwargs):
     # call group_send function directly to send notificatoions or you can create a dynamic task in celery beat
     if created:
-        # print(str(instance.broadcast_on.hour) + " " + str(instance.broadcast_on.minute))
-        
         schedule, created = CrontabSchedule.objects.get_or_create(
                                                             hour = '*',
                                                             minute = '*/2',
@@ -158,7 +154,5 @@ def notification_handler(sender, instance, created, **kwargs):
                                     task="apps.home.tasks.broadcast_notification", 
                                     args=json.dumps((instance.id,))
                                     )
-
-    #if not created:
 
         
