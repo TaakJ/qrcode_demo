@@ -248,7 +248,6 @@ class page_copyview(View):
         form_data_dict = {}
         form_data_list = json.loads(self.request.POST.get("request"))
         form_data_dict = {field["name"]: field["value"] for field in form_data_list}
-        
         if userid is None:
             try:
                 form_data_dict["userid"] = (
@@ -288,8 +287,8 @@ class page_copyview(View):
             if form.is_valid():
                 form.save()
 
-            form_data_dict["url"] = "/copy-user/"
-            return JsonResponse(form_data_dict)
+        form_data_dict["url"] = "/copy-user/"
+        return JsonResponse(form_data_dict)
 
 @method_decorator(login_required(login_url="/login/"), name="dispatch")
 class ui_tablesview(View):

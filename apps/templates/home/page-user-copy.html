@@ -86,8 +86,8 @@ text-align: center;
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header card-header-primary">
-                <h4 class="card-title">Edit Profile</h4>
+            <div class="card-header card-header-success">
+                <h4 class="card-title">Copy Profile</h4>
                 <p class="card-category">Complete company profile</p>
             </div>
             <div class="card-body">
@@ -252,7 +252,7 @@ text-align: center;
                     </div>
                     </div>
                 </div>
-                <button type="button" class="btn btn-danger pull-right cancel" style="margin-left: 1%" data-url="{% url 'del-user' model.userid %}">Delete Profile</button>
+                <button type="button" class="btn btn-rose pull-right cancel" style="margin-left: 1%" data-url="{% url 'del-user' model.userid %}">Cancel Profile</button> 
                 <button type="submit" class="btn btn-success pull-right submitbtn" name="update">Update Profile<a href="{% url 'ui-tables' %}"></a></button>
                 <button type="submit" class="btn btn-primary pull-right submitbtn" name="copy" style="margin-right: 1%" disabled>Copy Profile</button>
                 <div class="clearfix"></div>
