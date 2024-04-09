@@ -81,10 +81,12 @@ TEMPLATES = [
     },
 ]
 
+WSGI_APPLICATION = "qrcode_demo.wsgi.application"
 ASGI_APPLICATION = "qrcode_demo.asgi.application"
-# WSGI_APPLICATION = "qrcode_demo.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+
+import dj_database_url
 
 DATABASES = {
     "default": {
@@ -92,6 +94,9 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES["default"].update(db_from_env)
 
 # Scheduler
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"  # Default

@@ -144,12 +144,14 @@ class page_userview(View):
                 (record.vote_star == int(form_data_dict["vote_star"]))
                 and (record.schedule_plan == int(form_data_dict["schedule_plan"]))
                 and (record.end_date == form_data_dict["start_date"])
-            ):
+            ):  
+                print("same วันเดียวกัน")
                 vote_star = record.vote_star
                 vote_percent = record.vote_percent
                 vote_status = record.vote_status
                 avg_vote = record.avg_vote
             else:
+                print("คนละวัน")
                 vote_star = int(form_data_dict["vote_star"])
                 vote_percent, vote_status = calculate_rating(vote_star)
                 avg_vote = vote_percent / int(form_data_dict["schedule_plan"])

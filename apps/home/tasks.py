@@ -71,6 +71,9 @@ def broadcast_realtime(self):
             state="FAILURE",
             meta={
                 "exe": "Failed"
+                # 'exc_type': type(ex).__name__,
+                # 'exc_message': traceback.format_exc().split('\n')
+                # 'custom': '...'
             },
         )
         raise Ignore()
@@ -104,6 +107,9 @@ def broadcast_notification(self, data):
             state="FAILURE",
             meta={
                 "exe": "Failed"
+                # 'exc_type': type(ex).__name__,
+                # 'exc_message': traceback.format_exc().split('\n')
+                # 'custom': '...'
             },
         )
         raise Ignore()
