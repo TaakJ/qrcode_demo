@@ -12,26 +12,20 @@
 :root {
     --color-dark: #212121;
     --color-text: var(--color-dark);
-    --size-bezel: .5rem;
-    --size-radius: 4px;
+    --size-bezel: .2rem;
+    --size-radius: 3px;
     color: var(--color-text);
 }
 
 .card { 
     border-radius: var(--size-radius);
-    padding: calc(4 * var(--size-bezel));
-    margin-top: calc(4 * var(--size-bezel));
+    padding: calc(3 * var(--size-bezel));
+    margin-top: calc(3 * var(--size-bezel)); 
 }
 
-/* .card {
-    padding: calc(4 * var(--size-bezel));
-    margin-top: calc(4 * var(--size-bezel));
-    border-radius: var(--size-radius);
-    border: 3px solid var(--color-shadow, currentColor);
-    box-shadow: .5rem .5rem 0 var(--color-shadow, currentColor);
-} */
 
-.gradient-background {
+
+/* .gradient-background {
 width: 100%;
 background: linear-gradient(62deg, #EE7752, #f08ab1, #65c0e1, #23D5AB);
     animation: gradient 10s ease infinite; 
@@ -59,7 +53,7 @@ background: linear-gradient(62deg, #EE7752, #f08ab1, #65c0e1, #23D5AB);
 100% {
     background-position: 0% 50%;
 }
-} 
+}  */
 
 .container {
     display: grid;
@@ -142,7 +136,7 @@ background: linear-gradient(62deg, #EE7752, #f08ab1, #65c0e1, #23D5AB);
 .rate .star:before {
     display: inline-block;
     font-size: 3rem;
-    padding: .3rem .4rem;
+    padding: .1rem .2rem;
     margin: 0;
     font-family: FontAwesome;
     content: "\f005"; /* full star */
@@ -156,11 +150,11 @@ background: linear-gradient(62deg, #EE7752, #f08ab1, #65c0e1, #23D5AB);
 }
 
 .star:hover:before, .star.selected:before {
-    color: #FFFF00;
+    color: #FF8C00;
 }
 
 .star:hover ~ .star:before, .star.selected ~ .star:before {
-    color: #FFFF00;
+    color: #FF8C00;
     transition: color 0.8s;
     /* fontAwesome filled star code */
 }
@@ -180,7 +174,7 @@ background: linear-gradient(62deg, #EE7752, #f08ab1, #65c0e1, #23D5AB);
 .emoji img {
     margin: 0;
     display: block;
-    width: 200px;
+    width: 150px;
     transition: all 0.4s;
 }
 
@@ -231,8 +225,8 @@ input[type="radio"][id^="cb"] {
     position: absolute;
     top: -1px; 
     left: -1px;
-    width: 34px;
-    height: 34px;
+    width: 30px;
+    height: 30px;
     text-align: center;
     line-height: 36px;
     transition-duration: 0.4s;
@@ -244,7 +238,7 @@ input[type="radio"][id^="cb"] {
     /* height: 10%; */
     height: 18rem;
     transition-duration: 0.2s;
-    /* transform-origin: 50% 50%; */
+    transform-origin: 50% 50%;
 }
 
 :checked + label {
@@ -267,6 +261,20 @@ input {
     font-weight: bold;
 }
 
+.section span {
+    font-size: 12px;
+    letter-spacing: 1px;
+    font-weight: 700;
+    padding: 8px 20px;
+    line-height: 1;
+    margin: 0;
+    background: #fdeff2;
+    color: #e43c5c;
+    display: inline-block;
+    text-transform: uppercase;
+    border-radius: 50px;
+}
+
 </style>
 
 {% endblock stylesheets %}
@@ -284,10 +292,19 @@ input {
                 <div class="card-header">
                     <div class="box ">
                         <h2 style="color: #212121;">IAQ Tracking</h2>
-                        <div style="text-align: center;"><span id="statusid" style="color: #212121;">Product: </span><span><h2>{{ model.job_id }}</h2></span></div>
+                        <div class="section" style="text-align: center;">
+                            <span id="statusid">Job Description</span>
+                            <h2>{{ model.job_id }}</h2>
+                        </div>
                     </div>
-                    <br>
+                    
                     <div class="box">
+                        <div class="box ">
+                            <div  class="section" style="text-align: center;">
+                                <span>Rating</span>
+                            </div>
+                        </div>
+                        <br>
                         <div class="rate">
                             <span id="star7" class="star" title="5 stars"></span>
                             <span id="star6" class="half star " title="4.5 stars"></span>
@@ -296,8 +313,6 @@ input {
                             <span id="star3" class="star" title="3 stars"></span>
                             <span id="star2" class="star" title="2 stars"></span>
                             <span id="star1"  class="star" title="1 star"></span>
-                            
-                            <span> Rating:</span>
                         </div>      
                     </div>
                     <div class="container">
