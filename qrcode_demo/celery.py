@@ -17,7 +17,7 @@ app.config_from_object(settings, namespace='CELERY')
 app.conf.beat_schedule = {
     'push-message-every-day': {
         'task': "apps.home.tasks.push_message_job", 
-        'schedule': crontab(hour='*', minute='*/10', day_of_month='*', month_of_year='*'),
+        'schedule': crontab(hour='*', minute='*/5', day_of_month='*', month_of_year='*'),
     },
 }
 

@@ -33,12 +33,9 @@ class company_profile(models.Model):
     avg_vote = models.FloatField(null=False)
     feed = models.BooleanField(default=True)
     updated = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = ('userid',)
-        db_table = "company_profile"
         
     def to_dict_json(self):
+        print("Done")
         return {
             'userid': self.userid,
             'company_name': self.company_name,
@@ -64,6 +61,9 @@ class company_profile(models.Model):
             'feed': self.feed,
             'updated': self.updated,
         }    
+    class Meta:
+        ordering = ('userid',)
+        db_table = "company_profile"
         
 class company_notice(models.Model):
     userid = models.IntegerField(null=True)

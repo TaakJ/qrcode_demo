@@ -16,6 +16,7 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 import cloudinary_storage
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -86,8 +87,6 @@ ASGI_APPLICATION = "qrcode_demo.asgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-import dj_database_url
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -95,7 +94,7 @@ DATABASES = {
     }
 }
 
-db_from_env = dj_database_url.config(conn_max_age=600)
+db_from_env = dj_database_url.config(conn_max_age=3000)
 DATABASES["default"].update(db_from_env)
 
 # Scheduler
@@ -148,29 +147,30 @@ CLOUDINARY_STORAGE = {
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 
-# CHANNEL SETTING
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels_redis.core.RedisChannelLayer",
-#         "CONFIG": {
-#             "hosts": [("127.0.0.1", 6379)],
-#         },
-#     },
-# }
-CHANNEL_LAYERS = {
+# CELERY SETTING
+if DEBUG:
+    CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+    }
+    CELERY_BROKER_URL = "redis://127.0.0.1:6379"
+else:
+    CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": [os.environ.get("REDIS_URL", "redis://localhost:6379")],
-            "capacity": 1500,
-            "expiry": 10,
+            # "capacity": 1500,
+            # "expiry": 10,
         },
     },
-}
-
-# CELERY SETTING
-CELERY_BROKER_URL = os.environ["REDIS_URL"]
-# CELERY_BROKER_URL = "redis://127.0.0.1:6379"
+    }
+    CELERY_BROKER_URL = os.environ["REDIS_URL"]
+    
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_SELERLIZER = "json"

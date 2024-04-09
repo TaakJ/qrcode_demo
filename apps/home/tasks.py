@@ -1,13 +1,10 @@
 from celery import shared_task
 from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
 from .models import BroadcastNotification, company_profile, company_notice
-from django.core import serializers
 from django.shortcuts import get_object_or_404
 import json
 import datetime
 import asyncio
-from celery import Celery, states
 from celery.exceptions import Ignore
 from django_celery_beat.models import PeriodicTask
 
@@ -120,86 +117,83 @@ def push_message_job(self):
     
     # date_now = datetime.date.today() + datetime.timedelta(days=1)
     date_now = datetime.date.today()
-    # model_profile = company_profile.objects.filter(
-    #     start_date__lte=date_now, feed=True
-    # ).values() 
-    ate_now = datetime.date.today()
     model_profile = company_profile.objects.filter(start_date__lte=date_now, feed=True).values() 
-    
     print(date_now)
     print(model_profile)
     
-    a = company_profile.objects.all()
+    a  = company_profile.objects.all()
     print(a)
     
-    for instance in model_profile:
-        userid = instance["userid"]
-        company_name = instance["company_name"]
-        job_id = instance["job_id"]
-        end_date = datetime.datetime.strptime(str(instance["end_date"]), "%Y-%m-%d")
-        schedule_plan = (end_date.date() - date_now).days
-        
-        if schedule_plan != 0:
-            vote_percent = int(instance["vote_percent"] - instance["avg_vote"])
-            if vote_percent >= 0:
-                vote_star = int((7 * vote_percent) / 100)
+    if model_profile.exists():
+        for instance in model_profile:
+            userid = instance["userid"]
+            company_name = instance["company_name"]
+            job_id = instance["job_id"]
+            end_date = datetime.datetime.strptime(str(instance["end_date"]), "%Y-%m-%d")
+            schedule_plan = (end_date.date() - date_now).days
+            
+            if schedule_plan != 0:
+                vote_percent = int(instance["vote_percent"] - instance["avg_vote"])
+                if vote_percent >= 0:
+                    vote_star = int((7 * vote_percent) / 100)
+                else:
+                    vote_percent = 0
+                    vote_star = 0
+                _, vote_status = calculate_rating(vote_star)
             else:
                 vote_percent = 0
                 vote_star = 0
-            _, vote_status = calculate_rating(vote_star)
-        else:
-            vote_percent = 0
-            vote_star = 0
-            _, vote_status = calculate_rating(vote_star)
-        
-        # for company_profile
-        obj_cp = get_object_or_404(company_profile, userid=userid)
-        obj_cp.vote_star = vote_star
-        obj_cp.vote_percent = vote_percent
-        obj_cp.vote_status = vote_status
-        obj_cp.save()
+                _, vote_status = calculate_rating(vote_star)
+            
+            # for company_profile
+            obj_cp = get_object_or_404(company_profile, userid=userid)
+            obj_cp.vote_star = vote_star
+            obj_cp.vote_percent = vote_percent
+            obj_cp.vote_status = vote_status
+            obj_cp.save()
 
-        # for company_notice
-        if vote_star <= 3:
-            obj_cn, created_cn = company_notice.objects.get_or_create(
-                userid=userid,
-                defaults={
-                    "userid": userid,
-                    "company_name": company_name,
-                    "job_id": job_id,
-                    "schedule_plan": schedule_plan,
-                    "end_date": end_date,
-                    "vote_star": vote_star,
-                    "vote_percent": vote_percent,
-                    "vote_status": vote_status,
-                    "expired": True,
-                },
-            )
-
-            if not created_cn:
-                # new add broadcast
-                if vote_star != obj_cn.vote_star:
-                    obj_cn.expired = True
-                    name = f"broadcast-notification-{str(userid)}"
-                    tasks = get_object_or_404(PeriodicTask, name=name)
-                    tasks.enabled = True
-                    tasks.save()
-                obj_cn.company_name = company_name
-                obj_cn.job_id = job_id
-                obj_cn.end_date = end_date
-                obj_cn.schedule_plan = schedule_plan
-                obj_cn.vote_star = vote_star
-                obj_cn.vote_percent = vote_percent
-                obj_cn.vote_status = vote_status
-                obj_cn.save()
-            else:
-                # update broadcast
-                BroadcastNotification.objects.update_or_create(
+            # for company_notice
+            if vote_star <= 3:
+                obj_cn, created_cn = company_notice.objects.get_or_create(
                     userid=userid,
                     defaults={
                         "userid": userid,
-                        "message": f"You received notifications userid ({userid}), from {company_name} is expired !!",
-                        "broadcast_on": datetime.datetime.now(),
+                        "company_name": company_name,
+                        "job_id": job_id,
+                        "schedule_plan": schedule_plan,
+                        "end_date": end_date,
+                        "vote_star": vote_star,
+                        "vote_percent": vote_percent,
+                        "vote_status": vote_status,
+                        "expired": True,
                     },
                 )
-    return "Done"
+
+                if not created_cn:
+                    # new add broadcast
+                    if vote_star != obj_cn.vote_star:
+                        obj_cn.expired = True
+                        name = f"broadcast-notification-{str(userid)}"
+                        tasks = get_object_or_404(PeriodicTask, name=name)
+                        tasks.enabled = True
+                        tasks.save()
+                    obj_cn.company_name = company_name
+                    obj_cn.job_id = job_id
+                    obj_cn.end_date = end_date
+                    obj_cn.schedule_plan = schedule_plan
+                    obj_cn.vote_star = vote_star
+                    obj_cn.vote_percent = vote_percent
+                    obj_cn.vote_status = vote_status
+                    obj_cn.save()
+                else:
+                    # update broadcast
+                    BroadcastNotification.objects.update_or_create(
+                        userid=userid,
+                        defaults={
+                            "userid": userid,
+                            "message": f"You received notifications userid ({userid}), from {company_name} is expired !!",
+                            "broadcast_on": datetime.datetime.now(),
+                        },
+                    )
+        return "Done"
+    return None
