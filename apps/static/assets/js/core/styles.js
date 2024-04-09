@@ -108,7 +108,7 @@ $(document).ready(function() {
                 win.document.write('<center><br><br><h2 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;">"'
                 +  data.company_name +'"</h2><h2 style="font-family:monospace;"> Subject Area: "' 
                 + data.job_id +  '"</h2><img src="'+ img +'" /><div style="position: absolute; top:'+ top + 'px; left: 261px;"><img src="' 
-                + data.qrcode + '"onload="window.print();window.close()"/></div><br><h3 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;"> https://https://iaq-tracking-app-d375cd4c464e.herokuapp.com </h3></center>');
+                + data.qrcode + '"onload="window.print();window.close()"/></div><br><h3 style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;"> https://iaq-tracking-app-d375cd4c464e.herokuapp.com </h3></center>');
                 win.focus();
             },
             error: function(error) {

@@ -135,7 +135,7 @@ class page_userview(View):
                 userid=qr_user,
                 defaults={
                     "userid": qr_user,
-                    "name": f"https://iaq-tracking-app-d375cd4c464e.herokuapp.com/qr-code/{qr_user}",
+                    "name": f"iaq-tracking-app-d375cd4c464e.herokuapp.com/qr-code/{qr_user}",
                 },
             )
             if form.is_valid():
@@ -288,7 +288,7 @@ class page_copyview(View):
                 userid=qr_user,
                 defaults={
                     "userid": qr_user,
-                    "name": f"https://iaq-tracking-app-d375cd4c464e.herokuapp.com/qr-code/{qr_user}",
+                    "name": f"iaq-tracking-app-d375cd4c464e.herokuapp.com/qr-code/{qr_user}",
                 },
             )
 
