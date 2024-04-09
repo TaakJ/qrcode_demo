@@ -23,38 +23,6 @@
     margin-top: calc(3 * var(--size-bezel)); 
 }
 
-
-
-/* .gradient-background {
-width: 100%;
-background: linear-gradient(62deg, #EE7752, #f08ab1, #65c0e1, #23D5AB);
-    animation: gradient 10s ease infinite; 
-    background-size: 400% 400%;
-
-}
-@-webkit-keyframes gradient{
-0% {
-    background-position: 0 50%;
-}
-50% {
-    background-position: 100% 50%;
-}
-100% {
-    background-position: 0% 50%;
-}
-}
-@keyframes gradient{
-0% {
-    background-position: 0 50%;
-}
-50% {
-    background-position: 100% 50%;
-}
-100% {
-    background-position: 0% 50%;
-}
-}  */
-
 .container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, max-content));
@@ -283,7 +251,7 @@ input {
 
     <div class="row">
         <div class="col-md-12">
-            <div class="card card-chart gradient-background">
+            <div class="card card-chart">
                 <div class="card-header card-header-primary card-header-icon"> 
                     <div class="card-icon">
                         <i class="material-icons">devices</i>
@@ -294,7 +262,7 @@ input {
                         <h2 style="color: #212121;">IAQ Tracking</h2>
                         <div class="section" style="text-align: center;">
                             <span id="statusid">Job Description</span>
-                            <h2>{{ model.job_id }}</h2>
+                            <h2 style="color: #798eb3;">{{ model.job_id }}</h2>
                         </div>
                     </div>
                     
