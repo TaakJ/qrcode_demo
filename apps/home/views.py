@@ -22,10 +22,12 @@ from django.utils.decorators import method_decorator
 from django_celery_beat.models import PeriodicTask
 from .tasks import push_message_job, calculate_rating
 
+
 # Create your views here.
 def test(request):
     push_message_job.delay()
     return HttpResponse("Done")
+
 
 @method_decorator(login_required(login_url="/login/"), name="dispatch")
 class indexiew(View):
@@ -49,6 +51,7 @@ class indexiew(View):
 class page_userview(View):
     form_class = company_form
     page = ""
+
     @csrf_exempt
     def get(self, request, userid=None):
         if userid is None:
@@ -126,13 +129,13 @@ class page_userview(View):
                 form_data_dict["schedule_plan"]
             )
             form = self.form_class(form_data_dict)
-            
+
             qr_user = form_data_dict["userid"]
             company_qrcode.objects.update_or_create(
                 userid=qr_user,
                 defaults={
                     "userid": qr_user,
-                    "name": f"iaq-trackking-app-df045633f579.herokuapp.com/qr-code/{qr_user}",
+                    "name": f"https://iaq-tracking-app-d375cd4c464e.herokuapp.com/qr-code/{qr_user}",
                 },
             )
             if form.is_valid():
@@ -145,7 +148,7 @@ class page_userview(View):
                 (record.vote_star == int(form_data_dict["vote_star"]))
                 and (record.schedule_plan == int(form_data_dict["schedule_plan"]))
                 and (record.end_date == form_data_dict["start_date"])
-            ):  
+            ):
                 print("same วันเดียวกัน")
                 vote_star = record.vote_star
                 vote_percent = record.vote_percent
@@ -211,10 +214,12 @@ class page_userview(View):
         form_data_dict["url"] = "/ui-tables/"
         return JsonResponse(form_data_dict)
 
+
 @method_decorator(login_required(login_url="/login/"), name="dispatch")
 class page_copyview(View):
     form_class = company_form
     page = ""
+
     @csrf_exempt
     def get(self, request, userid=None):
 
@@ -272,7 +277,7 @@ class page_copyview(View):
             form_data_dict["end_date"] = datetime.datetime.strptime(
                 form_data_dict["start_date"], "%Y-%m-%d"
             ) + datetime.timedelta(days=int(form_data_dict["schedule_plan"]))
-            
+
             form_data_dict["avg_vote"] = vote_percent / int(
                 form_data_dict["schedule_plan"]
             )
@@ -283,7 +288,7 @@ class page_copyview(View):
                 userid=qr_user,
                 defaults={
                     "userid": qr_user,
-                    "name": f"iaq-trackking-app-df045633f579.herokuapp.com/qr-code/{qr_user}",
+                    "name": f"https://iaq-tracking-app-d375cd4c464e.herokuapp.com/qr-code/{qr_user}",
                 },
             )
 
@@ -292,6 +297,7 @@ class page_copyview(View):
 
         form_data_dict["url"] = "/copy-user/"
         return JsonResponse(form_data_dict)
+
 
 @method_decorator(login_required(login_url="/login/"), name="dispatch")
 class ui_tablesview(View):
@@ -351,6 +357,7 @@ class ui_tablesview(View):
             data["count"] = count
 
         return JsonResponse(data)
+
 
 @method_decorator(login_required(login_url="/login/"), name="dispatch")
 class ui_noticview(View):
@@ -435,6 +442,7 @@ def delete_userview(request, userid=None):
 
     return JsonResponse(context)
 
+
 class qrcodeview(View):
 
     @csrf_exempt
@@ -477,7 +485,7 @@ class qrcodeview(View):
             "company_name": model.company_name,
             "job_id": model.job_id,
             "qr_type": model.qr_type,
-            "qrcode": qrcode.qr_code.url
+            "qrcode": qrcode.qr_code.url,
         }
 
         return JsonResponse(data)

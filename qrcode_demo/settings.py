@@ -29,7 +29,7 @@ SECRET_KEY = "django-insecure-wj(iy$6b+tu81v0t!lk^(6w_@yojb8tf!=v_uwbky0ge8xk*l=
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-CSRF_TRUSTED_ORIGINS = ["https://iaq-trackking-app-df045633f579.herokuapp.com"]
+CSRF_TRUSTED_ORIGINS = ["https://https://iaq-tracking-app-d375cd4c464e.herokuapp.com"]
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
@@ -141,11 +141,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # CLOUDUNARY_STORAGE SETTING
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dzwffbeuq',
-    'API_KEY': '126965395949196',
-    'API_SECRET': '1gjo14Diw6W-n1-Z-walFn4Apnk'
+    "CLOUD_NAME": "dzwffbeuq",
+    "API_KEY": "126965395949196",
+    "API_SECRET": "1gjo14Diw6W-n1-Z-walFn4Apnk",
 }
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 
 # CHANNEL SETTING
