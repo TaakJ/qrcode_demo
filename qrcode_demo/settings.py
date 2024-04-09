@@ -81,8 +81,8 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = "qrcode_demo.wsgi.application"
 ASGI_APPLICATION = "qrcode_demo.asgi.application"
+WSGI_APPLICATION = "qrcode_demo.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
