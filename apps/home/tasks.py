@@ -118,6 +118,8 @@ def push_message_job(self):
         start_date__lte=date_now, feed=True
     ).values() 
     
+    print(model_profile)
+    
     for instance in model_profile:
         userid = instance["userid"]
         company_name = instance["company_name"]
