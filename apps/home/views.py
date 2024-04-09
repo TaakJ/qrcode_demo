@@ -118,6 +118,7 @@ class page_userview(View):
             form_data_dict["percent_cost"] = int(form_data_dict["percent_cost"])
             form_data_dict["discount"] = int(form_data_dict["discount"])
             form_data_dict["schedule_plan"] = int(form_data_dict["schedule_plan"])
+            form_data_dict["start_date"] = datetime.date.today().strftime("%Y-%m-%d")
             form_data_dict["end_date"] = datetime.datetime.strptime(
                 form_data_dict["start_date"], "%Y-%m-%d"
             ) + datetime.timedelta(days=int(form_data_dict["schedule_plan"]))
