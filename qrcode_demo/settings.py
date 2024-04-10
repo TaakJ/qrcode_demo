@@ -84,6 +84,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "qrcode_demo.wsgi.application"
 ASGI_APPLICATION = "qrcode_demo.asgi.application"
+
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
@@ -94,8 +95,10 @@ DATABASES = {
     }
 }
 
-db_from_env = dj_database_url.config(conn_max_age=3000)
-DATABASES["default"].update(db_from_env)
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=600)
+#DATABASES['default'] = dj_database_url.config(default='postgres://...'}
+DATABASES['default'].update(db_from_env)
 
 # Scheduler
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"  # Default
@@ -122,9 +125,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
+
 TIME_ZONE = "Asia/Bangkok"
+
 USE_I18N = True
+
 USE_TZ = True
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 STATIC_ROOT = os.path.join(CORE_DIR, "staticfiles")
@@ -164,13 +171,12 @@ else:
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": [os.environ.get("REDIS_URL", "redis://localhost:6379")],
-            # "capacity": 1500,
-            # "expiry": 10,
+            "capacity": 1500,
+            "expiry": 10,
         },
     },
     }
     CELERY_BROKER_URL = os.environ["REDIS_URL"]
-    
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_SELERLIZER = "json"
