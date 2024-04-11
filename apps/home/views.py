@@ -149,13 +149,11 @@ class page_userview(View):
                 and (record.schedule_plan == int(form_data_dict["schedule_plan"]))
                 and (record.end_date == form_data_dict["start_date"])
             ):
-                print("same วันเดียวกัน")
                 vote_star = record.vote_star
                 vote_percent = record.vote_percent
                 vote_status = record.vote_status
                 avg_vote = record.avg_vote
             else:
-                print("คนละวัน")
                 vote_star = int(form_data_dict["vote_star"])
                 vote_percent, vote_status = calculate_rating(vote_star)
                 avg_vote = vote_percent / int(form_data_dict["schedule_plan"])
@@ -382,28 +380,28 @@ class ui_noticview(View):
             html_template = loader.get_template("home/page-500.html")
             return HttpResponse(html_template.render(context, self.request))
 
-    @csrf_exempt
-    def post(self, request, userid=None):
-        data = {"segment": "ui-notic"}
-        if self.request.POST.get("checked") == "true":
-            checked = True
-        else:
-            checked = False
+    # @csrf_exempt
+    # def post(self, request, userid=None):
+    #     data = {"segment": "ui-notic"}
+    #     if self.request.POST.get("checked") == "true":
+    #         checked = True
+    #     else:
+    #         checked = False
 
-        record = get_object_or_404(company_notice, userid=userid)
-        record.expired = checked
-        record.save()
+    #     record = get_object_or_404(company_notice, userid=userid)
+    #     record.expired = checked
+    #     record.save()
 
-        # count notice
-        count = company_notice.objects.filter(expired=True).count()
-        data["count"] = count
+    #     # count notice
+    #     count = company_notice.objects.filter(expired=True).count()
+    #     data["count"] = count
 
-        name = f"broadcast-notification-{str(userid)}"
-        tasks = get_object_or_404(PeriodicTask, name=name)
-        tasks.enabled = checked
-        tasks.save()
+    #     name = f"broadcast-notification-{str(userid)}"
+    #     tasks = get_object_or_404(PeriodicTask, name=name)
+    #     tasks.enabled = checked
+    #     tasks.save()
 
-        return JsonResponse(data)
+    #     return JsonResponse(data)
 
 
 def delete_userview(request, userid=None):

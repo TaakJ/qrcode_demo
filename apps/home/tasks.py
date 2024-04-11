@@ -187,7 +187,7 @@ def push_message_job(self):
                         userid=userid,
                         defaults={
                             "userid": userid,
-                            "message": f"You received notifications userid ({userid}), from {company_name} is expired !!",
+                            "message": f'You received notifications from userid ({userid}) / "{company_name}" was expired !!',
                             "broadcast_on": datetime.datetime.now(),
                         },
                     )
