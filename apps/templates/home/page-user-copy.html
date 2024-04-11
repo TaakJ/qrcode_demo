@@ -7,19 +7,6 @@
 <style>
 @import url('https://rsms.me/inter/inter.css');
 
-:root {
-    --color-dark: #212121;
-    --color-text: var(--color-dark);
-    --size-bezel: .5rem;
-    --size-radius: 4px;
-    color: var(--color-text);
-}
-.card {
-    border-radius: var(--size-radius);
-    border: 3px solid var(--color-shadow, currentColor);
-    box-shadow: .5rem .5rem 0 var(--color-shadow, currentColor);
-}
-
 select.form-control{
     display: inline-block;
     width: 100%;
@@ -86,9 +73,9 @@ text-align: center;
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header card-header-primary">
-                <h4 class="card-title">Edit Profile</h4>
-                <p class="card-category">Complete company profile</p>
+            <div class="card-header card-header-success">
+                <h4 class="card-title">IAQ Profile</h4>
+                <p class="card-category">Create new IAQ profile and update information for existing IAQ profile</p>
             </div>
             <div class="card-body">
                 <form id="page-copy-userid" data-url="{% url 'edit-user' model.userid %}">
@@ -218,16 +205,10 @@ text-align: center;
                         </select>
                     </div>
                     </div>
-                    <div class="col-md-3 align-self-end" style="display: none;">
-                    <div class="form-group">
-                        <label class="bmd-label-floating"  style="font-size: 12px;">Register Date</label>
-                        <input type="date" class="form-control" name="start_date" id="start_date"  required>
-                    </div>
-                    </div>
                     <div class="col-md-3 align-self-end">
                     <div class="form-group">
                         <label class="bmd-label-floating"  style="font-size: 12px;">Start Date</label>
-                        <input type="date" class="form-control" name="end_date" id="end_date"  required>
+                        <input type="date" class="form-control" name="start_date" id="start_date"  required>
                     </div>
                     </div>
                     <div class="col-md-1 align-self-end">
@@ -258,7 +239,7 @@ text-align: center;
                     </div>
                     </div>
                 </div>
-                <button type="button" class="btn btn-danger pull-right cancel" style="margin-left: 1%" data-url="{% url 'del-user' model.userid %}">Delete Profile</button>
+                <button type="button" class="btn btn-rose pull-right cancel" style="margin-left: 1%" data-url="{% url 'del-user' model.userid %}">Cancel Profile</button> 
                 <button type="submit" class="btn btn-success pull-right submitbtn" name="update">Update Profile<a href="{% url 'ui-tables' %}"></a></button>
                 <button type="submit" class="btn btn-primary pull-right submitbtn" name="copy" style="margin-right: 1%" disabled>Copy Profile</button>
                 <div class="clearfix"></div>
@@ -274,21 +255,11 @@ text-align: center;
 <script src="/static/assets/js/core/styles.js"></script>
 <script>
 
- // start date
+  // start date
 var now = new Date();
 var today = now.getFullYear()+"-"+(("0" + (now.getMonth() + 1)).slice(-2))+"-"+(("0" + now.getDate()).slice(-2));
-
-// end date
-var add = now.setDate(now.getDate() + 1);
-var someDate = new Date(add)
-var adddate = now.getFullYear()+"-"+(("0" + (someDate.getMonth() + 1)).slice(-2))+"-"+(("0" + someDate.getDate()).slice(-2));
-
 $('#start_date').val(today);
 $('#start_date').attr('min', today);
-$('#start_date').attr('max', today);
-
-$('#end_date').val(adddate);
-$('#end_date').attr('min', adddate);
 
 
 $(document).ready(function() {
@@ -361,13 +332,13 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(data) {
                 if (data.resp) {
-                    md.showNotification('top','center', '<b> DELETE TO Customer Profile' + data.company_name + '(' + data.userid  + ')' + '- on database SQLite. </b>');
+                    md.showNotification('top','center', '<b> Delete To Customer Profile&nbsp;"' + data.company_name + '"&nbsp(' + data.userid  + ')' + '&nbspOn Database. </b>');
                     setTimeout(function () {
                         // window.location.reload(true);
                         window.location.href = '/ui-tables/'
                     }, 3000);
                 } else {
-                    md.showNotification('top','center', '<b> PROBLEM !! CAN NOT DELETE Customer Profile<b>' + data.company_name + '(' + data.userid  + ')' + '- on database SQLite. </b>');
+                    md.showNotification('top','center', '<b> Problem !! Can Not Delete Customer Profile&nbsp;"' + data.company_name + '"&nbsp(' + data.userid  + ')' + '&nbspOn Database. </b>');
                 }    
             },
             error: function(error) {

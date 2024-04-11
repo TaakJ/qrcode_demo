@@ -10,20 +10,6 @@
 
 @import url('https://rsms.me/inter/inter.css');
 
-  :root {
-    --color-dark: #212121;
-    --color-text: var(--color-dark);
-    --size-bezel: .5rem;
-    --size-radius: 4px;
-    color: var(--color-text);
-  }
-  .card {
-    border-radius: var(--size-radius);
-    border: 3px solid var(--color-shadow, currentColor);
-    box-shadow: .5rem .5rem 0 var(--color-shadow, currentColor);
-  }
-
-
   select.form-control{
     display: inline-block;
     width: 100%;
@@ -91,9 +77,9 @@
           <div class="row">
             <div class="col-md-12">
               <div class="card">
-                <div class="card-header card-header-primary">
-                  <h4 class="card-title">Edit Profile</h4>
-                  <p class="card-category">Scope of Company Profile</p>
+                <div class="card-header card-header-success">
+                  <h4 class="card-title">IAQ Profile</h4>
+                  <p class="card-category">Create new IAQ profile and update information for existing IAQ profile</p>
                 </div>
                 <div class="card-body">
                     <form id="page-userid">
@@ -223,16 +209,10 @@
                             </select>
                         </div>
                       </div>
-                      <div class="col-md-3 align-self-end" style="display: none;">
-                        <div class="form-group">
-                          <label class="bmd-label-floating"  style="font-size: 12px;">Register Date</label>
-                          <input type="date" class="form-control" name="start_date" id="start_date"  required>
-                        </div>
-                      </div>
                       <div class="col-md-3 align-self-end">
                         <div class="form-group">
                           <label class="bmd-label-floating"  style="font-size: 12px;">Start Date</label>
-                          <input type="date" class="form-control"  name="end_date" id="end_date" required>
+                          <input type="date" class="form-control"  name="start_date" id="start_date" required>
                         </div>
                       </div>
                       <div class="col-md-1 align-self-end">
@@ -278,19 +258,11 @@
 {% block javascripts %}
 <script>
 
-  // start date
-  var now = new Date();
-  var today = now.getFullYear()+"-"+(("0" + (now.getMonth() + 1)).slice(-2))+"-"+(("0" + now.getDate()).slice(-2));
-  $('#start_date').val(today);
-  $('#start_date').attr('min', today);
-  $('#start_date').attr('max', today);
-
-  // end date
-  var add = now.setDate(now.getDate() + 1);
-  var someDate = new Date(add)
-  var adddate = now.getFullYear()+"-"+(("0" + (someDate.getMonth() + 1)).slice(-2))+"-"+(("0" + someDate.getDate()).slice(-2));
-  $('#end_date').val(adddate);
-  $('#end_date').attr('min', adddate);
+    // start date
+    var now = new Date();
+    var today = now.getFullYear()+"-"+(("0" + (now.getMonth() + 1)).slice(-2))+"-"+(("0" + now.getDate()).slice(-2));
+    $('#start_date').val(today);
+    $('#start_date').attr('min', today);
 
   $(document).ready(function() {
 

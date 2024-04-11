@@ -1,5 +1,5 @@
 from django import forms
-from apps.home.models import company_profile, username, company_qrcode
+from apps.home.models import company_profile, username
 
 class company_form(forms.ModelForm):
         
@@ -85,13 +85,6 @@ class company_form(forms.ModelForm):
                 "class": "form-control"
             }
         ))
-    
-    dual_date = forms.DateField(
-        widget=forms.DateInput(
-            attrs={
-                "type": "date"
-            }
-        ))
             
     vote_star = forms.IntegerField(
         widget=forms.NumberInput(
@@ -147,7 +140,7 @@ class company_form(forms.ModelForm):
         fields= ('userid', 'company_name', 'address', 'telephone',
                 'district', 'sub_district', 'province', 'postal_code',
                 'job_id', 'cost', 'percent_cost', 'discount',
-                'approve_user', 'start_date', 'end_date', 'schedule_plan', 'dual_date',
+                'approve_user', 'start_date', 'end_date', 'schedule_plan',
                 'avg_vote','vote_star', 'vote_percent', 'vote_status')
 
 class username_form(forms.ModelForm):    

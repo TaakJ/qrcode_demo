@@ -28,9 +28,11 @@
   font-weight: 900;
 }
 
+
+
 </style>
 
-<div class="sidebar" data-color="purple" data-background-color="black" data-image="/static/assets/img/sidebar-3.jpg">
+<div class="sidebar" data-color="purple" data-background-color="#fff" data-image="/static/assets/img/sidebar-3.jpg">
 <div class="logo">
   <a target="_blank" rel="noopener noreferrer" 
     href="" class="simple-text logo-normal">Menu
@@ -42,38 +44,38 @@
 
       {% if request.user.is_authenticated %}
 
-        <li class="nav-item {% if 'ui-tables' in segment %} active {% endif %}">
-          <a class="nav-link" href="{% url 'ui-tables' %}">
-            <i class="material-icons">content_paste</i>
-            <p>List Profile</p>
-          </a>
-        </li>
-
-        <li class="nav-item {% if 'ui-notic' in segment %} active {% endif %}">
-          <a class="nav-link" href="{% url 'ui-notic' %}" >
-            <i class="material-icons notices">notifications<span class="count" id="cnt">0</span></i>
-            <P>Notifications</P>
+        <li class="nav-item {% if 'index' in segment %} active {% endif %}">
+          <a class="nav-link" href="{% url 'index' %}">
+            <i class="material-icons">home</i>
+            <p class="d-lg-none d-md-block">
+            <p>Home</p>
           </a>
         </li>
 
         <li class="nav-item {% if 'page-user' in segment %} active {% endif %}">
           <a class="nav-link" href="{% url 'page-user' %}">
             <i class="material-icons">person</i>
-            <p>User Profile</p>
+            <p>IAQ Profile</p>
           </a>
         </li> 
 
-        <!-- <li class="nav-item {% if 'index' in segment %} active {% endif %}">
-          <a class="nav-link" href="{% url 'index' %}">
-            <i class="material-icons">dashboard</i>
-            <p class="d-lg-none d-md-block">
-            <p>Dashboard</p>
+        <li class="nav-item {% if 'ui-tables' in segment %} active {% endif %}">
+          <a class="nav-link" href="{% url 'ui-tables' %}">
+            <i class="material-icons">content_paste</i>
+            <p>IAQ List</p>
           </a>
-        </li> -->
+        </li>
+
+        <li class="nav-item {% if 'ui-notic' in segment %} active {% endif %}">
+          <a class="nav-link" href="{% url 'ui-notic' %}" >
+            <i class="material-icons notices">notifications<span class="count" id="cnt">0</span></i>
+            <P>IAQ Notifications</P>
+          </a>
+        </li>
 
       <li class="nav-item" style="clear: left;">
         <a class="nav-link" href="{% url 'logout' %}" >
-          <i class="material-icons">directions_run</i>
+          <i class="material-icons">logout</i>
           <p>Logout</p>
         </a>
       </li>

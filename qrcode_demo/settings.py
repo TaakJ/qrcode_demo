@@ -16,6 +16,7 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 import cloudinary_storage
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,7 +30,7 @@ SECRET_KEY = "django-insecure-wj(iy$6b+tu81v0t!lk^(6w_@yojb8tf!=v_uwbky0ge8xk*l=
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-CSRF_TRUSTED_ORIGINS = ["https://iaq-trackking-app-df045633f579.herokuapp.com"]
+CSRF_TRUSTED_ORIGINS = ["https://iaq-tracking-app-d375cd4c464e.herokuapp.com"]
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
@@ -83,6 +84,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "qrcode_demo.wsgi.application"
 ASGI_APPLICATION = "qrcode_demo.asgi.application"
+
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
@@ -96,6 +98,7 @@ DATABASES = {
 import dj_database_url
 
 db_from_env = dj_database_url.config(conn_max_age=600)
+# DATABASES['default'] = dj_database_url.config(default='postgres://...'}
 DATABASES["default"].update(db_from_env)
 
 # Scheduler
@@ -123,9 +126,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
+
 TIME_ZONE = "Asia/Bangkok"
+
 USE_I18N = True
+
 USE_TZ = True
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 STATIC_ROOT = os.path.join(CORE_DIR, "staticfiles")
@@ -141,37 +148,37 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # CLOUDUNARY_STORAGE SETTING
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dzwffbeuq',
-    'API_KEY': '126965395949196',
-    'API_SECRET': '1gjo14Diw6W-n1-Z-walFn4Apnk'
+    "CLOUD_NAME": "dzwffbeuq",
+    "API_KEY": "126965395949196",
+    "API_SECRET": "1gjo14Diw6W-n1-Z-walFn4Apnk",
 }
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
-
-# CHANNEL SETTING
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels_redis.core.RedisChannelLayer",
-#         "CONFIG": {
-#             "hosts": [("127.0.0.1", 6379)],
-#         },
-#     },
-# }
-
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [os.environ.get("REDIS_URL", "redis://localhost:6379")],
-            "capacity": 1500,
-            "expiry": 10,
-        },
-    },
-}
 
 # CELERY SETTING
-CELERY_BROKER_URL = os.environ["REDIS_URL"]
-# CELERY_BROKER_URL = "redis://127.0.0.1:6379"
+if DEBUG:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [("127.0.0.1", 6379)],
+            },
+        },
+    }
+    CELERY_BROKER_URL = "redis://127.0.0.1:6379"
+else:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [os.environ.get("REDIS_URL", "redis://localhost:6379")],
+                "capacity": 1500,
+                "expiry": 10,
+            },
+        },
+    }
+    CELERY_BROKER_URL = os.environ["REDIS_URL"]
+
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_SELERLIZER = "json"

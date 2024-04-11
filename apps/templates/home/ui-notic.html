@@ -6,27 +6,7 @@
 {% block stylesheets %}
 
 <style>
-:root {
-    --color-dark: #212121;
-    --color-text: var(--color-dark);
-    --size-bezel: .5rem;
-    --size-radius: 4px;
-    --text: #FFFFFF;
-    --slider: #E0E0E0; 
-    --shadow: #0000001a;
 
-    color: var(--color-text);
-
-    --col-1-up: #70A7FF;
-    --col-1: #3A86FF;
-    --col-1-down: #0056E0;
-}
-.card {
-    padding-bottom: calc(4 * var(--size-bezel));
-    border-radius: var(--size-radius);
-    border: 3px solid var(--color-shadow, currentColor);
-    box-shadow: .5rem .5rem 0 var(--color-shadow, currentColor);
-}
 table {
     width: 70%;
     margin: auto;
@@ -73,65 +53,14 @@ tr:hover td.highlight div.bod {
     transform: scaleX(3);
 }
 
-.switch  {
-    position: relative;
-    display: inline-block;
-    width: 2rem;
-    height: 1.2rem;
-    margin: 0 auto;
-}
-
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer; 
-    background-color: var(--slider);
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 1.5rem;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-
-.slider:before {
-    position: absolute;
-    content: '';
-    background-color: var(--text);
-    height: .95rem;
-    width: .95rem;
-    left: .125rem;
-    bottom: .125rem;
-    border-radius: 50%;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-
-input:checked + .slider:before {
-    -webkit-transform: translateX(.85rem);
-    -ms-transform: translateX(.85rem);
-    transform: translateX(.85rem);
-}
-
-/* input:checked + .slider-1 {
-    background-color: var(--col-1);
-} */
-
-input:checked + .slider-1 {
-    background-color: var(--col-1);
-    /* box-shadow:
-    .01rem -.01rem 0.5rem 0 var(--col-1-down),
-    0.5rem 0.5rem 1.25rem 0 var(--shadow),
-    0.25rem 0.25rem 0.5rem 0 var(--shadow); */
-}
-input:checked + .slider-1:before {
-    background: var(--col-1-down);
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    padding: 6px 0px;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.42857;
 }
 
 </style>
@@ -143,9 +72,9 @@ input:checked + .slider-1:before {
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header card-header-danger">
-                <h4 class="card-title">Notifications Profile</h4>
-                <p class="card-category">Notifications Company Profile was expired !!</p>
+            <div class="card-header card-header-rose">
+                <h4 class="card-title">IAQ Notifications</h4>
+                <p class="card-category">Notice IAQ which reach maintenance period according to the end date</p>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -153,7 +82,7 @@ input:checked + .slider-1:before {
                         <thead>
                             <th class="highlight"><div class="bod"></div></th>
                             <th style="font-weight:bold; font-size: 15px; color:#212121;">
-                                Expired
+                                Notice
                             </th>
                             <th style="font-weight:bold; font-size: 15px; color:#212121;">
                                 Userid
@@ -165,10 +94,10 @@ input:checked + .slider-1:before {
                                 Job Description
                             </th>
                             <th style="font-weight:bold; font-size: 15px; color:#212121;">
-                                Dual Date
+                                End Date
                             </th>
                             <th style="font-weight:bold; font-size: 15px; color:#212121;">
-                                Countdown
+                                Timing
                             </th>
                             <th style="font-weight:bold; font-size: 15px; color:#212121;">
                                 Vote Star
@@ -185,20 +114,23 @@ input:checked + .slider-1:before {
                             {% for model in model %}
                             <tr>
                                 <td class="highlight"><div class="bod"></div></td>
-                                <td class="td-actions text-left">
-                                    <label class="switch switch-1" for="{{ model.userid }}">
-                                        <input class="notice" type="checkbox" name="{{ model.userid }}" id="{{ model.userid }}" value="{{ model.expired }}" data-url="/ui-notic/{{model.userid}}">
-                                        <span class="slider round slider-1"></span>
-                                    </label>
-                                </td>
+                                {% if model.expired %}
+                                    <td class="td-actions text-left">
+                                        <button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i></button>
+                                    </td>
+                                {% else %}
+                                    <td class="td-actions text-left">
+                                        <button type="button" class="btn btn-rose btn-circle"><i class="fa fa-times"></i></button>
+                                    </td>
+                                {% endif %}
                                 <td> {{ model.userid|safe }}</td>
                                 <td> {{ model.company_name|safe }}</td>
                                 <td> {{ model.job_id|safe }} </td>
-                                <td> {{ model.dual_date }}</td>
+                                <td> {{ model.end_date|safe }}</td>
                                 <td><span></span></td>
                                 <td>{{ model.vote_star|safe}}</td>
                                 <td> {{ model.vote_status|safe }} </td>
-                                <td> {{ model.updated }} </td>
+                                <td> {{ model.updated|safe}} </td>
                                 <td><div class="bod"></div></td>
                             </tr>
                             {% endfor %}

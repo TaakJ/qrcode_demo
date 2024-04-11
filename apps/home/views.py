@@ -2,9 +2,8 @@ import json
 import datetime
 from django import template
 
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.template import loader
-from django.urls import reverse
 from django.shortcuts import get_object_or_404
 
 from apps.home.models import (
@@ -20,20 +19,19 @@ from django.views.generic import View
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-
-from django_celery_beat.models import PeriodicTask, CrontabSchedule, IntervalSchedule
+from django_celery_beat.models import PeriodicTask
 from .tasks import push_message_job, calculate_rating
 
+
 # Create your views here.
-
-
 def test(request):
     push_message_job.delay()
     return HttpResponse("Done")
 
+
 @method_decorator(login_required(login_url="/login/"), name="dispatch")
 class indexiew(View):
-
+    @csrf_exempt
     def get(self, request):
         try:
             count = company_notice.objects.filter(expired=True).count()
@@ -106,7 +104,7 @@ class page_userview(View):
         form_data_dict = {}
         form_data_list = json.loads(self.request.POST.get("request"))
         form_data_dict = {field["name"]: field["value"] for field in form_data_list}
-        # add
+        # add new data
         if userid is None:
             try:
                 form_data_dict["userid"] = (
@@ -123,8 +121,9 @@ class page_userview(View):
             form_data_dict["percent_cost"] = int(form_data_dict["percent_cost"])
             form_data_dict["discount"] = int(form_data_dict["discount"])
             form_data_dict["schedule_plan"] = int(form_data_dict["schedule_plan"])
-            form_data_dict["dual_date"] = datetime.datetime.strptime(
-                form_data_dict["end_date"], "%Y-%m-%d"
+            form_data_dict["start_date"] = datetime.date.today().strftime("%Y-%m-%d")
+            form_data_dict["end_date"] = datetime.datetime.strptime(
+                form_data_dict["start_date"], "%Y-%m-%d"
             ) + datetime.timedelta(days=int(form_data_dict["schedule_plan"]))
             form_data_dict["avg_vote"] = vote_percent / int(
                 form_data_dict["schedule_plan"]
@@ -136,20 +135,19 @@ class page_userview(View):
                 userid=qr_user,
                 defaults={
                     "userid": qr_user,
-                    "name": f"iaq-trackking-app-df045633f579.herokuapp.com/qr-code/{qr_user}",
+                    "name": f"iaq-tracking-app-d375cd4c464e.herokuapp.com/qr-code/{qr_user}",
                 },
             )
             if form.is_valid():
                 form.save()
 
         else:
-            # update
+            # update data
             record = get_object_or_404(company_profile, userid=userid)
-
             if (
                 (record.vote_star == int(form_data_dict["vote_star"]))
                 and (record.schedule_plan == int(form_data_dict["schedule_plan"]))
-                and (record.dual_date == form_data_dict["end_date"])
+                and (record.end_date == form_data_dict["start_date"])
             ):
                 vote_star = record.vote_star
                 vote_percent = record.vote_percent
@@ -175,10 +173,7 @@ class page_userview(View):
             record.start_date = datetime.datetime.strptime(
                 form_data_dict["start_date"], "%Y-%m-%d"
             )
-            record.end_date = datetime.datetime.strptime(
-                form_data_dict["end_date"], "%Y-%m-%d"
-            )
-            record.dual_date = record.end_date + datetime.timedelta(
+            record.end_date = record.start_date + datetime.timedelta(
                 days=int(form_data_dict["schedule_plan"])
             )
             record.schedule_plan = int(form_data_dict["schedule_plan"])
@@ -210,7 +205,7 @@ class page_userview(View):
                 else:
                     notices.company_name = record.company_name
                     notices.job_id = record.job_id
-                    notices.dual_date = record.dual_date
+                    notices.end_date = record.end_date
                     notices.schedule_plan = record.schedule_plan
                     notices.save()
 
@@ -259,7 +254,6 @@ class page_copyview(View):
         form_data_dict = {}
         form_data_list = json.loads(self.request.POST.get("request"))
         form_data_dict = {field["name"]: field["value"] for field in form_data_list}
-
         if userid is None:
             try:
                 form_data_dict["userid"] = (
@@ -278,13 +272,10 @@ class page_copyview(View):
             form_data_dict["percent_cost"] = int(form_data_dict["percent_cost"])
             form_data_dict["discount"] = int(form_data_dict["discount"])
             form_data_dict["schedule_plan"] = int(form_data_dict["schedule_plan"])
-            form_data_dict["start_date"] = datetime.date.today().strftime("%Y-%m-%d")
             form_data_dict["end_date"] = datetime.datetime.strptime(
                 form_data_dict["start_date"], "%Y-%m-%d"
-            ) + datetime.timedelta(days=1)
-            form_data_dict["dual_date"] = form_data_dict[
-                "end_date"
-            ] + datetime.timedelta(days=int(form_data_dict["schedule_plan"]))
+            ) + datetime.timedelta(days=int(form_data_dict["schedule_plan"]))
+
             form_data_dict["avg_vote"] = vote_percent / int(
                 form_data_dict["schedule_plan"]
             )
@@ -295,20 +286,23 @@ class page_copyview(View):
                 userid=qr_user,
                 defaults={
                     "userid": qr_user,
-                    "name": f"iaq-trackking-app-df045633f579.herokuapp.com/qr-code/{qr_user}",
+                    "name": f"iaq-tracking-app-d375cd4c464e.herokuapp.com/qr-code/{qr_user}",
                 },
             )
 
             if form.is_valid():
                 form.save()
 
-            form_data_dict["url"] = "/copy-user/"
-            return JsonResponse(form_data_dict)
+        form_data_dict["url"] = "/copy-user/"
+        return JsonResponse(form_data_dict)
 
 
 @method_decorator(login_required(login_url="/login/"), name="dispatch")
 class ui_tablesview(View):
+<<<<<<< HEAD
 
+=======
+>>>>>>> development
     @csrf_exempt
     def get(self, request):
         model = company_profile.objects.all().order_by("userid")
@@ -390,28 +384,28 @@ class ui_noticview(View):
             html_template = loader.get_template("home/page-500.html")
             return HttpResponse(html_template.render(context, self.request))
 
-    @csrf_exempt
-    def post(self, request, userid=None):
-        data = {"segment": "ui-notic"}
-        if self.request.POST.get("checked") == "true":
-            checked = True
-        else:
-            checked = False
+    # @csrf_exempt
+    # def post(self, request, userid=None):
+    #     data = {"segment": "ui-notic"}
+    #     if self.request.POST.get("checked") == "true":
+    #         checked = True
+    #     else:
+    #         checked = False
 
-        record = get_object_or_404(company_notice, userid=userid)
-        record.expired = checked
-        record.save()
+    #     record = get_object_or_404(company_notice, userid=userid)
+    #     record.expired = checked
+    #     record.save()
 
-        # count notice
-        count = company_notice.objects.filter(expired=True).count()
-        data["count"] = count
+    #     # count notice
+    #     count = company_notice.objects.filter(expired=True).count()
+    #     data["count"] = count
 
-        name = f"broadcast-notification-{str(userid)}"
-        tasks = get_object_or_404(PeriodicTask, name=name)
-        tasks.enabled = checked
-        tasks.save()
+    #     name = f"broadcast-notification-{str(userid)}"
+    #     tasks = get_object_or_404(PeriodicTask, name=name)
+    #     tasks.enabled = checked
+    #     tasks.save()
 
-        return JsonResponse(data)
+    #     return JsonResponse(data)
 
 
 def delete_userview(request, userid=None):
@@ -449,6 +443,7 @@ def delete_userview(request, userid=None):
         context["resp"] = False
 
     return JsonResponse(context)
+
 
 class qrcodeview(View):
 
@@ -492,7 +487,7 @@ class qrcodeview(View):
             "company_name": model.company_name,
             "job_id": model.job_id,
             "qr_type": model.qr_type,
-            "qrcode": qrcode.qr_code.url
+            "qrcode": qrcode.qr_code.url,
         }
 
         return JsonResponse(data)

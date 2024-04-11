@@ -6,7 +6,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django_celery_beat.models import PeriodicTask, CrontabSchedule
 import json
-import base64
 
 # Create your models here.
 
@@ -27,7 +26,6 @@ class company_profile(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     schedule_plan = models.IntegerField(null=True)
-    dual_date = models.DateField()
     vote_star  = models.IntegerField(null=True)
     vote_percent = models.IntegerField(null=True)
     vote_status = models.CharField(max_length=10000, null=True)
@@ -35,12 +33,9 @@ class company_profile(models.Model):
     avg_vote = models.FloatField(null=False)
     feed = models.BooleanField(default=True)
     updated = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = ('userid',)
-        db_table = "company_profile"
         
     def to_dict_json(self):
+        print("Done")
         return {
             'userid': self.userid,
             'company_name': self.company_name,
@@ -58,7 +53,6 @@ class company_profile(models.Model):
             'start_date': self.start_date,
             'end_date': self.end_date,
             'schedule_plan': self.schedule_plan,
-            'dual_date': self.dual_date,
             'vote_star':  self.vote_star,
             'vote_percent': self.vote_percent,
             'vote_status': self.vote_status,
@@ -67,13 +61,16 @@ class company_profile(models.Model):
             'feed': self.feed,
             'updated': self.updated,
         }    
+    class Meta:
+        ordering = ('userid',)
+        db_table = "company_profile"
         
 class company_notice(models.Model):
     userid = models.IntegerField(null=True)
     company_name = models.CharField(max_length=10000, null=True)
     job_id = models.CharField(max_length=10000, null=True)
     schedule_plan = models.IntegerField(null=True)
-    dual_date = models.DateField()
+    end_date = models.DateField()
     vote_star  = models.IntegerField(null=True)
     vote_percent = models.IntegerField(null=True)
     vote_status = models.CharField(max_length=10000, null=True)
@@ -89,7 +86,7 @@ class company_notice(models.Model):
             'company_name': self.company_name,
             'job_id': self.job_id,
             'schedule_plan': self.schedule_plan,
-            'dual_date': self.dual_date,
+            'end_date': self.dual_date,
             'updated': self.updated,
             'vote_star': self.vote_star,
             'vote_percent': self.vote_percent,
@@ -118,10 +115,8 @@ class company_qrcode(models.Model):
         _buffer.seek(0)
         self.qr_code.save(fname, File(_buffer), save=False)
         super().save(*args, **kwargs)
-        
     class Meta:
         db_table = "company_qrcode"
-
 
 class username(models.Model):
     name = models.CharField(max_length = 150)
@@ -146,8 +141,6 @@ class BroadcastNotification(models.Model):
 def notification_handler(sender, instance, created, **kwargs):
     # call group_send function directly to send notificatoions or you can create a dynamic task in celery beat
     if created:
-        # print(str(instance.broadcast_on.hour) + " " + str(instance.broadcast_on.minute))
-        
         schedule, created = CrontabSchedule.objects.get_or_create(
                                                             hour = '*',
                                                             minute = '*/2',
@@ -161,7 +154,5 @@ def notification_handler(sender, instance, created, **kwargs):
                                     task="apps.home.tasks.broadcast_notification", 
                                     args=json.dumps((instance.id,))
                                     )
-
-    #if not created:
 
         

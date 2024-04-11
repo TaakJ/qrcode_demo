@@ -10,55 +10,15 @@
 @import url('https://rsms.me/inter/inter.css');
 
 :root {
-    --color-dark: #212121;
-
-    --color-text: var(--color-dark);
-
-    --size-bezel: .5rem;
-    --size-radius: 4px;
-
-    font-size: calc(.6rem + .4vw);
+    --size-bezel: .2rem;
+    --size-radius: 3px;
     color: var(--color-text);
-    padding: 0 calc(var(--size-bezel) * 3);
 }
 
-
-.card {
-    padding: calc(4 * var(--size-bezel));
-    margin-top: calc(4 * var(--size-bezel));
+.card { 
     border-radius: var(--size-radius);
-    border: 3px solid var(--color-shadow, currentColor);
-    box-shadow: .5rem .5rem 0 var(--color-shadow, currentColor);
-}
-
-.gradient-background {
-width: 100%;
-background: linear-gradient(62deg, #EE7752, #f08ab1, #65c0e1, #23D5AB);
-    animation: gradient 10s ease infinite; 
-    background-size: 400% 400%;
-
-}
-@-webkit-keyframes gradient{
-0% {
-    background-position: 0 50%;
-}
-50% {
-    background-position: 100% 50%;
-}
-100% {
-    background-position: 0% 50%;
-}
-}
-@keyframes gradient{
-0% {
-    background-position: 0 50%;
-}
-50% {
-    background-position: 100% 50%;
-}
-100% {
-    background-position: 0% 50%;
-}
+    padding: calc(3 * var(--size-bezel));
+    margin-top: calc(3 * var(--size-bezel)); 
 }
 
 .container {
@@ -118,7 +78,6 @@ background: linear-gradient(62deg, #EE7752, #f08ab1, #65c0e1, #23D5AB);
 .group_border {
     display: inline-block;
     position: relative;
-    /* font-weight: bold; */
     padding: 5px 5px 0px 5px;
     margin-bottom: 0%;
     left: 50%;
@@ -138,11 +97,12 @@ background: linear-gradient(62deg, #EE7752, #f08ab1, #65c0e1, #23D5AB);
     float: right;
 }
 
+
 /* The star of the show */
 .rate .star:before {
     display: inline-block;
     font-size: 3rem;
-    padding: .3rem .4rem;
+    padding: .1rem .2rem;
     margin: 0;
     font-family: FontAwesome;
     content: "\f005"; /* full star */
@@ -156,11 +116,11 @@ background: linear-gradient(62deg, #EE7752, #f08ab1, #65c0e1, #23D5AB);
 }
 
 .star:hover:before, .star.selected:before {
-    color: #FFFF00;
+    color: #FF8C00;
 }
 
 .star:hover ~ .star:before, .star.selected ~ .star:before {
-    color: #FFFF00;
+    color: #FF8C00;
     transition: color 0.8s;
     /* fontAwesome filled star code */
 }
@@ -180,7 +140,7 @@ background: linear-gradient(62deg, #EE7752, #f08ab1, #65c0e1, #23D5AB);
 .emoji img {
     margin: 0;
     display: block;
-    width: 200px;
+    width: 150px;
     transition: all 0.4s;
 }
 
@@ -231,8 +191,8 @@ input[type="radio"][id^="cb"] {
     position: absolute;
     top: -1px; 
     left: -1px;
-    width: 34px;
-    height: 34px;
+    width: 30px;
+    height: 30px;
     text-align: center;
     line-height: 36px;
     transition-duration: 0.4s;
@@ -244,7 +204,7 @@ input[type="radio"][id^="cb"] {
     /* height: 10%; */
     height: 18rem;
     transition-duration: 0.2s;
-    /* transform-origin: 50% 50%; */
+    transform-origin: 50% 50%;
 }
 
 :checked + label {
@@ -267,6 +227,20 @@ input {
     font-weight: bold;
 }
 
+.section span {
+    font-size: 12px;
+    letter-spacing: 1px;
+    font-weight: 700;
+    padding: 8px 20px;
+    line-height: 1;
+    margin: 0;
+    background: #fdeff2;
+    color: #e43c5c;
+    display: inline-block;
+    text-transform: uppercase;
+    border-radius: 50px;
+}
+
 </style>
 
 {% endblock stylesheets %}
@@ -275,24 +249,28 @@ input {
 
     <div class="row">
         <div class="col-md-12">
-            <div class="card card-chart gradient-background">
+            <div class="card card-chart">
                 <div class="card-header card-header-primary card-header-icon"> 
                     <div class="card-icon">
                         <i class="material-icons">devices</i>
                     </div>
                 </div>
-                <div class="card-header">  
-                    <div class="box">                        
-                        <div class="group_border" style="text-decoration: underline #212121; text-underline-position: under; font-family:monospace;">
-                            <h2> "{{ model.company_name }}" </h2>
+                <div class="card-header">
+                    <div class="box ">
+                        <h2 style="color: #212121;">IAQ Tracking</h2>
+                        <div class="section" style="text-align: center;">
+                            <span id="statusid">Job Description</span>
+                            <h2 style="color: #798eb3;">{{ model.job_id }}</h2>
                         </div>
                     </div>
+                    
                     <div class="box">
-                        <h2 style="color: white;">IAQ Tracking</h2>
-                        <h2 style="text-decoration: underline #212121; text-underline-position: under;"><span id="">{{ model.job_id }}</span></h2> 
-                    </div>
-                    <br>
-                    <div class="box">
+                        <div class="box ">
+                            <div  class="section" style="text-align: center;">
+                                <span>Rating</span>
+                            </div>
+                        </div>
+                        <br>
                         <div class="rate">
                             <span id="star7" class="star" title="5 stars"></span>
                             <span id="star6" class="half star " title="4.5 stars"></span>
@@ -301,12 +279,7 @@ input {
                             <span id="star3" class="star" title="3 stars"></span>
                             <span id="star2" class="star" title="2 stars"></span>
                             <span id="star1"  class="star" title="1 star"></span>
-                        </div>
-                    </div>
-                    <div class="box">
-                        <div class="group_border" style="color: #212121;">
-                            <h2><span id="statusid" style="color: white;">"{{ model.vote_status }}"</span></h2>
-                        </div>
+                        </div>      
                     </div>
                     <div class="container">
                         <div class="chartbox">
@@ -315,7 +288,6 @@ input {
                             </div>
                         </div>
                         <div class="box">
-                        <div id="box">
                             <div class="emoji">
                                 {% if model.vote_star == 7 %} 
                                     <img id="emoji" src="/static/assets/img/fantastic.gif" alt="" style="mix-blend-mode: multiply;">
@@ -333,7 +305,7 @@ input {
                                     <img id="emoji" src="/static/assets/img/bad.gif" alt="" style="mix-blend-mode: multiply;">
                                 {% endif %}
                             </div>
-                        </div>
+                            <div style="text-align: center;"><span id="statusid" style="color: #212121;">{{ model.vote_status }}</span></div>
                         </div>
                     </div>
                 </div>
@@ -389,15 +361,8 @@ input {
                         <i class="material-icons">access_time</i>
                     </div>
                     <p class="card-category">Schedule Plan</p>
-                    <h5 class="card-title" id="plan_id" style="color: #212121; font-weight: bold; font-size: 1.5rem;">
-                        {{ model.schedule_plan|safe }} <span style="color: #212121; font-weight: bold; font-size: 1rem;">(Day)
+                    <h5 class="card-title" id="plan_id" style="color: #212121; font-weight: bold; font-size: 1.5rem;"></h5>
                 </div>
-                <!-- <div class="card-footer">
-                    <div class="stats">
-                        <i class="material-icons">date_range</i>&nbsp;
-                        <span id='countdownid' style="color: #212121; font-weight: bold; font-size: 1rem;"></span>
-                    </div>
-                </div> -->
             </div>
         </div>     
     </div>
@@ -472,7 +437,7 @@ input {
                             <ul>
                                 <h4 style="text-decoration: underline #212121; text-underline-position: under; font-weight: 900;">square</h4>
                                 <li><input type="radio" id="cb1" name="chk" value="1" checked/>
-                                    <label for="cb1"><img src='https://res.cloudinary.com/dzwffbeuq/image/upload/v1/image/1' + data.qr_type"  alt=""  style="mix-blend-mode: multiply; height: 180px;"/></label>
+                                    <label for="cb1"><img src='https://res.cloudinary.com/dzwffbeuq/image/upload/v1/image/1' + data.qr_type"  alt=""  style="mix-blend-mode: multiply;  height: 180px;"/></label>
                                 </li>
                             </ul>
                         </div>
@@ -508,8 +473,8 @@ input {
 
 $(document).ready(function() {
 
-const start_date = `{{ model.end_date|safe }}`;
-const dual_date = `{{ model.dual_date|safe }}`;
+const start_date = `{{ model.start_date|safe }}`;
+const end_date = `{{ model.end_date|safe }}`;
 const vote_star =  `{{ model.vote_star|safe }}`;
 const vote_percent = `{{ model.vote_percent|safe }}`;
 const qr_type = `{{ model.qr_type|safe }}`;
@@ -548,7 +513,7 @@ const plan = `{{ model.schedule_plan }}`;
         hour = minute * 60,
         day = hour * 24;
 
-    let schedule = new Date(dual_date),
+    let schedule = new Date(end_date),
         dual_dd = String(schedule.getDate()).padStart(2, "0"),
         dual_mm = String(schedule.getMonth() + 1).padStart(2, "0"),
         dual_yyyy = schedule.getFullYear(),
@@ -576,7 +541,7 @@ const plan = `{{ model.schedule_plan }}`;
 
             x1 =  cd + " day : " +  ch + " hour : " +  cmi + " min : " +  cms + " sec";
             document.getElementById('countdownid').innerHTML = x1;
-            document.getElementById('plan_id').innerHTML = cd;
+            document.getElementById('plan_id').innerHTML = cd + "&nbsp;Days"
 
         },1000); 
 }());
