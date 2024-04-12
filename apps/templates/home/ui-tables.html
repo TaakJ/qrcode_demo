@@ -10,13 +10,20 @@
 @import url('https://rsms.me/inter/inter.css');
 
 :root {
+  --color-dark: #212121;
+  --color-text: var(--color-dark);
+  --size-bezel: .5rem;
+  --size-radius: 4px;
+  --text: #FFFFFF;
+  --slider: #E0E0E0; 
+  --shadow: #0000001a;
 
   color: var(--color-text);
+
   --col-1-up: #70A7FF;
   --col-1: #3A86FF;
   --col-1-down: #FFFFFF;
 }
-
 table {
   width: 70%;
   margin: 0 auto;
@@ -289,12 +296,10 @@ $(document).ready(function() {
           col.style.color  = "black";
         }
       }
-      
       if (cnt_out.innerText == "Timeout..") {
           row.cells[1].getElementsByTagName('input')[0].checked = false
           col.style.color  = "#959596";
       }
-
     } 
 
   }
